@@ -17,11 +17,16 @@
  * <https://www.gnu.org/licenses/>.
  */
 
-#include <iostream>
+#include <SDL2/SDL.h>
 
 int main(void)
 {
-    std::cout << "meow\n";
+    if (SDL_Init(SDL_INIT_VIDEO) != 0) {
+        SDL_Log("Unable to initialize SDL: %s", SDL_GetError());
+        return 1;
+    }
+
+    SDL_Quit();
 
     return 0;
 }

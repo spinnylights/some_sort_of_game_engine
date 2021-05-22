@@ -9,11 +9,20 @@ AC_INIT([Crypt Underworld],
         [https://github.com/spinnylights/]m4_defn([pname])[/issues],
         m4_defn([pname])[-]m4_defn(m4_defn([pname])[_VERSION]))
 
+AC_CONFIG_MACRO_DIR([m4])
+
 AC_CONFIG_SRCDIR([src/main.cpp])
 
 AM_INIT_AUTOMAKE([-Wall -Werror subdir-objects foreign])
 
 AC_PROG_CXX
+
+SDL_VERSION=2.0.14
+AM_PATH_SDL2($SDL_VERSION,
+             :,
+             AC_MSG_ERROR([SDL version $SDL_VERSION not found!]))
+CXXFLAGS="$CXXFLAGS $SDL_CFLAGS"
+LIBS="$LIBS $SDL_LIBS"
 
 AC_CONFIG_FILES([Makefile])
 

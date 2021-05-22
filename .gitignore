@@ -2,3 +2,6 @@ Makefile.in
 config.status
 Makefile
 config.log
+compile
+.deps
+.dirstamp
