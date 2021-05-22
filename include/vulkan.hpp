@@ -19,11 +19,28 @@
  * Copyright (c) 2021 Zoë Sparks <zoe@milky.flowers>
  */
 
-#include "engine.hpp"
+#include <vector>
+#include <string>
 
-int main(void)
-{
-    cu::Engine e;
+#include <vulkan/vulkan.h>
+#include <vulkan/vulkan_core.h>
 
-    return 0;
-}
+namespace cu {
+
+class Vulkan {
+public:
+    static void vk_try(VkResult, std::string oper);
+
+    Vulkan(std::vector<const char*> exts,
+           std::vector<const char*> layers);
+
+    Vulkan(Vulkan&&) = delete;
+    Vulkan(const Vulkan&) = delete;
+    Vulkan& operator=(const Vulkan&) = delete;
+
+    ~Vulkan();
+private:
+    VkInstance inst;
+};
+
+} // namespace cu

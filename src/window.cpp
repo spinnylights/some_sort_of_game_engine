@@ -19,11 +19,28 @@
  * Copyright (c) 2021 Zoë Sparks <zoe@milky.flowers>
  */
 
-#include "engine.hpp"
+#include "sdl.hpp"
 
-int main(void)
+#include "window.hpp"
+
+namespace cu {
+
+Window::Window()
 {
-    cu::Engine e;
-
-    return 0;
+    int width = 640;
+    int height = 480;
+    SDL::sdl_try(win = SDL_CreateWindow("Crypt Underworld",
+                                        SDL_WINDOWPOS_UNDEFINED,
+                                        SDL_WINDOWPOS_UNDEFINED,
+                                        width,
+                                        height,
+                                        SDL_WINDOW_VULKAN),
+                 "create window");
 }
+
+Window::~Window()
+{
+    SDL_DestroyWindow(win);
+}
+
+} // namespace cu

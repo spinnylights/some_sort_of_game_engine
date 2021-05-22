@@ -19,11 +19,41 @@
  * Copyright (c) 2021 Zoë Sparks <zoe@milky.flowers>
  */
 
-#include "engine.hpp"
+#ifndef Zf3e510f4ae1456bbb00eb41d1469268
+#define Zf3e510f4ae1456bbb00eb41d1469268
 
-int main(void)
-{
-    cu::Engine e;
+#include <string>
+#include <vector>
 
-    return 0;
-}
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_vulkan.h>
+
+#include "window.hpp"
+
+#include <vulkan/vulkan.h>
+
+namespace cu {
+
+class SDL {
+public:
+    static void sdl_try(int result, std::string oper);
+    static void sdl_try(void* result, std::string oper);
+    static void sdl_try(SDL_bool result, std::string oper);
+    static void sdl_throw(std::string oper);
+
+    SDL();
+
+    SDL(SDL&&) = delete;
+    SDL(const SDL&) = delete;
+    SDL& operator=(const SDL&) = delete;
+
+    ~SDL();
+
+    std::vector<const char*> get_req_vulk_exts(Window&) const;
+
+private:
+};
+
+} // namespace cu
+
+#endif

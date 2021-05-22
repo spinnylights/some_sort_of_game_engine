@@ -19,11 +19,44 @@
  * Copyright (c) 2021 Zoë Sparks <zoe@milky.flowers>
  */
 
-#include "engine.hpp"
+#ifndef T1ea57521dc545848febc06aae81ba12
+#define T1ea57521dc545848febc06aae81ba12
 
-int main(void)
-{
-    cu::Engine e;
+#include "sdl.hpp"
+#include "window.hpp"
+#include "vulkan.hpp"
 
-    return 0;
-}
+namespace cu {
+
+class Engine {
+public:
+    static std::vector<const char*> layers(bool debug)
+    {
+        if (debug) {
+            return {"VK_LAYER_KHRONOS_validation"};
+        } else {
+            return {};
+        }
+    }
+
+    Engine(bool debug = false)
+        : sdl{},
+          win{},
+          vulk{sdl.get_req_vulk_exts(win),
+               layers(debug)}
+    {}
+
+    Engine(Engine&&) = delete;
+    Engine(const Engine&) = delete;
+    Engine& operator=(const Engine&) = delete;
+
+    ~Engine() = default;
+private:
+    SDL sdl;
+    Window win;
+    Vulkan vulk;
+};
+
+} // namespace cu
+
+#endif

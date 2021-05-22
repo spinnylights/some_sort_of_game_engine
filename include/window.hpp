@@ -19,11 +19,30 @@
  * Copyright (c) 2021 Zoë Sparks <zoe@milky.flowers>
  */
 
-#include "engine.hpp"
+#ifndef p331cb00feda44159c4965f40d76fdfa
+#define p331cb00feda44159c4965f40d76fdfa
 
-int main(void)
-{
-    cu::Engine e;
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_vulkan.h>
 
-    return 0;
-}
+namespace cu {
+
+class Window {
+public:
+    Window();
+
+    Window(Window&&) = delete;
+    Window(const Window&) = delete;
+    Window& operator=(const Window&) = delete;
+
+    ~Window();
+
+    SDL_Window* inner() { return win; }
+
+private:
+    SDL_Window* win;
+};
+
+} // namespace cu
+
+#endif

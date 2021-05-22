@@ -21,9 +21,6 @@
 
 #include "engine.hpp"
 
-int main(void)
-{
-    cu::Engine e;
+namespace cu {
 
-    return 0;
-}
+} // namespace cu

@@ -28,7 +28,7 @@ CXXFLAGS="$CXXFLAGS $SDL_CFLAGS"
 LIBS="$LIBS $SDL_LIBS"
 
 dnl Check for Vulkan
-AC_CHECK_HEADERS([vulkan/vulkan.h],
+AC_CHECK_HEADERS([vulkan/vulkan.h, vulkan/vulkan_core.h],
                  [pname_found_vulkan_headers=yes; break;])
 AS_IF([test "x$pname_found_vulkan_headers" != "xyes"],
       [AC_MSG_ERROR([Unable to find the Vulkan headers])])
