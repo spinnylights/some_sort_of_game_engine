@@ -19,43 +19,30 @@
  * Copyright (c) 2021 Zoë Sparks <zoe@milky.flowers>
  */
 
-#ifndef T1ea57521dc545848febc06aae81ba12
-#define T1ea57521dc545848febc06aae81ba12
+#ifndef ac994460237c45fcb74600d711cd72af
+#define ac994460237c45fcb74600d711cd72af
 
-#include "sdl.hpp"
-#include "window.hpp"
-#include "vulkan.hpp"
+#include <vector>
+
+#include <vulkan/vulkan.h>
+#include <vulkan/vulkan_core.h>
 
 namespace cu {
 
-class Engine {
+class Instance {
 public:
-    static std::vector<const char*> layers(bool debug)
-    {
-        if (debug) {
-            return {"VK_LAYER_KHRONOS_validation"};
-        } else {
-            return {};
-        }
-    }
+    Instance(std::vector<const char*> exts, std::vector<const char*> layers);
 
-    Engine(bool debug = false)
-        : sdl{},
-          win{},
-          vulk{sdl.get_req_vulk_exts(win),
-               layers(debug)}
-    {}
+    Instance(Instance&&) = delete;
+    Instance(const Instance&) = delete;
+    Instance& operator=(const Instance&) = delete;
 
-    Engine(Engine&&) = delete;
-    Engine(const Engine&) = delete;
-    Engine& operator=(const Engine&) = delete;
+    ~Instance();
 
-    ~Engine() = default;
+    VkInstance inner() { return inst; }
 
 private:
-    SDL sdl;
-    Window win;
-    Vulkan vulk;
+    VkInstance inst;
 };
 
 } // namespace cu

@@ -19,11 +19,17 @@
  * Copyright (c) 2021 Zoë Sparks <zoe@milky.flowers>
  */
 
+#ifndef q765e99c966249c6aa35adad25b72458
+#define q765e99c966249c6aa35adad25b72458
+
 #include <vector>
 #include <string>
 
 #include <vulkan/vulkan.h>
 #include <vulkan/vulkan_core.h>
+
+#include "instance.hpp"
+#include "phys_devices.hpp"
 
 namespace cu {
 
@@ -38,9 +44,13 @@ public:
     Vulkan(const Vulkan&) = delete;
     Vulkan& operator=(const Vulkan&) = delete;
 
-    ~Vulkan();
+    ~Vulkan() = default;
+
 private:
-    VkInstance inst;
+    Instance inst;
+    PhysDevices phys_dev;
 };
 
 } // namespace cu
+
+#endif

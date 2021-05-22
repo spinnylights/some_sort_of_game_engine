@@ -7,4 +7,6 @@ crypt_underworld_SOURCES = \
 	src/sdl.cpp \
 	src/window.cpp \
 	src/vulkan.cpp \
+	src/instance.cpp \
+	src/phys_devices.cpp \
 	src/engine.cpp

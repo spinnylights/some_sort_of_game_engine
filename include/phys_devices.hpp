@@ -19,43 +19,31 @@
  * Copyright (c) 2021 Zoë Sparks <zoe@milky.flowers>
  */
 
-#ifndef T1ea57521dc545848febc06aae81ba12
-#define T1ea57521dc545848febc06aae81ba12
+#ifndef rbd14ff256e547b690e922fd8ac2dbb9
+#define rbd14ff256e547b690e922fd8ac2dbb9
 
-#include "sdl.hpp"
-#include "window.hpp"
-#include "vulkan.hpp"
+#include <string>
+#include <vector>
+
+#include <vulkan/vulkan.h>
+
+#include "instance.hpp"
+#include "phys_device.hpp"
 
 namespace cu {
 
-class Engine {
+class PhysDevices {
 public:
-    static std::vector<const char*> layers(bool debug)
-    {
-        if (debug) {
-            return {"VK_LAYER_KHRONOS_validation"};
-        } else {
-            return {};
-        }
-    }
+    PhysDevices(Instance&);
 
-    Engine(bool debug = false)
-        : sdl{},
-          win{},
-          vulk{sdl.get_req_vulk_exts(win),
-               layers(debug)}
-    {}
-
-    Engine(Engine&&) = delete;
-    Engine(const Engine&) = delete;
-    Engine& operator=(const Engine&) = delete;
-
-    ~Engine() = default;
+    PhysDevice default_device() { return devs.at(default_dev); }
 
 private:
-    SDL sdl;
-    Window win;
-    Vulkan vulk;
+    std::vector<PhysDevice> devs;
+    std::vector<PhysDevice>::size_type default_dev;
+
+    void populate_devs(Instance&);
+    void populate_default();
 };
 
 } // namespace cu

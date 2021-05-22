@@ -194,37 +194,8 @@ void Vulkan::vk_try(VkResult res, std::string oper)
 }
 
 Vulkan::Vulkan(std::vector<const char*> exts, std::vector<const char*> layers)
-{
-    check_under_uint32(exts, "extensions");
-    check_under_uint32(layers, "layers");
-
-    VkApplicationInfo app_info = {
-        .sType = VK_STRUCTURE_TYPE_APPLICATION_INFO,
-        .pNext = NULL,
-        .pApplicationName = "Crypt Underworld",
-        .applicationVersion = 0,
-        .pEngineName = "Crypt Underworld",
-        .engineVersion = 0,
-        .apiVersion = VK_MAKE_VERSION(2, 170, 0)
-    };
-
-    VkInstanceCreateInfo inst_inf = {
-        .sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
-        .pNext = NULL,
-        .flags = 0,
-        .pApplicationInfo = &app_info,
-        .enabledLayerCount = static_cast<uint32_t>(layers.size()),
-        .ppEnabledLayerNames = layers.data(),
-        .enabledExtensionCount = static_cast<uint32_t>(exts.size()),
-        .ppEnabledExtensionNames = exts.data()
-    };
-
-    vk_try(vkCreateInstance(&inst_inf, NULL, &inst), "create instance");
-}
-
-Vulkan::~Vulkan()
-{
-    vkDestroyInstance(inst, NULL);
-}
+    : inst{exts, layers},
+      phys_dev{inst}
+{}
 
 } // namespace cu
