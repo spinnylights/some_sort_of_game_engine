@@ -19,11 +19,37 @@
  * Copyright (c) 2021 Zoë Sparks <zoe@milky.flowers>
  */
 
+#include <string>
+#include <iostream>
+
 #include "engine.hpp"
 
-int main(void)
+int main(int argc, char** argv)
 {
-    cu::Engine e;
+    bool debug = false;
+
+    std::string help_txt = "Usage: crypt_underworld [OPTION]...\n"
+                           "Play a game called Crypt Underworld.\n"
+                           "\n"
+                           "    -d, --debug    Enable debug output\n"
+                           "    -h, --help     Print this message and exit\n";
+
+    for (std::size_t i = 1; i < argc; ++i) {
+        std::string arg {argv[i]};
+
+        if (arg == "-h" || arg == "--help") {
+            std::cout << help_txt;
+            return 0;
+        } else if (arg == "-d" || arg == "--debug") {
+            debug = true;
+        } else {
+            std::cout << "*** Option " << arg << " not recognized.\n\n"
+                      << help_txt;
+            return EINVAL;
+        }
+    }
+
+    cu::Engine e {debug};
 
     return 0;
 }
