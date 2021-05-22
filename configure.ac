@@ -17,6 +17,9 @@ AM_INIT_AUTOMAKE([-Wall -Werror subdir-objects foreign])
 
 AC_PROG_CXX
 
+AX_CXX_COMPILE_STDCXX20
+
+dnl Check for SDL2
 SDL_VERSION=2.0.14
 AM_PATH_SDL2($SDL_VERSION,
              :,
