@@ -20,6 +20,7 @@
  */
 
 #include <stdexcept>
+#include <array>
 
 #include "vulkan.hpp"
 
@@ -151,21 +152,44 @@ std::string map_vk_result(VkResult res)
     return msg;
 }
 
+const std::array<VkResult, 26> vk_res_errs = {
+    VK_ERROR_OUT_OF_HOST_MEMORY,
+    VK_ERROR_OUT_OF_DEVICE_MEMORY,
+    VK_ERROR_INITIALIZATION_FAILED,
+    VK_ERROR_DEVICE_LOST,
+    VK_ERROR_MEMORY_MAP_FAILED,
+    VK_ERROR_LAYER_NOT_PRESENT,
+    VK_ERROR_EXTENSION_NOT_PRESENT,
+    VK_ERROR_FEATURE_NOT_PRESENT,
+    VK_ERROR_INCOMPATIBLE_DRIVER,
+    VK_ERROR_TOO_MANY_OBJECTS,
+    VK_ERROR_FORMAT_NOT_SUPPORTED,
+    VK_ERROR_FRAGMENTED_POOL,
+    VK_ERROR_UNKNOWN,
+    VK_ERROR_OUT_OF_POOL_MEMORY,
+    VK_ERROR_INVALID_EXTERNAL_HANDLE,
+    VK_ERROR_FRAGMENTATION,
+    VK_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS,
+    VK_ERROR_SURFACE_LOST_KHR,
+    VK_ERROR_NATIVE_WINDOW_IN_USE_KHR,
+    VK_ERROR_OUT_OF_DATE_KHR,
+    VK_ERROR_INCOMPATIBLE_DISPLAY_KHR,
+    VK_ERROR_VALIDATION_FAILED_EXT,
+    VK_ERROR_INVALID_SHADER_NV,
+    VK_ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT,
+    VK_ERROR_NOT_PERMITTED_EXT,
+    VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT,
+};
+
 void Vulkan::vk_try(VkResult res, std::string oper)
 {
-    if (res != VK_SUCCESS) {
-        throw std::runtime_error("could not "
-                                 + oper
-                                 + "; Vulkan says: "
-                                 + map_vk_result(res));
-    }
-}
-
-void check_under_uint32(std::vector<const char*> items, std::string type)
-{
-    if (items.size() > UINT32_MAX) {
-        throw std::runtime_error("the desired count of " + type + " " +
-                                 "must be <= UINT32_MAX");
+    for (auto res_err : vk_res_errs) {
+        if (res == res_err) {
+            throw std::runtime_error("could not "
+                                     + oper
+                                     + "; Vulkan says: "
+                                     + map_vk_result(res));
+        }
     }
 }
 
