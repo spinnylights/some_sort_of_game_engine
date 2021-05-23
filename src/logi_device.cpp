@@ -20,28 +20,84 @@
  */
 
 #include "logi_device.hpp"
+#include "vulkan.hpp"
+
+#include <iostream>
+#include <functional>
+#include <set>
 
 namespace cu {
 
-LogiDevice::LogiDevice(PhysDevice& phys_dev)
+uint32_t pick_queue_ndx(PhysDevice& phys_dev,
+                        std::function<bool(QueueFamily&)> criterion)
 {
+    uint32_t ndx = 0;
+    uint32_t flag_cnt = UINT32_MAX;
 
+    for (auto& fam : phys_dev.queue_families) {
+        uint32_t this_flag_cnt = fam.flag_count();
+
+        if (criterion(fam) && this_flag_cnt < flag_cnt) {
+            ndx = fam.index();
+            flag_cnt = this_flag_cnt;
+        }
+    }
+
+    return ndx;
 }
 
-LogiDevice::LogiDevice(LogiDevice&& other)
+LogiDevice::LogiDevice(PhysDevice& phys_dev)
 {
-    dev = other.inner();
-    other.inner({});
+    uint32_t graphics_ndx = pick_queue_ndx(phys_dev,
+                                           [](QueueFamily& q) {
+                                               return q.graphics();
+                                           });
 
-    inited = other.initialized();
-    other.initialized(false);
+    uint32_t present_ndx = pick_queue_ndx(phys_dev,
+                                           [](QueueFamily& q) {
+                                               return q.present_supported();
+                                           });
+
+    std::set<uint32_t> indices_to_create;
+    indices_to_create.insert(graphics_ndx);
+    indices_to_create.insert(present_ndx);
+
+    std::vector<VkDeviceQueueCreateInfo> queue_infos;
+    const float queue_priority = 1.0;
+    for (auto& i : indices_to_create) {
+        queue_infos.push_back({
+            .sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
+            .pNext = NULL,
+            .flags = 0,
+            .queueFamilyIndex = i,
+            .queueCount = 1,
+            .pQueuePriorities = &queue_priority,
+        });
+    }
+
+    VkDeviceCreateInfo dev_info = {
+        .sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
+        .pNext = NULL,
+        .flags = 0,
+        .queueCreateInfoCount = static_cast<uint32_t>(queue_infos.size()),
+        .pQueueCreateInfos = queue_infos.data(),
+        .enabledLayerCount = 0,
+        .ppEnabledLayerNames = NULL,
+        .enabledExtensionCount = 0,
+        .ppEnabledExtensionNames = NULL,
+        .pEnabledFeatures = NULL,
+    };
+
+    Vulkan::vk_try(vkCreateDevice(phys_dev.inner, &dev_info, NULL, &dev),
+                   "create logical device");
+
+    vkGetDeviceQueue(dev, graphics_ndx, 0, &graphics);
+    vkGetDeviceQueue(dev, present_ndx, 0, &present);
 }
 
 LogiDevice::~LogiDevice()
 {
-    if (inited) {
-        vkDestroyDevice(dev, NULL);
-    }
+    vkDestroyDevice(dev, NULL);
 }
 
 } // namespace cu

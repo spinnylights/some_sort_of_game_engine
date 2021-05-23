@@ -25,6 +25,7 @@
 
 #include <stdexcept>
 #include <array>
+#include <iostream>
 
 namespace cu {
 
@@ -209,7 +210,8 @@ Vulkan::Vulkan(std::vector<const char*> exts,
                SDL& sdl)
     : inst{exts, layers},
       surf{sdl, inst},
-      phys_dev{inst, surf}
+      phys_devs{inst, surf},
+      logi_dev{phys_devs.default_device()}
 {}
 
 } // namespace cu

@@ -38,7 +38,7 @@ class PhysDevices {
 public:
     PhysDevices(Instance&, Surface&);
 
-    PhysDevice default_device() { return devs.at(default_dev); }
+    PhysDevice& default_device() { return devs.at(default_dev); }
 
 private:
     std::vector<PhysDevice> devs;

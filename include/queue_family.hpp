@@ -43,6 +43,8 @@ public:
     bool sparse_binding();
     bool protected_memory();
 
+    uint32_t flag_count() const;
+
     uint32_t queue_count()       const { return queue_cnt; }
     uint32_t index()             const { return ndx; }
     bool     present_supported() const { return pres_support; }

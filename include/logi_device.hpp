@@ -32,7 +32,7 @@ class LogiDevice {
 public:
     LogiDevice(PhysDevice&);
 
-    LogiDevice(LogiDevice&&);
+    LogiDevice(LogiDevice&&) = delete;
     LogiDevice(const LogiDevice&) = delete;
     LogiDevice& operator=(const LogiDevice&) = delete;
 
@@ -41,12 +41,10 @@ public:
     VkDevice inner()               { return dev; }
     void     inner(VkDevice other) { dev = other; }
 
-    bool initialized()           { return inited; }
-    void initialized(bool other) { inited = other; }
-
 private:
     VkDevice dev;
-    bool inited = false;
+    VkQueue graphics;
+    VkQueue present;
 };
 
 } // namespace cu

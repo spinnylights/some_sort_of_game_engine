@@ -10,4 +10,5 @@ crypt_underworld_SOURCES = \
 	src/phys_devices.cpp \
 	src/surface.cpp \
 	src/queue_family.cpp \
+	src/logi_device.cpp \
 	src/engine.cpp

@@ -28,6 +28,7 @@
 #include "instance.hpp"
 #include "surface.hpp"
 #include "phys_devices.hpp"
+#include "logi_device.hpp"
 
 namespace cu {
 
@@ -51,7 +52,8 @@ public:
 private:
     Instance inst;
     Surface surf;
-    PhysDevices phys_dev;
+    PhysDevices phys_devs;
+    LogiDevice logi_dev;
 };
 
 } // namespace cu
