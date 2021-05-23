@@ -19,43 +19,29 @@
  * Copyright (c) 2021 Zoë Sparks <zoe@milky.flowers>
  */
 
-#ifndef T1ea57521dc545848febc06aae81ba12
-#define T1ea57521dc545848febc06aae81ba12
-
-#include "sdl.hpp"
-#include "vulkan.hpp"
+#include "logi_device.hpp"
 
 namespace cu {
 
-class Engine {
-public:
-    static std::vector<const char*> layers(bool debug)
-    {
-        if (debug) {
-            return {"VK_LAYER_KHRONOS_validation"};
-        } else {
-            return {};
-        }
+LogiDevice::LogiDevice(PhysDevice& phys_dev)
+{
+
+}
+
+LogiDevice::LogiDevice(LogiDevice&& other)
+{
+    dev = other.inner();
+    other.inner({});
+
+    inited = other.initialized();
+    other.initialized(false);
+}
+
+LogiDevice::~LogiDevice()
+{
+    if (inited) {
+        vkDestroyDevice(dev, NULL);
     }
-
-    Engine(bool debug = false)
-        : sdl{},
-          vulk{sdl.get_req_vulk_exts(),
-               layers(debug),
-               sdl}
-    {}
-
-    Engine(Engine&&) = delete;
-    Engine(const Engine&) = delete;
-    Engine& operator=(const Engine&) = delete;
-
-    ~Engine() = default;
-
-private:
-    SDL sdl;
-    Vulkan vulk;
-};
+}
 
 } // namespace cu
-
-#endif

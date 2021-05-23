@@ -19,28 +19,39 @@
  * Copyright (c) 2021 Zoë Sparks <zoe@milky.flowers>
  */
 
-#ifndef p331cb00feda44159c4965f40d76fdfa
-#define p331cb00feda44159c4965f40d76fdfa
+#ifndef nf881038f94847228e50390dc7437b5e
+#define nf881038f94847228e50390dc7437b5e
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_vulkan.h>
+#include <vulkan/vulkan.h>
+
+#include <cstdint>
 
 namespace cu {
 
-class Window {
+class Surface;
+
+class QueueFamily {
 public:
-    Window();
+    QueueFamily(VkQueueFamilyProperties&,
+                uint32_t ndex,
+                VkPhysicalDevice,
+                Surface&);
 
-    Window(Window&&) = delete;
-    Window(const Window&) = delete;
-    Window& operator=(const Window&) = delete;
+    bool graphics();
+    bool compute();
+    bool transfer();
+    bool sparse_binding();
+    bool protected_memory();
 
-    ~Window();
-
-    SDL_Window* inner() { return win; }
+    uint32_t queue_count()       const { return queue_cnt; }
+    uint32_t index()             const { return ndx; }
+    bool     present_supported() const { return pres_support; }
 
 private:
-    SDL_Window* win;
+    VkQueueFlags flags;
+    uint32_t     queue_cnt;
+    uint32_t     ndx;
+    bool         pres_support;
 };
 
 } // namespace cu

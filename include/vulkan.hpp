@@ -25,20 +25,22 @@
 #include <vector>
 #include <string>
 
-#include <vulkan/vulkan.h>
-#include <vulkan/vulkan_core.h>
-
 #include "instance.hpp"
+#include "surface.hpp"
 #include "phys_devices.hpp"
 
 namespace cu {
 
+class SDL;
+
 class Vulkan {
 public:
     static void vk_try(VkResult, std::string oper);
+    static bool vkbool_to_bool(VkBool32);
 
     Vulkan(std::vector<const char*> exts,
-           std::vector<const char*> layers);
+           std::vector<const char*> layers,
+           SDL&);
 
     Vulkan(Vulkan&&) = delete;
     Vulkan(const Vulkan&) = delete;
@@ -48,6 +50,7 @@ public:
 
 private:
     Instance inst;
+    Surface surf;
     PhysDevices phys_dev;
 };
 

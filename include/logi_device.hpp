@@ -19,28 +19,36 @@
  * Copyright (c) 2021 Zoë Sparks <zoe@milky.flowers>
  */
 
-#include "sdl.hpp"
+#ifndef xe47e6d7980140aa9940894be9435fc2
+#define xe47e6d7980140aa9940894be9435fc2
 
-#include "window.hpp"
+#include <vulkan/vulkan.h>
+
+#include "phys_device.hpp"
 
 namespace cu {
 
-Window::Window()
-{
-    int width = 640;
-    int height = 480;
-    SDL::sdl_try(win = SDL_CreateWindow("Crypt Underworld",
-                                        SDL_WINDOWPOS_UNDEFINED,
-                                        SDL_WINDOWPOS_UNDEFINED,
-                                        width,
-                                        height,
-                                        SDL_WINDOW_VULKAN),
-                 "create window");
-}
+class LogiDevice {
+public:
+    LogiDevice(PhysDevice&);
 
-Window::~Window()
-{
-    SDL_DestroyWindow(win);
-}
+    LogiDevice(LogiDevice&&);
+    LogiDevice(const LogiDevice&) = delete;
+    LogiDevice& operator=(const LogiDevice&) = delete;
+
+    ~LogiDevice();
+
+    VkDevice inner()               { return dev; }
+    void     inner(VkDevice other) { dev = other; }
+
+    bool initialized()           { return inited; }
+    void initialized(bool other) { inited = other; }
+
+private:
+    VkDevice dev;
+    bool inited = false;
+};
 
 } // namespace cu
+
+#endif

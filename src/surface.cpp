@@ -19,43 +19,22 @@
  * Copyright (c) 2021 Zoë Sparks <zoe@milky.flowers>
  */
 
-#ifndef T1ea57521dc545848febc06aae81ba12
-#define T1ea57521dc545848febc06aae81ba12
+#include "surface.hpp"
 
 #include "sdl.hpp"
-#include "vulkan.hpp"
+#include "instance.hpp"
 
 namespace cu {
 
-class Engine {
-public:
-    static std::vector<const char*> layers(bool debug)
-    {
-        if (debug) {
-            return {"VK_LAYER_KHRONOS_validation"};
-        } else {
-            return {};
-        }
-    }
+Surface::Surface(SDL& sdl, Instance& instance)
+{
+    sdl.create_surface(instance, &surf);
+    inst = instance.inner();
+}
 
-    Engine(bool debug = false)
-        : sdl{},
-          vulk{sdl.get_req_vulk_exts(),
-               layers(debug),
-               sdl}
-    {}
-
-    Engine(Engine&&) = delete;
-    Engine(const Engine&) = delete;
-    Engine& operator=(const Engine&) = delete;
-
-    ~Engine() = default;
-
-private:
-    SDL sdl;
-    Vulkan vulk;
-};
+Surface::~Surface() noexcept
+{
+    vkDestroySurfaceKHR(inst, surf, NULL);
+}
 
 } // namespace cu
-
-#endif

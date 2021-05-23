@@ -20,6 +20,7 @@
  */
 
 #include <stdexcept>
+#include <iostream>
 
 #include "vulkan.hpp"
 
@@ -27,7 +28,7 @@
 
 namespace cu {
 
-void PhysDevices::populate_devs(Instance& inst)
+void PhysDevices::populate_devs(Instance& inst, Surface& surf)
 {
     uint32_t dev_cnt;
     Vulkan::vk_try(vkEnumeratePhysicalDevices(inst.inner(), &dev_cnt, NULL),
@@ -60,12 +61,32 @@ void PhysDevices::populate_devs(Instance& inst)
             }
         }
 
-        devs.push_back({
+        PhysDevice phys_dev {
             .inner = potential_dev,
-            .name = props.properties.deviceName,
-            .type = props.properties.deviceType,
-            .mem = total_mem
-        });
+            .name  = props.properties.deviceName,
+            .type  = props.properties.deviceType,
+            .mem   = total_mem
+        };
+
+        uint32_t q_family_cnt;
+        vkGetPhysicalDeviceQueueFamilyProperties(potential_dev,
+                                                 &q_family_cnt,
+                                                 NULL);
+        std::vector<VkQueueFamilyProperties> q_family_props (q_family_cnt);
+        vkGetPhysicalDeviceQueueFamilyProperties(potential_dev,
+                                                 &q_family_cnt,
+                                                 q_family_props.data());
+
+        for (uint32_t i = 0; i < q_family_props.size(); ++i) {
+            phys_dev.queue_families.push_back({
+                q_family_props.at(i),
+                i,
+                potential_dev,
+                surf
+            });
+        }
+
+        devs.push_back(phys_dev);
     }
 }
 
@@ -101,9 +122,9 @@ void PhysDevices::populate_default()
     }
 }
 
-PhysDevices::PhysDevices(Instance& inst)
+PhysDevices::PhysDevices(Instance& inst, Surface& surf)
 {
-    populate_devs(inst);
+    populate_devs(inst, surf);
     populate_default();
 }
 

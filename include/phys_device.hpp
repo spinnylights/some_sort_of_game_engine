@@ -23,8 +23,11 @@
 #define J2f15c99194b4bc4bef27446c0d923d0
 
 #include <string>
+#include <vector>
 
 #include <vulkan/vulkan.h>
+
+#include "queue_family.hpp"
 
 namespace cu {
 
@@ -33,6 +36,7 @@ struct PhysDevice {
     std::string name;
     VkPhysicalDeviceType type;
     VkDeviceSize mem;
+    std::vector<QueueFamily> queue_families;
 };
 
 } // namespace cu

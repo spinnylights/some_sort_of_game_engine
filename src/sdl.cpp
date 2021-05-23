@@ -19,10 +19,12 @@
  * Copyright (c) 2021 Zoë Sparks <zoe@milky.flowers>
  */
 
+#include "sdl.hpp"
+
+#include "instance.hpp"
+
 #include <sstream>
 #include <stdexcept>
-
-#include "sdl.hpp"
 
 namespace cu {
 
@@ -54,32 +56,57 @@ void SDL::sdl_throw(std::string oper)
     throw std::runtime_error(ss.str());
 }
 
+SDL_Window* create_window()
+{
+    SDL_Window* win;
+
+    int width = 640;
+    int height = 480;
+    SDL::sdl_try(win = SDL_CreateWindow("Crypt Underworld",
+                                        SDL_WINDOWPOS_UNDEFINED,
+                                        SDL_WINDOWPOS_UNDEFINED,
+                                        width,
+                                        height,
+                                        SDL_WINDOW_VULKAN),
+                 "create window");
+
+    return win;
+}
+
 SDL::SDL()
 {
     sdl_try(SDL_Init(SDL_INIT_VIDEO), "initialize SDL");
+    win = create_window();
 }
 
-SDL::~SDL()
+SDL::~SDL() noexcept
 {
+    SDL_DestroyWindow(win);
     SDL_Quit();
 }
 
-std::vector<const char*> SDL::get_req_vulk_exts(Window& win) const
+std::vector<const char*> SDL::get_req_vulk_exts() const
 {
     uint32_t cnt;
-    sdl_try(SDL_Vulkan_GetInstanceExtensions(win.inner(),
+    sdl_try(SDL_Vulkan_GetInstanceExtensions(win,
                                              &cnt,
                                              NULL),
             "get SDL-required Vulkan instance exts count");
 
     std::vector<const char*> exts (cnt);
 
-    sdl_try(SDL_Vulkan_GetInstanceExtensions(win.inner(),
+    sdl_try(SDL_Vulkan_GetInstanceExtensions(win,
                                              &cnt,
                                              exts.data()),
             "get names of SDL-required Vulkan instance exts");
 
     return exts;
+}
+
+void SDL::create_surface(Instance& inst, VkSurfaceKHR* surf)
+{
+    sdl_try(SDL_Vulkan_CreateSurface(win, inst.inner(), surf),
+            "create surface");
 }
 
 } // namespace cu

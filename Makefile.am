@@ -5,8 +5,9 @@ crypt_underworld_LDADD = -lvulkan $(crypt_underworld_LIBS)
 crypt_underworld_SOURCES = \
 	src/main.cpp \
 	src/sdl.cpp \
-	src/window.cpp \
 	src/vulkan.cpp \
 	src/instance.cpp \
 	src/phys_devices.cpp \
+	src/surface.cpp \
+	src/queue_family.cpp \
 	src/engine.cpp

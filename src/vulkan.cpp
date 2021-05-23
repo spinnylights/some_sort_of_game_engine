@@ -19,10 +19,12 @@
  * Copyright (c) 2021 Zoë Sparks <zoe@milky.flowers>
  */
 
+#include "vulkan.hpp"
+
+#include "sdl.hpp"
+
 #include <stdexcept>
 #include <array>
-
-#include "vulkan.hpp"
 
 namespace cu {
 
@@ -193,9 +195,21 @@ void Vulkan::vk_try(VkResult res, std::string oper)
     }
 }
 
-Vulkan::Vulkan(std::vector<const char*> exts, std::vector<const char*> layers)
+bool Vulkan::vkbool_to_bool(VkBool32 b)
+{
+    if (b == VK_TRUE) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+Vulkan::Vulkan(std::vector<const char*> exts,
+               std::vector<const char*> layers,
+               SDL& sdl)
     : inst{exts, layers},
-      phys_dev{inst}
+      surf{sdl, inst},
+      phys_dev{inst, surf}
 {}
 
 } // namespace cu

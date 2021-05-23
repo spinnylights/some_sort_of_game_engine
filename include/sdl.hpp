@@ -28,11 +28,11 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_vulkan.h>
 
-#include "window.hpp"
-
 #include <vulkan/vulkan.h>
 
 namespace cu {
+
+class Instance;
 
 class SDL {
 public:
@@ -47,11 +47,14 @@ public:
     SDL(const SDL&) = delete;
     SDL& operator=(const SDL&) = delete;
 
-    ~SDL();
+    ~SDL() noexcept;
 
-    std::vector<const char*> get_req_vulk_exts(Window&) const;
+    std::vector<const char*> get_req_vulk_exts() const;
+
+    void create_surface(Instance&, VkSurfaceKHR*);
 
 private:
+    SDL_Window* win;
 };
 
 } // namespace cu

@@ -27,14 +27,16 @@
 
 #include <vulkan/vulkan.h>
 
-#include "instance.hpp"
 #include "phys_device.hpp"
 
 namespace cu {
 
+class Instance;
+class Surface;
+
 class PhysDevices {
 public:
-    PhysDevices(Instance&);
+    PhysDevices(Instance&, Surface&);
 
     PhysDevice default_device() { return devs.at(default_dev); }
 
@@ -42,7 +44,7 @@ private:
     std::vector<PhysDevice> devs;
     std::vector<PhysDevice>::size_type default_dev;
 
-    void populate_devs(Instance&);
+    void populate_devs(Instance&, Surface&);
     void populate_default();
 };
 
