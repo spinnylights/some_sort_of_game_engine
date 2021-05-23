@@ -70,4 +70,19 @@ bool QueueFamily::protected_memory()
     return flags & VK_QUEUE_PROTECTED_BIT;
 }
 
+uint32_t QueueFamily::flag_count() const
+{
+    constexpr uint32_t flags_to_count = 5;
+
+    uint32_t count = 0;
+    VkQueueFlags scratch = flags;
+
+    for (uint32_t i = 0; i < flags_to_count; ++i) {
+        count += scratch & 1;
+        scratch >>= 1;
+    }
+
+    return count;
+}
+
 } // namespace cu
