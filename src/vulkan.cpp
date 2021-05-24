@@ -21,6 +21,8 @@
 
 #include "vulkan.hpp"
 
+#include "log.hpp"
+
 #include "sdl.hpp"
 
 #include <stdexcept>
@@ -186,6 +188,7 @@ const std::array<VkResult, 26> vk_res_errs = {
 
 void Vulkan::vk_try(VkResult res, std::string oper)
 {
+    log.attempt("Vulkan: " + oper);
     for (auto res_err : vk_res_errs) {
         if (res == res_err) {
             throw std::runtime_error("could not "
@@ -194,6 +197,7 @@ void Vulkan::vk_try(VkResult res, std::string oper)
                                      + map_vk_result(res));
         }
     }
+    log.finish();
 }
 
 bool Vulkan::vkbool_to_bool(VkBool32 b)
@@ -203,6 +207,13 @@ bool Vulkan::vkbool_to_bool(VkBool32 b)
     } else {
         return false;
     }
+}
+
+std::string Vulkan::api_ver_to_str(uint32_t ver)
+{
+    return std::to_string(VK_VERSION_MAJOR(ver)) + "." +
+           std::to_string(VK_VERSION_MINOR(ver)) + "." +
+           std::to_string(VK_VERSION_PATCH(ver));
 }
 
 Vulkan::Vulkan(std::vector<const char*> exts,

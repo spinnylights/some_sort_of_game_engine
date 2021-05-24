@@ -21,6 +21,8 @@
 
 #include "queue_family.hpp"
 
+#include "log.hpp"
+
 #include "surface.hpp"
 #include "vulkan.hpp"
 
@@ -45,27 +47,27 @@ QueueFamily::QueueFamily(VkQueueFamilyProperties& q_family_props,
     flags = q_family_props.queueFlags;
 }
 
-bool QueueFamily::graphics()
+bool QueueFamily::graphics() const
 {
     return flags & VK_QUEUE_GRAPHICS_BIT;
 }
 
-bool QueueFamily::compute()
+bool QueueFamily::compute() const
 {
     return flags & VK_QUEUE_COMPUTE_BIT;
 }
 
-bool QueueFamily::transfer()
+bool QueueFamily::transfer() const
 {
     return flags & VK_QUEUE_TRANSFER_BIT;
 }
 
-bool QueueFamily::sparse_binding()
+bool QueueFamily::sparse_binding() const
 {
     return flags & VK_QUEUE_SPARSE_BINDING_BIT;
 }
 
-bool QueueFamily::protected_memory()
+bool QueueFamily::protected_memory() const
 {
     return flags & VK_QUEUE_PROTECTED_BIT;
 }
@@ -83,6 +85,24 @@ uint32_t QueueFamily::flag_count() const
     }
 
     return count;
+}
+
+void QueueFamily::log_info() const
+{
+    log.enter_obj({
+        .name = "queue family " + std::to_string(index()),
+        .members = {
+            {"graphics", std::to_string(graphics())},
+            {"compute", std::to_string(compute())},
+            {"transfer", std::to_string(transfer())},
+            {"sparse binding", std::to_string(sparse_binding())},
+            {"protected memory", std::to_string(protected_memory())},
+            {"present supported", std::to_string(present_supported())},
+            {"queue count", std::to_string(queue_count())},
+        }
+    });
+
+    log.brk();
 }
 
 } // namespace cu

@@ -37,17 +37,19 @@ public:
                 VkPhysicalDevice,
                 Surface&);
 
-    bool graphics();
-    bool compute();
-    bool transfer();
-    bool sparse_binding();
-    bool protected_memory();
+    bool graphics() const;
+    bool compute() const;
+    bool transfer() const;
+    bool sparse_binding() const;
+    bool protected_memory() const;
 
     uint32_t flag_count() const;
 
     uint32_t queue_count()       const { return queue_cnt; }
     uint32_t index()             const { return ndx; }
     bool     present_supported() const { return pres_support; }
+
+    void log_info() const;
 
 private:
     VkQueueFlags flags;

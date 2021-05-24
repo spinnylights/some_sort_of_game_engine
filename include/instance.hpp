@@ -37,7 +37,7 @@ public:
     Instance(const Instance&) = delete;
     Instance& operator=(const Instance&) = delete;
 
-    ~Instance();
+    ~Instance() noexcept;
 
     VkInstance inner() { return inst; }
 

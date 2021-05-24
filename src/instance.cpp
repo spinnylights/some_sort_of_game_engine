@@ -19,10 +19,14 @@
  * Copyright (c) 2021 Zoë Sparks <zoe@milky.flowers>
  */
 
-#include <stdexcept>
 
 #include "instance.hpp"
+
+#include "log.hpp"
+
 #include "vulkan.hpp"
+
+#include <stdexcept>
 
 namespace cu {
 
@@ -61,12 +65,20 @@ Instance::Instance(std::vector<const char*> exts,
         .ppEnabledExtensionNames = exts.data()
     };
 
-    Vulkan::vk_try(vkCreateInstance(&inst_inf, NULL, &inst), "create instance");
+    Vulkan::vk_try(vkCreateInstance(&inst_inf, NULL, &inst), "creating instance");
+
+    log.indent();
+    log.enter("instance layers", layers);
+    log.enter("instance extensions", exts);
+    log.brk();
 }
 
-Instance::~Instance()
+Instance::~Instance() noexcept
 {
+    log.attempt("Vulkan: destroying instance");
     vkDestroyInstance(inst, NULL);
+    log.finish();
+    log.brk();
 }
 
 } // namespace cu

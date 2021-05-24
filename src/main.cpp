@@ -19,10 +19,12 @@
  * Copyright (c) 2021 Zoë Sparks <zoe@milky.flowers>
  */
 
+#include "engine.hpp"
+
+#include "log.hpp"
+
 #include <string>
 #include <iostream>
-
-#include "engine.hpp"
 
 int main(int argc, char** argv)
 {
@@ -32,6 +34,7 @@ int main(int argc, char** argv)
                            "Play a game called Crypt Underworld.\n"
                            "\n"
                            "    -d, --debug    Enable debug output\n"
+                           "    -l, --log      Enable log output\n"
                            "    -h, --help     Print this message and exit\n";
 
     for (int i = 1; i < argc; ++i) {
@@ -42,6 +45,8 @@ int main(int argc, char** argv)
             return 0;
         } else if (arg == "-d" || arg == "--debug") {
             debug = true;
+        } else if (arg == "-l" || arg == "--log") {
+            cu::log.turn_on();
         } else {
             std::cout << "*** Option " << arg << " not recognized.\n\n"
                       << help_txt;

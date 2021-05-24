@@ -21,6 +21,8 @@
 
 #include "sdl.hpp"
 
+#include "log.hpp"
+
 #include "instance.hpp"
 
 #include <sstream>
@@ -28,31 +30,34 @@
 
 namespace cu {
 
+void inner_try(bool result, std::string oper)
+{
+    log.attempt("SDL: " + oper);
+    if (result) {
+        SDL::sdl_throw(oper);
+    }
+    log.finish();
+}
+
 void SDL::sdl_try(int result, std::string oper)
 {
-    if (result != 0) {
-        sdl_throw(oper);
-    }
+    inner_try(result != 0, oper);
 }
 
 void SDL::sdl_try(void* result, std::string oper)
 {
-    if (result == NULL) {
-        sdl_throw(oper);
-    }
+    inner_try(result == NULL, oper);
 }
 
 void SDL::sdl_try(SDL_bool result, std::string oper)
 {
-    if (result == SDL_FALSE) {
-        sdl_throw(oper);
-    }
+    inner_try(result == SDL_FALSE, oper);
 }
 
 void SDL::sdl_throw(std::string oper)
 {
     std::stringstream ss;
-    ss << "Unable to " << oper << ": " << SDL_GetError();
+    ss << "Failed at " << oper << ": " << SDL_GetError();
     throw std::runtime_error(ss.str());
 }
 
@@ -60,29 +65,54 @@ SDL_Window* create_window()
 {
     SDL_Window* win;
 
-    int width = 640;
-    int height = 480;
-    SDL::sdl_try(win = SDL_CreateWindow("Crypt Underworld",
-                                        SDL_WINDOWPOS_UNDEFINED,
-                                        SDL_WINDOWPOS_UNDEFINED,
+    const std::string title = "Crypt Underworld";
+    const auto x_pos = SDL_WINDOWPOS_UNDEFINED;
+    const auto y_pos = SDL_WINDOWPOS_UNDEFINED;
+    const int width = 640;
+    const int height = 480;
+    const auto flags = SDL_WINDOW_VULKAN;
+    SDL::sdl_try(win = SDL_CreateWindow(title.c_str(),
+                                        x_pos,
+                                        y_pos,
                                         width,
                                         height,
-                                        SDL_WINDOW_VULKAN),
-                 "create window");
+                                        flags),
+                 "creating window");
+
+    log.indent();
+    log.enter_obj({
+        .name = "Window",
+        .members = {
+            { "title", title },
+            { "x", std::to_string(x_pos) },
+            { "y", std::to_string(x_pos) },
+            { "width", std::to_string(width) },
+            { "height", std::to_string(height) },
+            { "flags", std::to_string(flags) },
+        }
+    });
+    log.brk();
 
     return win;
 }
 
 SDL::SDL()
 {
-    sdl_try(SDL_Init(SDL_INIT_VIDEO), "initialize SDL");
+    sdl_try(SDL_Init(SDL_INIT_VIDEO), "initializing SDL");
+    log.brk();
     win = create_window();
 }
 
 SDL::~SDL() noexcept
 {
+    log.attempt("SDL: destroying window");
     SDL_DestroyWindow(win);
+    log.finish();
+    log.brk();
+
+    log.attempt("SDL: quitting");
     SDL_Quit();
+    log.finish();
 }
 
 std::vector<const char*> SDL::get_req_vulk_exts() const
@@ -91,14 +121,22 @@ std::vector<const char*> SDL::get_req_vulk_exts() const
     sdl_try(SDL_Vulkan_GetInstanceExtensions(win,
                                              &cnt,
                                              NULL),
-            "get SDL-required Vulkan instance exts count");
+            "getting required Vulkan instance extensions count");
+
+    log.indent();
+    log.enter("required extensions count: " + std::to_string(cnt));
+    log.brk();
 
     std::vector<const char*> exts (cnt);
 
     sdl_try(SDL_Vulkan_GetInstanceExtensions(win,
                                              &cnt,
                                              exts.data()),
-            "get names of SDL-required Vulkan instance exts");
+            "getting names of required Vulkan instance extensions");
+
+    log.indent();
+    log.enter("required extensions", exts);
+    log.brk();
 
     return exts;
 }
@@ -106,7 +144,8 @@ std::vector<const char*> SDL::get_req_vulk_exts() const
 void SDL::create_surface(Instance& inst, VkSurfaceKHR* surf)
 {
     sdl_try(SDL_Vulkan_CreateSurface(win, inst.inner(), surf),
-            "create surface");
+            "creating surface");
+    log.brk();
 }
 
 } // namespace cu

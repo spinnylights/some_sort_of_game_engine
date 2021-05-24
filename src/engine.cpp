@@ -23,4 +23,20 @@
 
 namespace cu {
 
+std::vector<const char*> Engine::layers(bool debug)
+{
+    if (debug) {
+        return {"VK_LAYER_KHRONOS_validation"};
+    } else {
+        return {};
+    }
+}
+
+Engine::Engine(bool debug)
+    : sdl{},
+      vulk{sdl.get_req_vulk_exts(),
+           layers(debug),
+           sdl}
+{}
+
 } // namespace cu

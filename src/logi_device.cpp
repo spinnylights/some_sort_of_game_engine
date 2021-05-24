@@ -20,6 +20,9 @@
  */
 
 #include "logi_device.hpp"
+
+#include "log.hpp"
+
 #include "vulkan.hpp"
 
 #include <iostream>
@@ -93,11 +96,19 @@ LogiDevice::LogiDevice(PhysDevice& phys_dev)
 
     vkGetDeviceQueue(dev, graphics_ndx, 0, &graphics);
     vkGetDeviceQueue(dev, present_ndx, 0, &present);
+
+    log.indent();
+    log.enter("graphics queue index: " + std::to_string(graphics_ndx));
+    log.enter("present queue index: " + std::to_string(present_ndx));
+    log.brk();
 }
 
 LogiDevice::~LogiDevice()
 {
+    log.attempt("Vulkan: destroying logical device");
     vkDestroyDevice(dev, NULL);
+    log.finish();
+    log.brk();
 }
 
 } // namespace cu

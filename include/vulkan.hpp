@@ -38,6 +38,7 @@ class Vulkan {
 public:
     static void vk_try(VkResult, std::string oper);
     static bool vkbool_to_bool(VkBool32);
+    static std::string api_ver_to_str(uint32_t ver);
 
     Vulkan(std::vector<const char*> exts,
            std::vector<const char*> layers,

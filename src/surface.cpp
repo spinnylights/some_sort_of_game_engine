@@ -21,6 +21,8 @@
 
 #include "surface.hpp"
 
+#include "log.hpp"
+
 #include "sdl.hpp"
 #include "instance.hpp"
 
@@ -34,7 +36,10 @@ Surface::Surface(SDL& sdl, Instance& instance)
 
 Surface::~Surface() noexcept
 {
+    log.attempt("Vulkan: destroying surface");
     vkDestroySurfaceKHR(inst, surf, NULL);
+    log.finish();
+    log.brk();
 }
 
 } // namespace cu

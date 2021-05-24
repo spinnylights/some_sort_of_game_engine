@@ -29,21 +29,9 @@ namespace cu {
 
 class Engine {
 public:
-    static std::vector<const char*> layers(bool debug)
-    {
-        if (debug) {
-            return {"VK_LAYER_KHRONOS_validation"};
-        } else {
-            return {};
-        }
-    }
+    static std::vector<const char*> layers(bool debug);
 
-    Engine(bool debug = false)
-        : sdl{},
-          vulk{sdl.get_req_vulk_exts(),
-               layers(debug),
-               sdl}
-    {}
+    Engine(bool debug = false);
 
     Engine(Engine&&) = delete;
     Engine(const Engine&) = delete;
