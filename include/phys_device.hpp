@@ -32,11 +32,13 @@
 namespace cu {
 
 struct PhysDevice {
-    VkPhysicalDevice inner;
+    VkPhysicalDevice dev;
     std::string name;
     VkPhysicalDeviceType type;
     VkDeviceSize mem;
     std::vector<QueueFamily> queue_families;
+
+    VkPhysicalDevice inner() { return dev; }
 };
 
 } // namespace cu

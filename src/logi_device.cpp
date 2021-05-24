@@ -91,7 +91,7 @@ LogiDevice::LogiDevice(PhysDevice& phys_dev)
         .pEnabledFeatures = NULL,
     };
 
-    Vulkan::vk_try(vkCreateDevice(phys_dev.inner, &dev_info, NULL, &dev),
+    Vulkan::vk_try(vkCreateDevice(phys_dev.inner(), &dev_info, NULL, &dev),
                    "create logical device");
 
     vkGetDeviceQueue(dev, graphics_ndx, 0, &graphics);

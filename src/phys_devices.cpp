@@ -169,10 +169,10 @@ void PhysDevices::populate_devs(Instance& inst, Surface& surf)
         auto total_mem = calc_total_mem(mem_props);
 
         PhysDevice phys_dev {
-            .inner = potential_dev,
-            .name  = props.properties.deviceName,
-            .type  = props.properties.deviceType,
-            .mem   = total_mem
+            .dev  = potential_dev,
+            .name = props.properties.deviceName,
+            .type = props.properties.deviceType,
+            .mem  = total_mem
         };
 
         log_dev(props, total_mem);
