@@ -38,8 +38,7 @@ public:
 
     ~LogiDevice();
 
-    VkDevice inner()               { return dev; }
-    void     inner(VkDevice other) { dev = other; }
+    VkDevice inner() { return dev; }
 
 private:
     VkDevice dev;
