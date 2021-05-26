@@ -28,9 +28,11 @@
 
 namespace cu {
 
+class Instance;
+
 class LogiDevice {
 public:
-    LogiDevice(PhysDevice&);
+    LogiDevice(PhysDevice&, Instance&);
 
     LogiDevice(LogiDevice&&) = delete;
     LogiDevice(const LogiDevice&) = delete;
@@ -40,10 +42,17 @@ public:
 
     VkDevice inner() { return dev; }
 
+    PFN_vkVoidFunction get_proc_addr(const char* name);
+
 private:
     VkDevice dev;
     VkQueue graphics;
     VkQueue present;
+
+    PFN_vkCreateDevice create_dev;
+    PFN_vkGetDeviceQueue get_dev_queue;
+    PFN_vkGetDeviceProcAddr get_dev_proc_addr;
+    PFN_vkDestroyDevice destroy_dev;
 };
 
 } // namespace cu

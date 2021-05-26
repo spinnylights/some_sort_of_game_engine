@@ -31,17 +31,20 @@ namespace cu {
 QueueFamily::QueueFamily(VkQueueFamilyProperties& q_family_props,
                          uint32_t ndex,
                          VkPhysicalDevice dev,
-                         Surface& surf)
+                         Surface& surf,
+                         Instance& inst)
+    :get_surf_support{
+        reinterpret_cast<PFN_vkGetPhysicalDeviceSurfaceSupportKHR>(
+            inst.get_proc_addr("vkGetPhysicalDeviceSurfaceSupportKHR")
+        )
+     }
 {
     ndx = ndex;
 
     queue_cnt = q_family_props.queueCount;
 
     VkBool32 pres_supported;
-    vkGetPhysicalDeviceSurfaceSupportKHR(dev,
-                                         ndx,
-                                         surf.inner(),
-                                         &pres_supported);
+    get_surf_support(dev, ndx, surf.inner(), &pres_supported);
     pres_support = Vulkan::vkbool_to_bool(pres_supported);
 
     flags = q_family_props.queueFlags;

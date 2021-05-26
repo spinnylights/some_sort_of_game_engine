@@ -46,6 +46,18 @@ private:
 
     void populate_devs(Instance&, Surface&);
     void populate_default();
+    uint32_t get_dev_cnt(Instance& inst);
+    std::vector<VkPhysicalDevice> enumerate_devs(Instance& inst,
+                                                 uint32_t dev_cnt);
+    std::vector<VkQueueFamilyProperties>
+    get_queue_fam_props(VkPhysicalDevice& dev);
+    VkPhysicalDeviceProperties2 get_dev_props(VkPhysicalDevice& dev);
+    VkPhysicalDeviceMemoryProperties2 get_mem_props(VkPhysicalDevice& dev);
+
+    PFN_vkEnumeratePhysicalDevices enum_phys_devs;
+    PFN_vkGetPhysicalDeviceProperties2 get_phys_dev_props;
+    PFN_vkGetPhysicalDeviceMemoryProperties2 get_phys_dev_mem_props;
+    PFN_vkGetPhysicalDeviceQueueFamilyProperties get_phys_dev_queue_fam_props;
 };
 
 } // namespace cu

@@ -62,7 +62,12 @@ Instance::Instance(std::vector<const char*> exts,
                    std::vector<const char*> layers,
                    bool debug)
     :dbg{debug},
-     get_inst_proc_addr{SDL::get_get_inst_proc_addr()}
+     get_inst_proc_addr{SDL::get_get_inst_proc_addr()},
+     create_inst {
+         reinterpret_cast<PFN_vkCreateInstance>(
+             get_inst_proc_addr(NULL, "vkCreateInstance")
+         )
+     }
 {
     check_under_uint32(exts, "extensions");
     check_under_uint32(layers, "layers");
@@ -88,7 +93,13 @@ Instance::Instance(std::vector<const char*> exts,
         .ppEnabledExtensionNames = exts.data()
     };
 
-    Vulkan::vk_try(vkCreateInstance(&inst_inf, NULL, &inst), "creating instance");
+    Vulkan::vk_try(create_inst(&inst_inf, NULL, &inst), "creating instance");
+
+    destroy_inst = {
+        reinterpret_cast<PFN_vkDestroyInstance>(
+            get_proc_addr("vkDestroyInstance")
+        )
+    };
 
     log.indent();
     log.enter("instance layers", layers);
@@ -147,7 +158,7 @@ Instance::~Instance() noexcept
         log.brk();
     }
     log.attempt("Vulkan: destroying instance");
-    vkDestroyInstance(inst, NULL);
+    destroy_inst(inst, NULL);
     log.finish();
     log.brk();
 }

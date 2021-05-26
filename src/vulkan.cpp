@@ -223,7 +223,7 @@ Vulkan::Vulkan(std::vector<const char*> exts,
     : inst{exts, layers, debug},
       surf{sdl, inst},
       phys_devs{inst, surf},
-      logi_dev{phys_devs.default_device()}
+      logi_dev{phys_devs.default_device(), inst}
 {}
 
 } // namespace cu

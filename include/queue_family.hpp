@@ -29,13 +29,15 @@
 namespace cu {
 
 class Surface;
+class Instance;
 
 class QueueFamily {
 public:
     QueueFamily(VkQueueFamilyProperties&,
                 uint32_t ndex,
                 VkPhysicalDevice,
-                Surface&);
+                Surface&,
+                Instance&);
 
     bool graphics() const;
     bool compute() const;
@@ -56,6 +58,8 @@ private:
     uint32_t     queue_cnt;
     uint32_t     ndx;
     bool         pres_support;
+
+    PFN_vkGetPhysicalDeviceSurfaceSupportKHR get_surf_support;
 };
 
 } // namespace cu

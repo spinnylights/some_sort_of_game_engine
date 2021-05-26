@@ -31,10 +31,10 @@
 namespace cu {
 
 
-uint32_t get_dev_cnt(Instance& inst)
+uint32_t PhysDevices::get_dev_cnt(Instance& inst)
 {
     uint32_t dev_cnt;
-    Vulkan::vk_try(vkEnumeratePhysicalDevices(inst.inner(), &dev_cnt, NULL),
+    Vulkan::vk_try(enum_phys_devs(inst.inner(), &dev_cnt, NULL),
                    "getting physical device count");
     log.indent();
     log.enter("physical device count: " + std::to_string(dev_cnt));
@@ -43,33 +43,35 @@ uint32_t get_dev_cnt(Instance& inst)
     return dev_cnt;
 }
 
-std::vector<VkPhysicalDevice> enumerate_devs(Instance& inst, uint32_t dev_cnt)
+std::vector<VkPhysicalDevice> PhysDevices::enumerate_devs(Instance& inst,
+                                                          uint32_t dev_cnt)
 {
     std::vector<VkPhysicalDevice> potential_devs (dev_cnt);
-    Vulkan::vk_try(vkEnumeratePhysicalDevices(inst.inner(),
-                                              &dev_cnt,
-                                              potential_devs.data()),
+    Vulkan::vk_try(enum_phys_devs(inst.inner(),
+                                  &dev_cnt,
+                                  potential_devs.data()),
                    "enumerating physical devices");
 
     return potential_devs;
 }
 
-VkPhysicalDeviceProperties2 get_dev_props(VkPhysicalDevice& dev)
+VkPhysicalDeviceProperties2 PhysDevices::get_dev_props(VkPhysicalDevice& dev)
 {
     VkPhysicalDeviceProperties2 props = {
         .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2,
     };
-    vkGetPhysicalDeviceProperties2(dev, &props);
+    get_phys_dev_props(dev, &props);
 
     return props;
 }
 
-VkPhysicalDeviceMemoryProperties2 get_mem_props(VkPhysicalDevice& dev)
+VkPhysicalDeviceMemoryProperties2
+PhysDevices::get_mem_props(VkPhysicalDevice& dev)
 {
     VkPhysicalDeviceMemoryProperties2 mem_props = {
         .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PROPERTIES_2
     };
-    vkGetPhysicalDeviceMemoryProperties2(dev, &mem_props);
+    get_phys_dev_mem_props(dev, &mem_props);
 
     return mem_props;
 }
@@ -90,16 +92,13 @@ VkDeviceSize calc_total_mem(VkPhysicalDeviceMemoryProperties2& mem_props)
     return total_mem;
 }
 
-std::vector<VkQueueFamilyProperties> get_queue_fam_props(VkPhysicalDevice& dev)
+std::vector<VkQueueFamilyProperties>
+PhysDevices::get_queue_fam_props(VkPhysicalDevice& dev)
 {
     uint32_t q_family_cnt;
-    vkGetPhysicalDeviceQueueFamilyProperties(dev,
-                                             &q_family_cnt,
-                                             NULL);
+    get_phys_dev_queue_fam_props(dev, &q_family_cnt, NULL);
     std::vector<VkQueueFamilyProperties> q_family_props (q_family_cnt);
-    vkGetPhysicalDeviceQueueFamilyProperties(dev,
-                                             &q_family_cnt,
-                                             q_family_props.data());
+    get_phys_dev_queue_fam_props(dev, &q_family_cnt, q_family_props.data());
 
     return q_family_props;
 }
@@ -184,7 +183,8 @@ void PhysDevices::populate_devs(Instance& inst, Surface& surf)
                 q_family_props.at(i),
                 i,
                 potential_dev,
-                surf
+                surf,
+                inst
             };
             phys_dev.queue_families.push_back(fam);
 
@@ -232,6 +232,26 @@ void PhysDevices::populate_default()
 }
 
 PhysDevices::PhysDevices(Instance& inst, Surface& surf)
+    :enum_phys_devs{
+         reinterpret_cast<PFN_vkEnumeratePhysicalDevices>(
+             inst.get_proc_addr("vkEnumeratePhysicalDevices")
+         )
+     },
+     get_phys_dev_props{
+         reinterpret_cast<PFN_vkGetPhysicalDeviceProperties2>(
+             inst.get_proc_addr("vkGetPhysicalDeviceProperties2")
+         )
+     },
+     get_phys_dev_mem_props{
+         reinterpret_cast<PFN_vkGetPhysicalDeviceMemoryProperties2>(
+             inst.get_proc_addr("vkGetPhysicalDeviceMemoryProperties2")
+         )
+     },
+     get_phys_dev_queue_fam_props{
+         reinterpret_cast<PFN_vkGetPhysicalDeviceQueueFamilyProperties>(
+             inst.get_proc_addr("vkGetPhysicalDeviceQueueFamilyProperties")
+         )
+     }
 {
     populate_devs(inst, surf);
     populate_default();

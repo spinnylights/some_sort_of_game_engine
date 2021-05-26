@@ -44,6 +44,8 @@ public:
 private:
     VkSurfaceKHR surf;
     VkInstance inst;
+
+    PFN_vkDestroySurfaceKHR destroy_surf;
 };
 
 } // namespace cu

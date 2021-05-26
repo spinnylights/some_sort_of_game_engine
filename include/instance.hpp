@@ -52,6 +52,8 @@ private:
     VkDebugUtilsMessengerEXT dbg_msgr;
 
     PFN_vkGetInstanceProcAddr get_inst_proc_addr;
+    PFN_vkCreateInstance create_inst;
+    PFN_vkDestroyInstance destroy_inst;
     PFN_vkCreateDebugUtilsMessengerEXT create_dbg_msgr;
     PFN_vkDestroyDebugUtilsMessengerEXT destroy_dbg_msgr;
 };

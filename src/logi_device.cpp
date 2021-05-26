@@ -49,7 +49,18 @@ uint32_t pick_queue_ndx(PhysDevice& phys_dev,
     return ndx;
 }
 
-LogiDevice::LogiDevice(PhysDevice& phys_dev)
+LogiDevice::LogiDevice(PhysDevice& phys_dev, Instance& inst)
+    :create_dev {
+        reinterpret_cast<PFN_vkCreateDevice>(
+            inst.get_proc_addr("vkCreateDevice")
+        )
+     },
+     get_dev_proc_addr {
+         reinterpret_cast<PFN_vkGetDeviceProcAddr>(
+             inst.get_proc_addr("vkGetDeviceProcAddr")
+         )
+     }
+
 {
     uint32_t graphics_ndx = pick_queue_ndx(phys_dev,
                                            [](QueueFamily& q) {
@@ -91,11 +102,23 @@ LogiDevice::LogiDevice(PhysDevice& phys_dev)
         .pEnabledFeatures = NULL,
     };
 
-    Vulkan::vk_try(vkCreateDevice(phys_dev.inner(), &dev_info, NULL, &dev),
+    Vulkan::vk_try(create_dev(phys_dev.inner(), &dev_info, NULL, &dev),
                    "create logical device");
 
-    vkGetDeviceQueue(dev, graphics_ndx, 0, &graphics);
-    vkGetDeviceQueue(dev, present_ndx, 0, &present);
+    get_dev_queue = {
+        reinterpret_cast<PFN_vkGetDeviceQueue>(
+            get_proc_addr("vkGetDeviceQueue")
+        )
+    };
+
+    destroy_dev = {
+       reinterpret_cast<PFN_vkDestroyDevice>(
+           get_proc_addr("vkDestroyDevice")
+       )
+    };
+
+    get_dev_queue(dev, graphics_ndx, 0, &graphics);
+    get_dev_queue(dev, present_ndx, 0, &present);
 
     log.indent();
     log.enter("graphics queue index: " + std::to_string(graphics_ndx));
@@ -106,9 +129,14 @@ LogiDevice::LogiDevice(PhysDevice& phys_dev)
 LogiDevice::~LogiDevice()
 {
     log.attempt("Vulkan: destroying logical device");
-    vkDestroyDevice(dev, NULL);
+    destroy_dev(dev, NULL);
     log.finish();
     log.brk();
+}
+
+PFN_vkVoidFunction LogiDevice::get_proc_addr(const char* name)
+{
+    return get_dev_proc_addr(dev, name);
 }
 
 } // namespace cu

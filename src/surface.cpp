@@ -29,6 +29,11 @@
 namespace cu {
 
 Surface::Surface(SDL& sdl, Instance& instance)
+     :destroy_surf{
+         reinterpret_cast<PFN_vkDestroySurfaceKHR>(
+             instance.get_proc_addr("vkDestroySurfaceKHR")
+         )
+      }
 {
     sdl.create_surface(instance, &surf);
     inst = instance.inner();
@@ -37,7 +42,7 @@ Surface::Surface(SDL& sdl, Instance& instance)
 Surface::~Surface() noexcept
 {
     log.attempt("Vulkan: destroying surface");
-    vkDestroySurfaceKHR(inst, surf, NULL);
+    destroy_surf(inst, surf, NULL);
     log.finish();
     log.brk();
 }

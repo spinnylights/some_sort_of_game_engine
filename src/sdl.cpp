@@ -100,6 +100,10 @@ SDL::SDL()
 {
     sdl_try(SDL_Init(SDL_INIT_VIDEO), "initializing SDL");
     log.brk();
+
+    sdl_try(SDL_Vulkan_LoadLibrary(NULL), "loading Vulkan lib");
+    log.brk();
+
     win = create_window();
 }
 
