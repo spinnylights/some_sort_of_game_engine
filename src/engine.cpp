@@ -31,12 +31,23 @@ std::vector<const char*> Engine::layers(bool debug)
         return {};
     }
 }
+std::vector<const char*> Engine::extensions(bool debug)
+{
+    auto exts = sdl.get_req_vulk_exts();
+
+    if (debug) {
+        exts.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+    }
+
+    return exts;
+}
 
 Engine::Engine(bool debug)
     : sdl{},
-      vulk{sdl.get_req_vulk_exts(),
+      vulk{extensions(debug),
            layers(debug),
-           sdl}
+           sdl,
+           debug}
 {}
 
 } // namespace cu

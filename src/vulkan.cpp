@@ -218,8 +218,9 @@ std::string Vulkan::api_ver_to_str(uint32_t ver)
 
 Vulkan::Vulkan(std::vector<const char*> exts,
                std::vector<const char*> layers,
-               SDL& sdl)
-    : inst{exts, layers},
+               SDL& sdl,
+               bool debug)
+    : inst{exts, layers, debug},
       surf{sdl, inst},
       phys_devs{inst, surf},
       logi_dev{phys_devs.default_device()}

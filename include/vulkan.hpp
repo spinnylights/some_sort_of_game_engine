@@ -42,7 +42,8 @@ public:
 
     Vulkan(std::vector<const char*> exts,
            std::vector<const char*> layers,
-           SDL&);
+           SDL&,
+           bool debug = false);
 
     Vulkan(Vulkan&&) = delete;
     Vulkan(const Vulkan&) = delete;

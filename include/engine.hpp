@@ -39,6 +39,8 @@ public:
 
     ~Engine() = default;
 
+    std::vector<const char*> extensions(bool debug);
+
 private:
     SDL sdl;
     Vulkan vulk;

@@ -148,4 +148,10 @@ void SDL::create_surface(Instance& inst, VkSurfaceKHR* surf)
     log.brk();
 }
 
+PFN_vkGetInstanceProcAddr SDL::get_get_inst_proc_addr()
+{
+    return reinterpret_cast<PFN_vkGetInstanceProcAddr>(
+               SDL_Vulkan_GetVkGetInstanceProcAddr()
+           );
+}
 } // namespace cu

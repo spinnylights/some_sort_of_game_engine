@@ -40,6 +40,7 @@ public:
     static void sdl_try(void* result, std::string oper);
     static void sdl_try(SDL_bool result, std::string oper);
     static void sdl_throw(std::string oper);
+    static PFN_vkGetInstanceProcAddr get_get_inst_proc_addr();
 
     SDL();
 
