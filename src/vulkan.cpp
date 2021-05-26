@@ -197,7 +197,7 @@ void Vulkan::vk_try(VkResult res, std::string oper)
                                      + map_vk_result(res));
         }
     }
-    log.finish();
+    log.enter(map_vk_result(res));
 }
 
 bool Vulkan::vkbool_to_bool(VkBool32 b)
