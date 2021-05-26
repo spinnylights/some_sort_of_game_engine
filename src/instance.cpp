@@ -51,7 +51,7 @@ Instance::Instance(std::vector<const char*> exts,
         .applicationVersion = 0,
         .pEngineName = "Crypt Underworld",
         .engineVersion = 0,
-        .apiVersion = VK_MAKE_VERSION(2, 170, 0)
+        .apiVersion = VK_MAKE_API_VERSION(0, 1, 2, 0)
     };
 
     VkInstanceCreateInfo inst_inf = {
