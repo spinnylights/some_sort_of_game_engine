@@ -56,6 +56,8 @@ private:
     PFN_vkDestroyInstance destroy_inst;
     PFN_vkCreateDebugUtilsMessengerEXT create_dbg_msgr;
     PFN_vkDestroyDebugUtilsMessengerEXT destroy_dbg_msgr;
+
+    void setup_debug_utils();
 };
 
 } // namespace cu
