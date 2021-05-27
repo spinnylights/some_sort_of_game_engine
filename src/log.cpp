@@ -32,7 +32,32 @@ namespace cu {
 // global log
 Log log;
 
-std::string LoggableObjMember::str(std::string::size_type extra_spaces)
+void indent_str(std::string& str,
+                std::string::size_type indent_amt,
+                bool start_indent,
+                std::string indentation = " ")
+{
+    if (indent_amt > 0) {
+        bool insert = start_indent;
+        for (std::string::size_type i = 0; i < str.size(); ++i) {
+            if (insert) {
+                for (std::string::size_type j = 0;
+                     j < indent_amt;
+                     ++j) {
+                    str.insert(i, indentation);
+                }
+                insert = false;
+            }
+
+            if (str.at(i) == '\n' && i < str.size() - 1) {
+                insert = true;
+            }
+        }
+    }
+}
+
+std::string LoggableObjMember::str(std::string::size_type extra_spaces,
+                                   std::string::size_type pre_spaces)
 {
     std::string opening = name + spacer;
     const auto opening_len = opening.length();
@@ -42,7 +67,10 @@ std::string LoggableObjMember::str(std::string::size_type extra_spaces)
         for (std::string::size_type i = 0; i < space_cnt; ++i) {
             padding.push_back(' ');
         }
-     }
+    }
+    if (value.find("\n") != std::string::npos) {
+        indent_str(value, pre_spaces, false);
+    }
 
     return name + spacer + padding + value;
 }
@@ -80,10 +108,12 @@ std::string LoggableObj::str()
         for (std::vector<LoggableObjMember>::size_type i = 1;
              i < members.size() - 1;
              ++i) {
-            ss << indent << members.at(i).str(member_indent_spaces) << ",\n";
+            ss << indent << members.at(i).str(member_indent_spaces,
+                                              member_indent_spaces + opening.size()) << ",\n";
         }
 
-        ss << indent << members.back().str(member_indent_spaces) << " }\n";
+        ss << indent << members.back().str(member_indent_spaces,
+                                           member_indent_spaces + opening.size()) << " }\n";
     }
 
     return ss.str();
@@ -147,23 +177,7 @@ bool Log::append_newline(std::string& entry, bool newline) noexcept
 bool Log::indent_entry(std::string& entry) noexcept
 {
     try {
-        if (indent_amt > 0) {
-            bool insert = true;
-            for (std::string::size_type i = 0; i < entry.size(); ++i) {
-                if (insert) {
-                    for (std::string::size_type j = 0;
-                         j < indent_amt;
-                         ++j) {
-                        entry.insert(i, indentation);
-                    }
-                    insert = false;
-                }
-
-                if (entry.at(i) == '\n' && i < entry.size() - 1) {
-                    insert = true;
-                }
-            }
-        }
+        indent_str(entry, indent_amt, true, indentation);
     } catch(...) {
         safe_err("prepend indentation to entry");
         return false;

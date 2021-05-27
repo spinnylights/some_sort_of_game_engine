@@ -64,12 +64,24 @@ struct LoggableObjMember {
     std::string name;
     std::string value;
 
-    std::string str(std::string::size_type extra_spaces = 0);
+    std::string str(std::string::size_type extra_spaces = 0,
+                    std::string::size_type pre_spaces = 0);
 
     LoggableObjMember(std::string n, std::string v)
         :name{n},
          value{v}
     {}
+
+    LoggableObjMember(std::string n, std::vector<std::string> vs)
+        :name{n}
+    {
+        for (std::string::size_type i = 0;
+             i < vs.size() - 1;
+             ++i) {
+            value += vs.at(i) + "\n";
+        }
+        value += vs.back();
+    }
 
     template <typename T> LoggableObjMember(std::string n, T v)
         :name{n},
