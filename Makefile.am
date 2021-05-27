@@ -13,4 +13,5 @@ crypt_underworld_SOURCES = \
 	src/queue_family.cpp \
 	src/logi_device.cpp \
 	src/log.cpp \
+	src/swapchain.cpp \
 	src/engine.cpp

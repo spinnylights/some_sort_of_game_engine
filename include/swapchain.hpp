@@ -19,45 +19,40 @@
  * Copyright (c) 2021 Zoë Sparks <zoe@milky.flowers>
  */
 
-#ifndef q765e99c966249c6aa35adad25b72458
-#define q765e99c966249c6aa35adad25b72458
+#ifndef bfec49bf097c4235a5a04d7785daf8ff
+#define bfec49bf097c4235a5a04d7785daf8ff
+
+#include <vulkan/vulkan.h>
 
 #include <vector>
-#include <string>
-
-#include "instance.hpp"
-#include "surface.hpp"
-#include "phys_devices.hpp"
-#include "logi_device.hpp"
-#include "swapchain.hpp"
 
 namespace cu {
 
+class PhysDevice;
+class LogiDevice;
+class Surface;
+class Instance;
 class SDL;
 
-class Vulkan {
+class Swapchain {
 public:
-    static void vk_try(VkResult, std::string oper);
-    static bool vkbool_to_bool(VkBool32);
-    static std::string api_ver_to_str(uint32_t ver);
+    Swapchain(PhysDevice&, LogiDevice&, Surface&, SDL&);
 
-    Vulkan(std::vector<const char*> exts,
-           std::vector<const char*> layers,
-           SDL&,
-           bool debug = false);
+    Swapchain(Swapchain&&) = delete;
+    Swapchain(const Swapchain&) = delete;
+    Swapchain& operator=(const Swapchain&) = delete;
 
-    Vulkan(Vulkan&&) = delete;
-    Vulkan(const Vulkan&) = delete;
-    Vulkan& operator=(const Vulkan&) = delete;
-
-    ~Vulkan() = default;
+    ~Swapchain() noexcept;
 
 private:
-    Instance inst;
-    Surface surf;
-    PhysDevices phys_devs;
-    LogiDevice logi_dev;
-    Swapchain swch;
+    VkSwapchainKHR swch;
+    VkSwapchainKHR old_swch = VK_NULL_HANDLE;
+    VkDevice dev;
+    std::vector<VkImage> imgs;
+
+    PFN_vkCreateSwapchainKHR create_swch;
+    PFN_vkGetSwapchainImagesKHR get_swch_imgs;
+    PFN_vkDestroySwapchainKHR destroy_swch;
 };
 
 } // namespace cu

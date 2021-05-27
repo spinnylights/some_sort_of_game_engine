@@ -89,6 +89,8 @@ LogiDevice::LogiDevice(PhysDevice& phys_dev, Instance& inst)
         });
     }
 
+    const char* const ext_names[] = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
+
     VkDeviceCreateInfo dev_info = {
         .sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
         .pNext = NULL,
@@ -97,8 +99,8 @@ LogiDevice::LogiDevice(PhysDevice& phys_dev, Instance& inst)
         .pQueueCreateInfos = queue_infos.data(),
         .enabledLayerCount = 0,
         .ppEnabledLayerNames = NULL,
-        .enabledExtensionCount = 0,
-        .ppEnabledExtensionNames = NULL,
+        .enabledExtensionCount = 1,
+        .ppEnabledExtensionNames = ext_names,
         .pEnabledFeatures = NULL,
     };
 
