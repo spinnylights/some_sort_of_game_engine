@@ -27,6 +27,8 @@
 
 namespace cu {
 
+// TODO: Formatter class? could also be run in the other thread
+
 // global log
 Log log;
 
@@ -212,7 +214,7 @@ void Log::enter_async(std::string entry, bool newline) noexcept
 void write_entry(std::string entry) noexcept
 {
     try {
-        std::cout << entry;
+        std::cout << entry << std::flush;
     } catch(...) {
         safe_err("write log message due to stream state");
     }
