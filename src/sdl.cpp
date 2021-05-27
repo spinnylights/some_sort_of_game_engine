@@ -152,10 +152,28 @@ void SDL::create_surface(Instance& inst, VkSurfaceKHR* surf)
     log.brk();
 }
 
+WinSize SDL::get_win_size()
+{
+    WinSize size;
+
+    log.attempt("SDL: getting drawable dimensions of window");
+    SDL_Vulkan_GetDrawableSize(win, &size.width, &size.height);
+    log.finish();
+
+    log.indent();
+    log.enter("width: " + std::to_string(size.width));
+    log.enter("height: " + std::to_string(size.height));
+
+    log.brk();
+
+    return size;
+}
+
 PFN_vkGetInstanceProcAddr SDL::get_get_inst_proc_addr()
 {
     return reinterpret_cast<PFN_vkGetInstanceProcAddr>(
                SDL_Vulkan_GetVkGetInstanceProcAddr()
            );
 }
+
 } // namespace cu

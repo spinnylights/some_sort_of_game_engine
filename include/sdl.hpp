@@ -34,6 +34,11 @@ namespace cu {
 
 class Instance;
 
+struct WinSize {
+    int width;
+    int height;
+};
+
 class SDL {
 public:
     static void sdl_try(int result, std::string oper);
@@ -53,6 +58,8 @@ public:
     std::vector<const char*> get_req_vulk_exts() const;
 
     void create_surface(Instance&, VkSurfaceKHR*);
+
+    WinSize get_win_size();
 
 private:
     SDL_Window* win;
