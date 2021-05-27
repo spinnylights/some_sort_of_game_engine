@@ -25,15 +25,21 @@
 
 #include "sdl.hpp"
 #include "instance.hpp"
+#include "phys_device.hpp"
 
 namespace cu {
 
 Surface::Surface(SDL& sdl, Instance& instance)
-     :destroy_surf{
+    :get_surf_caps{
+         reinterpret_cast<PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR>(
+             instance.get_proc_addr("vkGetPhysicalDeviceSurfaceCapabilitiesKHR")
+         )
+     },
+     destroy_surf{
          reinterpret_cast<PFN_vkDestroySurfaceKHR>(
              instance.get_proc_addr("vkDestroySurfaceKHR")
          )
-      }
+     }
 {
     sdl.create_surface(instance, &surf);
     inst = instance.inner();
@@ -45,6 +51,15 @@ Surface::~Surface() noexcept
     destroy_surf(inst, surf, NULL);
     log.finish();
     log.brk();
+}
+
+VkSurfaceCapabilitiesKHR Surface::capabilities(PhysDevice& dev)
+{
+    VkSurfaceCapabilitiesKHR caps;
+
+    get_surf_caps(dev.inner(), surf, &caps);
+
+    return caps;
 }
 
 } // namespace cu

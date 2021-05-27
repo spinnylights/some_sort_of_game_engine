@@ -28,6 +28,7 @@ namespace cu {
 
 class SDL;
 class Instance;
+class PhysDevice;
 
 class Surface {
 public:
@@ -41,10 +42,13 @@ public:
 
     VkSurfaceKHR inner() { return surf; }
 
+    VkSurfaceCapabilitiesKHR capabilities(PhysDevice&);
+
 private:
     VkSurfaceKHR surf;
     VkInstance inst;
 
+    PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR get_surf_caps;
     PFN_vkDestroySurfaceKHR destroy_surf;
 };
 
