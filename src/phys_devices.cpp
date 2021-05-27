@@ -172,6 +172,8 @@ void PhysDevices::populate_devs(Instance& inst, Surface& surf)
 
         auto q_family_props = get_queue_fam_props(potential_dev);
 
+        bool supports_graphics = false;
+        bool supports_present = false;
         for (uint32_t i = 0; i < q_family_props.size(); ++i) {
             QueueFamily fam = {
                 q_family_props.at(i),
@@ -180,13 +182,24 @@ void PhysDevices::populate_devs(Instance& inst, Surface& surf)
                 surf,
                 inst
             };
+
+            if (fam.graphics()) {
+                supports_graphics = true;
+            }
+
+            if (fam.present_supported()) {
+                supports_present = true;
+            }
+
             phys_dev.queue_families.push_back(fam);
 
             log.indent(2);
             fam.log_info();
         }
 
-        devs.push_back(phys_dev);
+        if (supports_graphics && supports_present) {
+            devs.push_back(phys_dev);
+        }
     }
 
     log.brk();
