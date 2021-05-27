@@ -96,6 +96,8 @@ public:
     void brk() noexcept;
     void turn_on() noexcept;
     void turn_off() noexcept;
+    void async_on();
+    void async_off();
 
 private:
     std::mutex msgs_mutex;
@@ -103,11 +105,18 @@ private:
     std::string::size_type indent_amt = 0;
     bool on = false;
     bool stopped = false;
+    bool async = false;
 
     void wait_to_empty() noexcept;
     void empty_queue() noexcept;
 
     guarded_thread emptier;
+
+    bool append_newline(std::string& entry, bool newline) noexcept;
+    bool indent_entry(std::string& entry) noexcept;
+    bool format_entry(std::string& entry, bool newline) noexcept;
+    void enter_sync(std::string entry, bool newline) noexcept;
+    void enter_async(std::string entry, bool newline) noexcept;
 };
 
 // global log

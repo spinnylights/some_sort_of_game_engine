@@ -88,9 +88,7 @@ std::string LoggableObj::str()
 }
 
 Log::Log()
-{
-    emptier = guarded_thread {std::thread{&Log::wait_to_empty, this}};
-}
+{}
 
 Log::~Log() noexcept
 {
@@ -107,64 +105,136 @@ void Log::turn_off() noexcept
     on = false;
 }
 
+void Log::async_on()
+{
+    if (!async) {
+        emptier = guarded_thread {std::thread{&Log::wait_to_empty, this}};
+        async = true;
+    }
+}
+
+void Log::async_off()
+{
+    if (async) {
+        auto stopped_memo = stopped;
+
+        // TODO: this would be better handled in a destructor
+        // (i.e. an Emptier class)
+        stopped = true;
+        emptier.join();
+
+        async = false;
+        stopped = stopped_memo;
+    }
+}
+
 void safe_err(const char* oper) noexcept
 {
     fprintf(stderr, "*** could not %s! discarding entry...\n", oper);
 }
 
+bool Log::append_newline(std::string& entry, bool newline) noexcept
+{
+    try {
+        if (newline) {
+            entry += "\n";
+        }
+    } catch(...) {
+        safe_err("append newline to entry");
+        return false;
+    }
+
+    return true;
+}
+
+bool Log::indent_entry(std::string& entry) noexcept
+{
+    try {
+        if (indent_amt > 0) {
+            bool insert = true;
+            for (std::string::size_type i = 0; i < entry.size(); ++i) {
+                if (insert) {
+                    for (std::string::size_type j = 0;
+                         j < indent_amt;
+                         ++j) {
+                        entry.insert(i, indentation);
+                    }
+                    insert = false;
+                }
+
+                if (entry.at(i) == '\n' && i < entry.size() - 1) {
+                    insert = true;
+                }
+            }
+        }
+    } catch(...) {
+        safe_err("prepend indentation to entry");
+        return false;
+    }
+
+    return true;
+}
+
+bool Log::format_entry(std::string& entry, bool newline) noexcept
+{
+    if (!indent_entry(entry) || !append_newline(entry, newline)) {
+        return false;
+    }
+
+     return true;
+}
+
+void Log::enter_async(std::string entry, bool newline) noexcept
+{
+    try {
+        msgs_mutex.lock();
+    } catch(...) {
+        safe_err("lock msgs mutex for log entry");
+        return;
+    }
+
+    if (!format_entry(entry, newline)) {
+        msgs_mutex.unlock();
+        return;
+    }
+
+    try {
+        msgs.push_back(entry);
+    } catch(...) {
+        msgs_mutex.unlock();
+        safe_err("push log entry onto queue");
+        return;
+    }
+
+    msgs_mutex.unlock();
+}
+
+void write_entry(std::string entry) noexcept
+{
+    try {
+        std::cout << entry;
+    } catch(...) {
+        safe_err("write log message due to stream state");
+    }
+}
+
+void Log::enter_sync(std::string entry, bool newline) noexcept
+{
+    if (!format_entry(entry, newline)) {
+        return;
+    }
+
+    write_entry(entry);
+}
+
 void Log::enter(std::string entry, bool newline) noexcept
 {
     if (on && !entry.empty()) {
-        try {
-            msgs_mutex.lock();
-        } catch(...) {
-            safe_err("lock msgs mutex for log entry");
-            return;
+        if (async) {
+            enter_async(entry, newline);
+        } else {
+            enter_sync(entry, newline);
         }
-
-        try {
-            if (indent_amt > 0) {
-                bool insert = true;
-                for (std::string::size_type i = 0; i < entry.size(); ++i) {
-                    if (insert) {
-                        for (std::string::size_type j = 0;
-                             j < indent_amt;
-                             ++j) {
-                            entry.insert(i, indentation);
-                        }
-                        insert = false;
-                    }
-
-                    if (entry.at(i) == '\n' && i < entry.size() - 1) {
-                        insert = true;
-                    }
-                }
-            }
-        } catch(...) {
-            msgs_mutex.unlock();
-            safe_err("prepend indentation to entry");
-            return;
-        }
-
-        try {
-            if (newline) {
-                entry += "\n";
-            }
-        } catch(...) {
-            msgs_mutex.unlock();
-            safe_err("append newline to entry");
-            return;
-        }
-
-        try {
-            msgs.push_back(entry);
-        } catch(...) {
-            msgs_mutex.unlock();
-            safe_err("push log entry onto queue");
-            return;
-        }
-
-        msgs_mutex.unlock();
     }
 }
 
@@ -247,12 +317,7 @@ void Log::empty_queue() noexcept
     }
 
     while (!msgs.empty()) {
-        try {
-            std::cout << msgs.front();
-        } catch(...) {
-            fprintf(stderr, "*** could not write log message due to stream "
-                            "state!");
-        }
+        write_entry(msgs.front());
         msgs.pop_front();
     }
 

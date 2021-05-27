@@ -33,9 +33,10 @@ int main(int argc, char** argv)
     std::string help_txt = "Usage: crypt_underworld [OPTION]...\n"
                            "Play a game called Crypt Underworld.\n"
                            "\n"
-                           "    -d, --debug    Enable debug output\n"
-                           "    -l, --log      Enable log output\n"
-                           "    -h, --help     Print this message and exit\n";
+                           "    -d, --debug     Enable debug output\n"
+                           "    -l, --log       Enable log output\n"
+                           "    -a, --async-log Log messages asynchronously\n"
+                           "    -h, --help      Print this message and exit\n";
 
     for (int i = 1; i < argc; ++i) {
         std::string arg {argv[i]};
@@ -47,6 +48,8 @@ int main(int argc, char** argv)
             debug = true;
         } else if (arg == "-l" || arg == "--log") {
             cu::log.turn_on();
+        } else if (arg == "-a" || arg == "--async-log") {
+            cu::log.async_on();
         } else {
             std::cout << "*** Option " << arg << " not recognized.\n\n"
                       << help_txt;
