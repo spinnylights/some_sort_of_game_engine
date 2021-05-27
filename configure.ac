@@ -13,8 +13,6 @@ AC_CONFIG_MACRO_DIR([m4])
 
 AC_CONFIG_SRCDIR([src/main.cpp])
 
-AM_INIT_AUTOMAKE([-Wall -Werror subdir-objects foreign])
-
 AC_PROG_CXX
 
 AX_CXX_COMPILE_STDCXX20
@@ -32,6 +30,11 @@ AC_CHECK_HEADERS([vulkan/vulkan.h, vulkan/vulkan_core.h],
                  [pname_found_vulkan_headers=yes; break;])
 AS_IF([test "x$pname_found_vulkan_headers" != "xyes"],
       [AC_MSG_ERROR([Unable to find the Vulkan headers])])
+
+dnl Check for pthreads
+AX_PTHREAD
+
+AM_INIT_AUTOMAKE([subdir-objects foreign])
 
 AC_CONFIG_FILES([Makefile])
 

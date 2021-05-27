@@ -1,7 +1,8 @@
 bin_PROGRAMS = crypt_underworld
 
-crypt_underworld_CPPFLAGS = -I$(top_srcdir)/include -Wall -Werror
-crypt_underworld_LDADD = -lpthread $(crypt_underworld_LIBS)
+crypt_underworld_CXXFLAGS = -I$(top_srcdir)/include $(PTHREAD_CFLAGS)
+crypt_underworld_LDADD = $(PTHREAD_LIBS)
+crypt_underworld_CXX = $(PTHREAD_CXX)
 crypt_underworld_SOURCES = \
 	src/main.cpp \
 	src/sdl.cpp \

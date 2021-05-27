@@ -1,7 +1,9 @@
 Makefile.in
-config.status
 Makefile
+config.status
 config.log
+config.guess
+config.sub
 compile
 .deps
 .dirstamp
