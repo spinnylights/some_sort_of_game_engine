@@ -37,7 +37,7 @@ uint32_t PhysDevices::get_dev_cnt(Instance& inst)
     Vulkan::vk_try(enum_phys_devs(inst.inner(), &dev_cnt, NULL),
                    "getting physical device count");
     log.indent();
-    log.enter("physical device count", std::to_string(dev_cnt));
+    log.enter("physical device count", dev_cnt);
     log.brk();
 
     return dev_cnt;
@@ -111,10 +111,10 @@ void log_dev(VkPhysicalDeviceProperties2& props, VkDeviceSize total_mem)
             {"api version",
                 Vulkan::api_ver_to_str(props.properties.apiVersion)},
             {"driver version",
-                std::to_string(props.properties.driverVersion)},
-            {"vendor ID", std::to_string(props.properties.vendorID)},
-            {"device ID", std::to_string(props.properties.deviceID)},
-            {"device type", std::to_string(props.properties.deviceType)},
+                props.properties.driverVersion},
+            {"vendor ID", props.properties.vendorID},
+            {"device ID", props.properties.deviceID},
+            {"device type", props.properties.deviceType},
             {"video memory", std::to_string(total_mem) + " bytes"},
         }
     });
@@ -128,11 +128,11 @@ void log_queue_fam(VkQueueFamilyProperties& q_fam_props, uint32_t ndx)
     log.enter_obj({
         .name = "queue family " + std::to_string(ndx),
         .members {
-            {"flags", std::to_string(q_fam_props.queueFlags)},
+            {"flags", q_fam_props.queueFlags},
             {"queue count",
-                std::to_string(q_fam_props.queueCount)},
+                q_fam_props.queueCount},
             {"timestamp valid bits",
-                std::to_string(q_fam_props.timestampValidBits)},
+                q_fam_props.timestampValidBits},
         }
     });
     log.brk();
@@ -141,15 +141,9 @@ void log_queue_fam(VkQueueFamilyProperties& q_fam_props, uint32_t ndx)
     log.enter_obj({
         .name = "min. img. transfer granularity",
         .members {
-            {"width", std::to_string(q_fam_props
-                                     .minImageTransferGranularity
-                                     .width)},
-            {"height", std::to_string(q_fam_props
-                                     .minImageTransferGranularity
-                                     .height)},
-            {"depth", std::to_string(q_fam_props
-                                     .minImageTransferGranularity
-                                     .depth)},
+            {"width", q_fam_props.minImageTransferGranularity.width},
+            {"height", q_fam_props.minImageTransferGranularity.height},
+            {"depth", q_fam_props.minImageTransferGranularity.depth},
         }
     });
     log.brk();
@@ -227,7 +221,7 @@ void PhysDevices::populate_default()
         default_dev = ndx;
     }
 
-    log.enter("default phys. device", std::to_string(default_dev));
+    log.enter("default phys. device", default_dev);
     log.brk();
 }
 

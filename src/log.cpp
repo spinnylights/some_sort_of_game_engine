@@ -130,11 +130,6 @@ void Log::async_off()
     }
 }
 
-void safe_err(const char* oper) noexcept
-{
-    fprintf(stderr, "*** could not %s! discarding entry...\n", oper);
-}
-
 bool Log::append_newline(std::string& entry, bool newline) noexcept
 {
     try {
@@ -211,7 +206,7 @@ void Log::enter_async(std::string entry, bool newline) noexcept
     msgs_mutex.unlock();
 }
 
-void write_entry(std::string entry) noexcept
+void Log::write_entry(std::string entry) noexcept
 {
     try {
         std::cout << entry << std::flush;

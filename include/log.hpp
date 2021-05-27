@@ -65,6 +65,16 @@ struct LoggableObjMember {
     std::string value;
 
     std::string str(std::string::size_type extra_spaces = 0);
+
+    LoggableObjMember(std::string n, std::string v)
+        :name{n},
+         value{v}
+    {}
+
+    template <typename T> LoggableObjMember(std::string n, T v)
+        :name{n},
+         value{std::to_string(v)}
+    {}
 };
 
 struct LoggableObj {
@@ -88,6 +98,10 @@ public:
 
     void enter(std::string entry, bool newline=true) noexcept;
     void enter(std::string name, std::vector<const char*>& entries) noexcept;
+    template <typename T> void enter(std::string obj, T attr) noexcept
+    {
+        enter(obj, std::to_string(attr));
+    }
     void enter(std::string obj, std::string attr) noexcept;
     void enter_obj(LoggableObj&& obj) noexcept;
     void attempt(std::string entry) noexcept;
@@ -119,6 +133,12 @@ private:
     bool format_entry(std::string& entry, bool newline) noexcept;
     void enter_sync(std::string entry, bool newline) noexcept;
     void enter_async(std::string entry, bool newline) noexcept;
+    void write_entry(std::string entry) noexcept;
+
+    void safe_err(const char* oper) noexcept
+    {
+        fprintf(stderr, "*** could not %s! discarding entry...\n", oper);
+    }
 };
 
 // global log

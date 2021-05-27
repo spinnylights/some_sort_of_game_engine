@@ -95,13 +95,13 @@ void QueueFamily::log_info() const
     log.enter_obj({
         .name = "queue family " + std::to_string(index()),
         .members = {
-            {"graphics", std::to_string(graphics())},
-            {"compute", std::to_string(compute())},
-            {"transfer", std::to_string(transfer())},
-            {"sparse binding", std::to_string(sparse_binding())},
-            {"protected memory", std::to_string(protected_memory())},
-            {"present supported", std::to_string(present_supported())},
-            {"queue count", std::to_string(queue_count())},
+            {"graphics", graphics()},
+            {"compute", compute()},
+            {"transfer", transfer()},
+            {"sparse binding", sparse_binding()},
+            {"protected memory", protected_memory()},
+            {"present supported", present_supported()},
+            {"queue count", queue_count()},
         }
     });
 

@@ -123,8 +123,8 @@ LogiDevice::LogiDevice(PhysDevice& phys_dev, Instance& inst)
     get_dev_queue(dev, present_ndx, 0, &present);
 
     log.indent();
-    log.enter("graphics queue index", std::to_string(graphics_ndx));
-    log.enter("present queue index", std::to_string(present_ndx));
+    log.enter("graphics queue index", graphics_ndx);
+    log.enter("present queue index", present_ndx);
     log.brk();
 }
 

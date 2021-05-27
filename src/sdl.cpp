@@ -84,11 +84,11 @@ SDL_Window* create_window()
         .name = "Window",
         .members = {
             { "title", title },
-            { "x", std::to_string(x_pos) },
-            { "y", std::to_string(x_pos) },
-            { "width", std::to_string(width) },
-            { "height", std::to_string(height) },
-            { "flags", std::to_string(flags) },
+            { "x", x_pos },
+            { "y", x_pos },
+            { "width", width },
+            { "height", height },
+            { "flags", flags },
         }
     });
     log.brk();
@@ -128,7 +128,7 @@ std::vector<const char*> SDL::get_req_vulk_exts() const
             "getting required Vulkan instance extensions count");
 
     log.indent();
-    log.enter("required extensions count", std::to_string(cnt));
+    log.enter("required extensions count", cnt);
     log.brk();
 
     std::vector<const char*> exts (cnt);
@@ -161,8 +161,8 @@ WinSize SDL::get_win_size()
     log.finish();
 
     log.indent();
-    log.enter("width", std::to_string(size.width));
-    log.enter("height", std::to_string(size.height));
+    log.enter("width", size.width);
+    log.enter("height", size.height);
 
     log.brk();
 
