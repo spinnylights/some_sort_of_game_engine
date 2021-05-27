@@ -128,7 +128,7 @@ LogiDevice::LogiDevice(PhysDevice& phys_dev, Instance& inst)
     log.brk();
 }
 
-LogiDevice::~LogiDevice()
+LogiDevice::~LogiDevice() noexcept
 {
     log.attempt("Vulkan", "destroying logical device");
     destroy_dev(dev, NULL);

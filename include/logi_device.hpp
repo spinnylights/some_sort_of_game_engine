@@ -38,7 +38,7 @@ public:
     LogiDevice(const LogiDevice&) = delete;
     LogiDevice& operator=(const LogiDevice&) = delete;
 
-    ~LogiDevice();
+    ~LogiDevice() noexcept;
 
     VkDevice inner() { return dev; }
 
