@@ -19,33 +19,34 @@
  * Copyright (c) 2021 Zoë Sparks <zoe@milky.flowers>
  */
 
-#include "engine.hpp"
+#ifndef oe57235954a14256abd94ca26648c94e
+#define oe57235954a14256abd94ca26648c94e
 
-#include "log.hpp"
-
-#include "cli.hpp"
-
+#include <vector>
 #include <string>
-#include <iostream>
 
-int main(int argc, char** argv)
-{
-    cu::CLI cli {argc, argv};
+namespace cu {
 
-    if (cli.help()) {
-        std::cout << cli.output();
-        return cli.status();
-    }
+class CLI {
+public:
+    CLI(int argc, char** argv);
 
-    if (cli.log()) {
-        cu::log.turn_on();
-    }
+    std::string output() const { return outpt; }
+    int status() const { return stat; }
+    bool log() const { return lg; };
+    bool debug() const { return debg; }
+    bool async_log() const { return async_lg; }
+    bool help() const { return hlp; }
 
-    if (cli.async_log()) {
-        cu::log.async_on();
-    }
+private:
+    std::string outpt;
+    int stat = 0;
+    bool lg = false;
+    bool debg = false;
+    bool async_lg = false;
+    bool hlp = false;
+};
 
-    cu::Engine e {cli.debug()};
+} // namespace cu
 
-    return 0;
-}
+#endif
