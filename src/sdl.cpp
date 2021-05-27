@@ -32,7 +32,7 @@ namespace cu {
 
 void inner_try(bool result, std::string oper)
 {
-    log.attempt("SDL: " + oper);
+    log.attempt("SDL", oper);
     if (result) {
         SDL::sdl_throw(oper);
     }
@@ -109,12 +109,12 @@ SDL::SDL()
 
 SDL::~SDL() noexcept
 {
-    log.attempt("SDL: destroying window");
+    log.attempt("SDL", "destroying window");
     SDL_DestroyWindow(win);
     log.finish();
     log.brk();
 
-    log.attempt("SDL: quitting");
+    log.attempt("SDL", "quitting");
     SDL_Quit();
     log.finish();
 }
@@ -128,7 +128,7 @@ std::vector<const char*> SDL::get_req_vulk_exts() const
             "getting required Vulkan instance extensions count");
 
     log.indent();
-    log.enter("required extensions count: " + std::to_string(cnt));
+    log.enter("required extensions count", std::to_string(cnt));
     log.brk();
 
     std::vector<const char*> exts (cnt);
@@ -156,13 +156,13 @@ WinSize SDL::get_win_size()
 {
     WinSize size;
 
-    log.attempt("SDL: getting drawable dimensions of window");
+    log.attempt("SDL", "getting drawable dimensions of window");
     SDL_Vulkan_GetDrawableSize(win, &size.width, &size.height);
     log.finish();
 
     log.indent();
-    log.enter("width: " + std::to_string(size.width));
-    log.enter("height: " + std::to_string(size.height));
+    log.enter("width", std::to_string(size.width));
+    log.enter("height", std::to_string(size.height));
 
     log.brk();
 

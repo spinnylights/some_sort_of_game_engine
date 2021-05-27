@@ -88,8 +88,10 @@ public:
 
     void enter(std::string entry, bool newline=true) noexcept;
     void enter(std::string name, std::vector<const char*>& entries) noexcept;
+    void enter(std::string obj, std::string attr) noexcept;
     void enter_obj(LoggableObj&& obj) noexcept;
     void attempt(std::string entry) noexcept;
+    void attempt(std::string domain, std::string entry) noexcept;
     void indent() noexcept;
     void indent(std::string::size_type amt) noexcept;
     void finish() noexcept;

@@ -47,7 +47,7 @@ Surface::Surface(SDL& sdl, Instance& instance)
 
 Surface::~Surface() noexcept
 {
-    log.attempt("Vulkan: destroying surface");
+    log.attempt("Vulkan", "destroying surface");
     destroy_surf(inst, surf, NULL);
     log.finish();
     log.brk();

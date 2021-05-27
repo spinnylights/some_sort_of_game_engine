@@ -123,14 +123,14 @@ LogiDevice::LogiDevice(PhysDevice& phys_dev, Instance& inst)
     get_dev_queue(dev, present_ndx, 0, &present);
 
     log.indent();
-    log.enter("graphics queue index: " + std::to_string(graphics_ndx));
-    log.enter("present queue index: " + std::to_string(present_ndx));
+    log.enter("graphics queue index", std::to_string(graphics_ndx));
+    log.enter("present queue index", std::to_string(present_ndx));
     log.brk();
 }
 
 LogiDevice::~LogiDevice()
 {
-    log.attempt("Vulkan: destroying logical device");
+    log.attempt("Vulkan", "destroying logical device");
     destroy_dev(dev, NULL);
     log.finish();
     log.brk();

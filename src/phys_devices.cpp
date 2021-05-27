@@ -37,7 +37,7 @@ uint32_t PhysDevices::get_dev_cnt(Instance& inst)
     Vulkan::vk_try(enum_phys_devs(inst.inner(), &dev_cnt, NULL),
                    "getting physical device count");
     log.indent();
-    log.enter("physical device count: " + std::to_string(dev_cnt));
+    log.enter("physical device count", std::to_string(dev_cnt));
     log.brk();
 
     return dev_cnt;
@@ -227,7 +227,7 @@ void PhysDevices::populate_default()
         default_dev = ndx;
     }
 
-    log.enter("default phys. device: " + std::to_string(default_dev));
+    log.enter("default phys. device", std::to_string(default_dev));
     log.brk();
 }
 

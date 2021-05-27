@@ -264,6 +264,13 @@ void Log::enter(std::string name, std::vector<const char*>& entries) noexcept
     }
 }
 
+void Log::enter(std::string obj, std::string attr) noexcept
+{
+    if (on) {
+        enter(obj + ": " + attr);
+    }
+}
+
 void Log::enter_obj(LoggableObj&& obj) noexcept
 {
     if (on) {
@@ -277,7 +284,16 @@ void Log::enter_obj(LoggableObj&& obj) noexcept
 
 void Log::attempt(std::string entry) noexcept
 {
-    enter(entry + "...", false);
+    if (on) {
+        enter(entry + "...", false);
+    }
+}
+
+void Log::attempt(std::string domain, std::string entry) noexcept
+{
+    if (on) {
+        attempt(domain + ": " + entry);
+    }
 }
 
 void Log::indent() noexcept

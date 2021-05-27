@@ -47,7 +47,7 @@ debug_callback(VkDebugUtilsMessageSeverityFlagBitsEXT msg_severity,
                const VkDebugUtilsMessengerCallbackDataEXT* callback_data,
                void* user_data)
 {
-    log.enter("Vulkan (validations): " + std::string{callback_data->pMessage});
+    log.enter("Vulkan (validations)", std::string{callback_data->pMessage});
     log.brk();
 
     return VK_FALSE;
@@ -152,12 +152,12 @@ Instance::Instance(std::vector<const char*> exts,
 Instance::~Instance() noexcept
 {
     if (dbg) {
-        log.attempt("Vulkan: destroying debug messenger");
+        log.attempt("Vulkan", "destroying debug messenger");
         destroy_dbg_msgr(inst, dbg_msgr, NULL);
         log.finish();
         log.brk();
     }
-    log.attempt("Vulkan: destroying instance");
+    log.attempt("Vulkan", "destroying instance");
     destroy_inst(inst, NULL);
     log.finish();
     log.brk();

@@ -114,7 +114,7 @@ Swapchain::Swapchain(PhysDevice& p_dev,
     Vulkan::vk_try(get_swch_imgs(l_dev.inner(), swch, &imgs_cnt, NULL),
                    "getting swapchain images count");
     log.indent();
-    log.enter("images count: " + std::to_string(imgs_cnt));
+    log.enter("images count", std::to_string(imgs_cnt));
     log.brk();
 
     imgs.resize(imgs_cnt);
@@ -125,7 +125,7 @@ Swapchain::Swapchain(PhysDevice& p_dev,
 
 Swapchain::~Swapchain() noexcept
 {
-    log.attempt("Vulkan: destroying swapchain");
+    log.attempt("Vulkan", "destroying swapchain");
     destroy_swch(dev, swch, NULL);
     log.finish();
     log.brk();

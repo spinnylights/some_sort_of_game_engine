@@ -188,7 +188,7 @@ const std::array<VkResult, 26> vk_res_errs = {
 
 void Vulkan::vk_try(VkResult res, std::string oper)
 {
-    log.attempt("Vulkan: " + oper);
+    log.attempt("Vulkan", oper);
     for (auto res_err : vk_res_errs) {
         if (res == res_err) {
             throw std::runtime_error("could not "
