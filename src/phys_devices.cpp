@@ -51,6 +51,7 @@ std::vector<VkPhysicalDevice> PhysDevices::enumerate_devs(Instance& inst,
                                   &dev_cnt,
                                   potential_devs.data()),
                    "enumerating physical devices");
+    log.brk();
 
     return potential_devs;
 }
@@ -103,7 +104,9 @@ PhysDevices::get_queue_fam_props(VkPhysicalDevice& dev)
     return q_family_props;
 }
 
-void log_dev(VkPhysicalDeviceProperties2& props, VkDeviceSize total_mem)
+void log_dev(VkPhysicalDeviceProperties2& props,
+             VkDeviceSize total_mem,
+             const std::vector<std::string>& exts)
 {
     log.enter_obj({
         .name = std::string{props.properties.deviceName},
@@ -116,6 +119,7 @@ void log_dev(VkPhysicalDeviceProperties2& props, VkDeviceSize total_mem)
             {"device ID", props.properties.deviceID},
             {"device type", props.properties.deviceType},
             {"video memory", std::to_string(total_mem) + " bytes"},
+            {"extensions", exts}
         }
     });
 
@@ -149,26 +153,54 @@ void log_queue_fam(VkQueueFamilyProperties& q_fam_props, uint32_t ndx)
     log.brk();
 }
 
+std::vector<std::string> PhysDevices::get_dev_exts(VkPhysicalDevice dev)
+{
+        uint32_t ext_cnt;
+        Vulkan::vk_try(enum_dev_ext_props(dev, NULL, &ext_cnt, NULL),
+                       "get device extensions count");
+        log.indent();
+        log.enter("device extensions count", ext_cnt);
+        log.brk();
+
+        std::vector<VkExtensionProperties> ext_props (ext_cnt);
+        Vulkan::vk_try(enum_dev_ext_props(dev,
+                                          NULL,
+                                          &ext_cnt,
+                                          ext_props.data()),
+                       "get device extensions");
+        log.brk();
+
+        std::vector<std::string> ext_names;
+        std::transform(begin(ext_props),
+                       end(ext_props),
+                       std::back_inserter(ext_names),
+                       [](VkExtensionProperties& ep) -> std::string {
+                           return std::string{ep.extensionName};
+                       });
+
+        return ext_names;
+}
+
 void PhysDevices::populate_devs(Instance& inst, Surface& surf)
 {
     auto dev_cnt        = get_dev_cnt(inst);
     auto potential_devs = enumerate_devs(inst, dev_cnt);
 
-    log.indent();
-
     for (auto potential_dev : potential_devs) {
         auto props     = get_dev_props(potential_dev);
         auto mem_props = get_mem_props(potential_dev);
         auto total_mem = calc_total_mem(mem_props);
+        auto exts      = get_dev_exts(potential_dev);
 
         PhysDevice phys_dev {
-            .dev  = potential_dev,
-            .name = props.properties.deviceName,
-            .type = props.properties.deviceType,
-            .mem  = total_mem
+            .dev        = potential_dev,
+            .name       = props.properties.deviceName,
+            .type       = props.properties.deviceType,
+            .mem        = total_mem,
+            .extensions = exts,
         };
 
-        log_dev(props, total_mem);
+        log_dev(props, total_mem, exts);
 
         auto q_family_props = get_queue_fam_props(potential_dev);
 
@@ -257,6 +289,11 @@ PhysDevices::PhysDevices(Instance& inst, Surface& surf)
      get_phys_dev_queue_fam_props{
          reinterpret_cast<PFN_vkGetPhysicalDeviceQueueFamilyProperties>(
              inst.get_proc_addr("vkGetPhysicalDeviceQueueFamilyProperties")
+         )
+     },
+     enum_dev_ext_props{
+         reinterpret_cast<PFN_vkEnumerateDeviceExtensionProperties>(
+             inst.get_proc_addr("vkEnumerateDeviceExtensionProperties")
          )
      }
 {

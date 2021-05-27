@@ -27,6 +27,7 @@
 
 #include <iostream>
 #include <functional>
+#include <algorithm>
 #include <set>
 
 namespace cu {
@@ -91,14 +92,25 @@ LogiDevice::LogiDevice(PhysDevice& phys_dev, Instance& inst)
 
     const char* const ext_names[] = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
 
+    for (auto&& n : ext_names) {
+        std::string ext {n};
+        if (std::find(begin(phys_dev.extensions),
+                      end(phys_dev.extensions),
+                      ext) == std::end(phys_dev.extensions)) {
+            throw std::runtime_error("device extension "
+                                     + ext
+                                     + " is not available!");
+        }
+    }
+
     VkDeviceCreateInfo dev_info = {
         .sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
         .pNext = NULL,
         .flags = 0,
         .queueCreateInfoCount = static_cast<uint32_t>(queue_infos.size()),
         .pQueueCreateInfos = queue_infos.data(),
-        .enabledLayerCount = 0,
-        .ppEnabledLayerNames = NULL,
+        .enabledLayerCount = 0, // deprecated + ignored
+        .ppEnabledLayerNames = NULL, // deprecated + ignored
         .enabledExtensionCount = 1,
         .ppEnabledExtensionNames = ext_names,
         .pEnabledFeatures = NULL,

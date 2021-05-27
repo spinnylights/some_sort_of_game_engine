@@ -36,6 +36,7 @@ struct PhysDevice {
     std::string name;
     VkPhysicalDeviceType type;
     VkDeviceSize mem;
+    std::vector<std::string> extensions;
     std::vector<QueueFamily> queue_families;
 
     VkPhysicalDevice inner() { return dev; }
