@@ -24,6 +24,8 @@
 
 #include <vulkan/vulkan.h>
 
+#include <vector>
+
 namespace cu {
 
 class SDL;
@@ -43,12 +45,14 @@ public:
     VkSurfaceKHR inner() { return surf; }
 
     VkSurfaceCapabilitiesKHR capabilities(PhysDevice&);
+    std::vector<VkPresentModeKHR> present_modes(PhysDevice&);
 
 private:
     VkSurfaceKHR surf;
     VkInstance inst;
 
     PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR get_surf_caps;
+    PFN_vkGetPhysicalDeviceSurfacePresentModesKHR get_pres_modes;
     PFN_vkDestroySurfaceKHR destroy_surf;
 };
 

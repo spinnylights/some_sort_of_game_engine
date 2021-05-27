@@ -30,6 +30,7 @@
 #include "sdl.hpp"
 
 #include <vector>
+#include <algorithm>
 
 namespace cu {
 
@@ -56,11 +57,21 @@ Swapchain::Swapchain(PhysDevice& p_dev,
     const auto win_size = sdl.get_win_size();
 
     const auto surface_caps = surf.capabilities(p_dev);
-
     uint32_t min_img_cnt = 3;
     if (surface_caps.maxImageCount < 3) {
         min_img_cnt = surface_caps.maxImageCount;
     }
+
+    // support for VK_PRESENT_MODE_FIFO_KHR is required by the
+    // spec (see VkSwapchainCreateInfoKHR in 33.9 WSI Swapchain)
+    VkPresentModeKHR pres_mode = VK_PRESENT_MODE_FIFO_KHR;
+    const auto pres_modes = surf.present_modes(p_dev);
+    if (std::find(begin(pres_modes), end(pres_modes),
+                  VK_PRESENT_MODE_MAILBOX_KHR) != end(pres_modes)) {
+        pres_mode = VK_PRESENT_MODE_MAILBOX_KHR;
+    }
+    log.enter("present mode used", pres_mode);
+    log.brk();
 
     VkSwapchainCreateInfoKHR create_info {
         .sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR,
@@ -94,11 +105,7 @@ Swapchain::Swapchain(PhysDevice& p_dev,
         .pQueueFamilyIndices = NULL,
         .preTransform = surface_caps.currentTransform,
         .compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR,
-
-        // support for this is required by the spec (see
-        // VkSwapchainCreateInfoKHR in 33.9 WSI Swapchain)
-        .presentMode = VK_PRESENT_MODE_FIFO_KHR,
-
+        .presentMode = pres_mode,
         .clipped = VK_TRUE,
 
         // TODO: remember to set this properly during swap chain

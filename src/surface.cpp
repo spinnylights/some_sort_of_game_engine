@@ -36,6 +36,11 @@ Surface::Surface(SDL& sdl, Instance& instance)
              instance.get_proc_addr("vkGetPhysicalDeviceSurfaceCapabilitiesKHR")
          )
      },
+     get_pres_modes{
+         reinterpret_cast<PFN_vkGetPhysicalDeviceSurfacePresentModesKHR>(
+             instance.get_proc_addr("vkGetPhysicalDeviceSurfacePresentModesKHR")
+         )
+     },
      destroy_surf{
          reinterpret_cast<PFN_vkDestroySurfaceKHR>(
              instance.get_proc_addr("vkDestroySurfaceKHR")
@@ -63,6 +68,27 @@ VkSurfaceCapabilitiesKHR Surface::capabilities(PhysDevice& dev)
     log.brk();
 
     return caps;
+}
+
+std::vector<VkPresentModeKHR> Surface::present_modes(PhysDevice& dev)
+{
+    uint32_t modes_cnt;
+    Vulkan::vk_try(get_pres_modes(dev.inner(), surf, &modes_cnt, NULL),
+                   "get present modes count");
+    log.indent();
+    log.enter("present modes count", modes_cnt);
+    log.brk();
+
+    std::vector<VkPresentModeKHR> modes (modes_cnt);
+    Vulkan::vk_try(get_pres_modes(dev.inner(), surf, &modes_cnt, modes.data()),
+                   "get present modes");
+    log.indent();
+    for (auto&& m : modes) {
+        log.enter("mode", m);
+    }
+    log.brk();
+
+    return modes;
 }
 
 } // namespace cu
