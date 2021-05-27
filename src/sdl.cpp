@@ -24,6 +24,7 @@
 #include "log.hpp"
 
 #include "instance.hpp"
+#include "game.hpp"
 
 #include <sstream>
 #include <stdexcept>
@@ -65,7 +66,7 @@ SDL_Window* create_window()
 {
     SDL_Window* win;
 
-    const std::string title = "Crypt Underworld";
+    const std::string title = Game::name;
     const auto x_pos = SDL_WINDOWPOS_UNDEFINED;
     const auto y_pos = SDL_WINDOWPOS_UNDEFINED;
     const int width = 640;

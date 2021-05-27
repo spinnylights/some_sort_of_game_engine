@@ -21,6 +21,8 @@
 
 #include "cli.hpp"
 
+#include "game.hpp"
+
 namespace cu {
 
 bool grouped_single_char_args(std::string arg)
@@ -53,8 +55,8 @@ CLI::CLI(int argc, char** argv)
 {
     auto args = parse_argv(argc, argv);
 
-    std::string help_txt = "Usage: crypt_underworld [OPTION]...\n"
-                           "Play a game called Crypt Underworld.\n"
+    std::string help_txt = "Usage: " + std::string{argv[0]} + " [OPTION]...\n"
+                           "Play a game called " + Game::name + ".\n"
                            "\n"
                            "    -l, --log       Enable log output\n"
                            "    -d, --debug     Enable Vulkan debug output\n"

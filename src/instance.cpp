@@ -19,13 +19,13 @@
  * Copyright (c) 2021 Zoë Sparks <zoe@milky.flowers>
  */
 
-
 #include "instance.hpp"
 
 #include "log.hpp"
 
 #include "vulkan.hpp"
 #include "sdl.hpp"
+#include "game.hpp"
 
 #include <vulkan/vulkan_core.h>
 
@@ -75,10 +75,10 @@ Instance::Instance(std::vector<const char*> exts,
     VkApplicationInfo app_info = {
         .sType = VK_STRUCTURE_TYPE_APPLICATION_INFO,
         .pNext = NULL,
-        .pApplicationName = "Crypt Underworld",
-        .applicationVersion = 0,
-        .pEngineName = "Crypt Underworld",
-        .engineVersion = 0,
+        .pApplicationName = Game::name.c_str(),
+        .applicationVersion = Game::version,
+        .pEngineName = Game::name.c_str(),
+        .engineVersion = Game::version,
         .apiVersion = VK_MAKE_API_VERSION(0, 1, 2, 0)
     };
 
