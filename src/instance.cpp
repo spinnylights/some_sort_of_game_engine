@@ -174,7 +174,15 @@ Instance::~Instance() noexcept
 
 PFN_vkVoidFunction Instance::get_proc_addr(const char* name)
 {
-    return get_inst_proc_addr(inst, name);
+    auto fn = get_inst_proc_addr(inst, name);
+
+    if (fn == NULL) {
+        throw std::runtime_error("instance function "
+                                 + std::string{name}
+                                 + " is not available!");
+    }
+
+    return fn;
 }
 
 } // namespace cu

@@ -138,7 +138,15 @@ LogiDevice::~LogiDevice() noexcept
 
 PFN_vkVoidFunction LogiDevice::get_proc_addr(const char* name)
 {
-    return get_dev_proc_addr(dev, name);
+    auto fn = get_dev_proc_addr(dev, name);
+
+    if (fn == NULL) {
+        throw std::runtime_error("device function "
+                                 + std::string{name}
+                                 + " is not available!");
+    }
+
+    return fn;
 }
 
 } // namespace cu
