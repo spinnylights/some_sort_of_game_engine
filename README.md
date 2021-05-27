@@ -1,17 +1,16 @@
 # _Crypt Underworld_
 
-_Crypt Underworld_ is a realtime 3D computer game where you
-wander around, piss, talk to people, eat things, etc. It's the
-sequel to Lily Zone's 2013 game [_Crypt
+_Crypt Underworld_ is (/will be) a realtime 3D computer game
+where you wander around, piss, talk to people, eat things, etc.
+It's the sequel to Lily Zone's 2013 game [_Crypt
 Worlds_](https://cicadamarionette.com/Games/CryptWorlds/Main.html),
 and is being made by [her](https://www.cicadamarionette.com/) and
-[me](https://milky.flowers/), with music by
+[me](https://milky.flowers/), with some music by
 [ESPer99](https://esper99.bandcamp.com/).
 
 Right now it is still in a relatively early phase of development
 despite having been worked on for the better part of a decade, to
-my great sheepishness (see below for more details on all that).
-We had an amazing successful
+my great sheepishness. We had an amazing successful
 [Kickstarter](https://www.kickstarter.com/projects/357609386/crypt-underworld-a-sequel-to-crypt-worlds)
 years ago that (among other things) saved me right as I was about
 to lose my housing, something for which I will always be
@@ -22,9 +21,11 @@ greatest demand, and I'm currently working on it full-time.
 There is a build available
 [here](https://lilithzone.itch.io/fundraisins). However, that
 build is made with Unity 2018 and thus is not built from this
-repository. Here, for runtime performance, quality of life, and
-ethical reasons, I am writing the engine much more from the
-ground up using [SDL](https://www.libsdl.org/) and
+repository. Here, for runtime performance, quality of life (I'm
+tired of dealing with Unity on Linux), and
+[ethical](https://www.fsf.org/about/what-is-free-software)
+reasons, I am writing the engine much more from the ground up
+using [SDL](https://www.libsdl.org/) and
 [Vulkan](https://www.khronos.org/vulkan/), which should allow
 support for the three platforms we've been targeting (Linux,
 Windows, macOS) and maybe some others like FreeBSD and such.
@@ -33,23 +34,26 @@ Windows, macOS) and maybe some others like FreeBSD and such.
 
 For binary distribution purposes, the goal is to build the Linux,
 Windows, and macOS builds all on Linux, cross-compiling as
-needed. So far this has been tested for the Linux and Windows
-builds; the macOS process is more complicated and will require
-support from someone with a current macOS environment, so I'm
-putting it off until the project is a bit further along.
-
-Anyway, with that in mind, these instructions have been tested in
+needed. With that in mind, these instructions have been tested in
 a Linux environment only for the time being. They _should_ work
 under Windows using e.g. [MSYS2](https://www.msys2.org/) and
 MinGW-w64 (MSVC support is not guaranteed), and under macOS
 provided that you have a C++ compiler installed. The Linux
 instructions ought to work under most other \*nix environments as
-well, like the BSDs, at least I hope.
+well, like the BSDs, at least I hope (feel free to file a bug
+report if not).
 
-### Dependencies
+### Build dependencies
 
-* [SDL2](https://www.libsdl.org/)
-* [Vulkan SDK](https://www.lunarg.com/vulkan-sdk/)
+* [SDL2 development libs + headers](https://www.libsdl.org/download-2.0.php)
+* [Vulkan headers](https://www.lunarg.com/vulkan-sdk/)
+
+### Runtime dependencies
+
+* SDL2
+* Vulkan-capable graphics drivers
+* On macOS,
+  [MoltenVK](https://formulae.brew.sh/formula/molten-vk)
 
 ### If you're working directly from the source repo
 
@@ -63,17 +67,18 @@ to help out with development.
 If you're on a Mac, make sure you're set up to build GNU-style
 packages (e.g. by installing [Homebrew](https://brew.sh/) and
 running `brew install autoconf automake libtool`—this package
-doesn't need libtool but you might as well have it if you're
-getting the other two). If you're on Windows and using MSYS2 I
-think you'll already have everything you need in that regard.
+doesn't need libtool at this point but you might as well have it
+if you're getting the other two). If you're on Windows and using
+MSYS2 I think you'll already have everything you need in that
+regard.
 
 You should also have [git](https://git-scm.com/) installed,
 although you probably do already.
 
 Anyway, all you should need to do before proceeding is run
-`autoreconf --install`. If this finishes without erroring out,
-continue to the next section. If you get an error, please file a
-bug report.
+`autoreconf --install` from the project root. If this finishes
+without erroring out, continue to the next section. If you get an
+error, please file a bug report.
 
 ### Build steps
 
@@ -85,16 +90,23 @@ root if you don't care about that. Anyway.
 1. Starting from the root directory of the source repo, `cd
    build`.
 1. `../configure --srcdir=..` should be all you need if you're
-   doing a native build. If you're cross-compiling, pass the
-   `--host` and `--build` flags as well (e.g. to cross-compile
-   for Windows from Linux, pass `--host=x86_64-w64-mingw32
-   --build=x86_64-pc-linux-gnu`, provided that you have `mingw`
-   installed). You can also set the installation root directory
-   from here (`--prefix`), as well as many other options. See
-   `../configure --help` and the [Autoconf
+   doing a native build. If you'd like to build with debug flags,
+   you can add `CPPFLAGS="-Og -ggdb"` or the like to that; if
+   you're working on a patch and would like to enable warnings,
+   you can add `-Wall -Werror` or the like to `CPPFLAGS` as well.
+   If you're cross-compiling, pass the `--host` and `--build`
+   flags as well (e.g. to cross-compile for Windows from Linux,
+   pass `--host=x86_64-w64-mingw32 --build=x86_64-pc-linux-gnu`,
+   provided that you have `mingw` installed). You can also set
+   the installation root directory from here (`--prefix`), as
+   well as many other options. See `../configure --help` and the
+   [Autoconf
    manual](https://www.gnu.org/software/autoconf/manual/) for
    more information.
-1. `make`. This will run the build.
+1. `make`. This will run the build. If you'd like to parallelize
+   the build process to speed it up, you can pass `-j#` to
+   `make`, where `#` is the number of jobs you would like to
+   run simultaneously.
 
 ### Installation
 
@@ -103,11 +115,11 @@ root if you don't care about that. Anyway.
 `make install` after running `make` will work (you will probably
 need to do this as root). By default, this will use `/usr/local`
 as the installation root directory; you can specify a different
-directory by passing `--prefix` to `configure`. Note that if
-possible you're almost certainly better off using your distro's
-package manager rather than using this command directly—if there
-isn't a package available for your distro, look into how to make
-one.
+directory by passing `--prefix` to `configure`. Note that if the
+game has been released you're almost certainly better off using
+your distro's package manager rather than using this command
+directly, and if there isn't a package available for your distro
+under those circumstances, you might consider making your own.
 
 To uninstall, you can run `make uninstall` from the same place
 you ran `make`. Again though, you're probably better off using
@@ -136,7 +148,7 @@ might want to look at the document `SOCIAL_EXPECTATIONS.md` in
 the project's root directory. This outlines how I expect everyone
 to behave here in social terms, naturally. My goal in writing
 this is to create a more pleasant, relaxing development
-atmosphere—hopefully you will feel that way.
+atmosphere—hopefully you will feel that way in practice.
 
 ### Bug reports and feature requests
 
