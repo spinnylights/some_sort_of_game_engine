@@ -26,6 +26,7 @@
 #include "sdl.hpp"
 #include "instance.hpp"
 #include "phys_device.hpp"
+#include "vulkan.hpp"
 
 namespace cu {
 
@@ -57,7 +58,9 @@ VkSurfaceCapabilitiesKHR Surface::capabilities(PhysDevice& dev)
 {
     VkSurfaceCapabilitiesKHR caps;
 
-    get_surf_caps(dev.inner(), surf, &caps);
+    Vulkan::vk_try(get_surf_caps(dev.inner(), surf, &caps),
+                   "get surface capabilities");
+    log.brk();
 
     return caps;
 }
