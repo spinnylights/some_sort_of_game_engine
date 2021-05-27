@@ -30,6 +30,7 @@
 #include <vulkan/vulkan_core.h>
 
 #include <stdexcept>
+#include <algorithm>
 
 namespace cu {
 
@@ -38,6 +39,90 @@ void check_under_uint32(std::vector<const char*> items, std::string type)
     if (items.size() > UINT32_MAX) {
         throw std::runtime_error("the desired count of " + type + " " +
                                  "must be <= UINT32_MAX");
+    }
+}
+
+void Instance::check_avail_layers(const std::vector<const char*>& layers)
+{
+    uint32_t layer_cnt;
+    Vulkan::vk_try(enum_inst_layer_props(&layer_cnt, NULL), "get layer count");
+    log.indent();
+    log.enter("layer count", layer_cnt);
+    log.brk();
+
+    std::vector<VkLayerProperties> layer_props (layer_cnt);
+    Vulkan::vk_try(enum_inst_layer_props(&layer_cnt, layer_props.data()),
+                   "get layer properties");
+    log.indent();
+    for (const auto& lp : layer_props) {
+        log.enter_obj({
+            .name = std::string{lp.layerName},
+            .members = {
+                {"description", std::string{lp.description}}
+            }
+        });
+    }
+    log.brk();
+
+    std::vector<std::string> avail_layers;
+    std::transform(layer_props.begin(),
+                   layer_props.end(),
+                   std::back_inserter(avail_layers),
+                   [](VkLayerProperties& lp) -> std::string {
+                       return std::string{lp.layerName};
+                   });
+
+    for (auto&& l : layers) {
+        auto layer = std::string{l};
+        if (std::find(begin(avail_layers), end(avail_layers), layer)
+            == end(avail_layers)) {
+            throw std::runtime_error("layer " + layer + " not available!");
+        }
+    }
+}
+
+void Instance::check_avail_exts(const std::vector<const char*>& exts,
+                                const std::vector<const char*>& layers)
+{
+    std::vector<std::string> avail_exts;
+
+    auto check_for_exts {layers};
+    check_for_exts.push_back(NULL);
+    for (const auto& n : check_for_exts) {
+        std::string name;
+        if (n == NULL) {
+            name = "implementation";
+        } else {
+            name = std::string{n};
+        }
+
+        uint32_t ext_cnt;
+        Vulkan::vk_try(enum_inst_ext_props(n, &ext_cnt, NULL),
+                       "get " + name + " extension count");
+        log.indent();
+        log.enter("extension count", ext_cnt);
+        log.brk();
+
+        std::vector<VkExtensionProperties> ext_props (ext_cnt);
+        Vulkan::vk_try(enum_inst_ext_props(n, &ext_cnt, ext_props.data()),
+                       "get " + name + " extensions");
+        log.indent();
+        for (const auto& ep : ext_props) {
+            log.enter(std::string{ep.extensionName});
+        }
+        log.brk();
+
+        for (auto&& ep : ext_props) {
+            avail_exts.push_back(std::string{ep.extensionName});
+        }
+    }
+
+    for (auto&& e : exts) {
+        auto ext = std::string{e};
+        if (std::find(begin(avail_exts), end(avail_exts), ext)
+            == end(avail_exts)) {
+            throw std::runtime_error("extension " + ext + " not available!");
+        }
     }
 }
 
@@ -108,6 +193,16 @@ Instance::Instance(std::vector<const char*> exts,
                    bool debug)
     :dbg{debug},
      get_inst_proc_addr{SDL::get_get_inst_proc_addr()},
+     enum_inst_layer_props {
+         reinterpret_cast<PFN_vkEnumerateInstanceLayerProperties>(
+             get_inst_proc_addr(NULL, "vkEnumerateInstanceLayerProperties")
+         )
+     },
+     enum_inst_ext_props {
+         reinterpret_cast<PFN_vkEnumerateInstanceExtensionProperties>(
+             get_inst_proc_addr(NULL, "vkEnumerateInstanceExtensionProperties")
+         )
+     },
      create_inst {
          reinterpret_cast<PFN_vkCreateInstance>(
              get_inst_proc_addr(NULL, "vkCreateInstance")
@@ -118,6 +213,9 @@ Instance::Instance(std::vector<const char*> exts,
     // to gcc 10 (i.e. contracts become available)
     check_under_uint32(exts, "extensions");
     check_under_uint32(layers, "layers");
+
+    check_avail_layers(layers);
+    check_avail_exts(exts, layers);
 
     VkApplicationInfo app_info = {
         .sType = VK_STRUCTURE_TYPE_APPLICATION_INFO,

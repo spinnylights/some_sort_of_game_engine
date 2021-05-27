@@ -52,12 +52,17 @@ private:
     VkDebugUtilsMessengerEXT dbg_msgr;
 
     PFN_vkGetInstanceProcAddr get_inst_proc_addr;
+    PFN_vkEnumerateInstanceLayerProperties enum_inst_layer_props;
+    PFN_vkEnumerateInstanceExtensionProperties enum_inst_ext_props;
     PFN_vkCreateInstance create_inst;
     PFN_vkDestroyInstance destroy_inst;
     PFN_vkCreateDebugUtilsMessengerEXT create_dbg_msgr;
     PFN_vkDestroyDebugUtilsMessengerEXT destroy_dbg_msgr;
 
     void setup_debug_utils();
+    void check_avail_layers(const std::vector<const char*>& layers);
+    void check_avail_exts(const std::vector<const char*>& exts,
+                          const std::vector<const char*>& layers);
 };
 
 } // namespace cu
