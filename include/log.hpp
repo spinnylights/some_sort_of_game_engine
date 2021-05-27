@@ -45,11 +45,16 @@ struct guarded_thread {
         return *this;
     }
 
-    ~guarded_thread()
+    void join()
     {
         if (t.joinable()) {
             t.join();
         }
+    }
+
+    ~guarded_thread()
+    {
+        join();
     }
 };
 
