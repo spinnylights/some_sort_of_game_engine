@@ -93,8 +93,6 @@ public:
     void turn_off() noexcept;
 
 private:
-    using dur = std::chrono::milliseconds;
-
     std::mutex msgs_mutex;
     std::deque<std::string> msgs;
     std::string::size_type indent_amt = 0;

@@ -232,8 +232,6 @@ void Log::brk() noexcept
 void Log::wait_to_empty() noexcept
 {
     while (!stopped) {
-        constexpr dur::rep EMPTY_INTERVAL {200}; // 5 hz
-        std::this_thread::sleep_for(dur{EMPTY_INTERVAL});
         empty_queue();
     }
     empty_queue();
