@@ -56,14 +56,14 @@ void indent_str(std::string& str,
     }
 }
 
-std::string LoggableObjMember::str(std::string::size_type extra_spaces,
+std::string LoggableObjMember::str(std::string::size_type opening_chars,
                                    std::string::size_type pre_spaces)
 {
     std::string opening = name + spacer;
     const auto opening_len = opening.length();
     std::string padding = "";
-    if (extra_spaces > opening_len) {
-        std::string::size_type space_cnt = extra_spaces - opening_len;
+    if (opening_chars > opening_len) {
+        std::string::size_type space_cnt = opening_chars - opening_len;
         for (std::string::size_type i = 0; i < space_cnt; ++i) {
             padding.push_back(' ');
         }

@@ -64,7 +64,7 @@ struct LoggableObjMember {
     std::string name;
     std::string value;
 
-    std::string str(std::string::size_type extra_spaces = 0,
+    std::string str(std::string::size_type opening_chars = 0,
                     std::string::size_type pre_spaces = 0);
 
     LoggableObjMember(std::string n, std::string v)
