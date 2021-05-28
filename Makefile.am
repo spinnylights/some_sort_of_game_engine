@@ -15,4 +15,5 @@ crypt_underworld_SOURCES = \
 	src/log.cpp \
 	src/swapchain.cpp \
 	src/cli.cpp \
+	src/debug_msgr.cpp \
 	src/engine.cpp

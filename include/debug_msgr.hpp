@@ -19,47 +19,33 @@
  * Copyright (c) 2021 Zoë Sparks <zoe@milky.flowers>
  */
 
-#ifndef q765e99c966249c6aa35adad25b72458
-#define q765e99c966249c6aa35adad25b72458
-
-#include <vector>
-#include <string>
+#ifndef k4808017bafe40e09a47f9ed7fa69735
+#define k4808017bafe40e09a47f9ed7fa69735
 
 #include "instance.hpp"
-#include "debug_msgr.hpp"
-#include "surface.hpp"
-#include "phys_devices.hpp"
-#include "logi_device.hpp"
-#include "swapchain.hpp"
+
+#include <vulkan/vulkan_core.h>
 
 namespace cu {
 
-class SDL;
-
-class Vulkan {
+class DebugMsgr {
 public:
-    static void vk_try(VkResult, std::string oper);
-    static bool vkbool_to_bool(VkBool32);
-    static std::string api_ver_to_str(uint32_t ver);
+    DebugMsgr(Instance&, bool debug_on);
 
-    Vulkan(std::vector<const char*> exts,
-           std::vector<const char*> layers,
-           SDL&,
-           bool debug = false);
+    DebugMsgr(DebugMsgr&&) = delete;
+    DebugMsgr(const DebugMsgr&) = delete;
+    DebugMsgr& operator=(const DebugMsgr&) = delete;
 
-    Vulkan(Vulkan&&) = delete;
-    Vulkan(const Vulkan&) = delete;
-    Vulkan& operator=(const Vulkan&) = delete;
-
-    ~Vulkan() = default;
+    ~DebugMsgr() noexcept;
 
 private:
-    Instance inst;
-    DebugMsgr dbg_msgr;
-    Surface surf;
-    PhysDevices phys_devs;
-    LogiDevice logi_dev;
-    Swapchain swch;
+    bool dbg_on;
+    VkInstance inst;
+
+    PFN_vkCreateDebugUtilsMessengerEXT create_dbg_msgr;
+    PFN_vkDestroyDebugUtilsMessengerEXT destroy_dbg_msgr;
+
+    VkDebugUtilsMessengerEXT msgr;
 };
 
 } // namespace cu
