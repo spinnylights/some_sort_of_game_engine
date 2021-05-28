@@ -30,6 +30,14 @@ using [SDL](https://www.libsdl.org/) and
 support for the three platforms we've been targeting (Linux,
 Windows, macOS) and maybe some others like FreeBSD and such.
 
+## Documentation
+
+API documentation is available
+[here](https://milky.flowers/programs/crypt_underworld/doc/). If
+you'd like to generate it yourself, you'll need
+[Doxygen](https://www.doxygen.nl/index.html) and
+[Graphviz](https://graphviz.org/).
+
 ## Building
 
 For binary distribution purposes, the goal is to build the Linux,

@@ -7,3 +7,6 @@ config.sub
 compile
 .deps
 .dirstamp
+
+/doc/html
+/doc/latex

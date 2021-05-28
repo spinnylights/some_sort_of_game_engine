@@ -1,0 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Nova+Cut&family=Fira+Sans&family=Recursive:CRSV,MONO@0,1&display=swap');
+
+
+code, pre.fragment, div.line, .memname, .paramkey, .paramtype, .paramname,
+.overload, .params .paramdir, .tparams .paramdir  {
+    font-family: "Recursive", monospace, fixed;
+}
+
+#projectname {
+    font: 1000 300% "Nova Cut";
+    text-transform: uppercase;
+}
+
+#projectbrief {
+    font: 400 120% "Fira Sans", sans-serif;
+}
+
+#projectnumber {
+    font: 800 35% "Nova Cut", sans-serif;
+}
