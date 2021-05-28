@@ -27,15 +27,49 @@
 
 namespace cu {
 
+/*!
+ * \brief Parses the command line arguments.
+ *
+ * Pass in the parameters from main() and this class will
+ * determine which options the user wants enabled, what to print
+ * to stdout if anything (e.g. help or error text), and an exit
+ * status code to return if exiting right away instead of
+ * starting the game (e.g. if the user requests help).
+ */
 class CLI {
 public:
+    /*!
+     * \brief (constructor)
+     *
+     * \param argc the length of argv.
+     * \param argv the arguments array.
+     */
     CLI(int argc, char** argv);
 
+    /*!
+     * \brief Text to write to stdout, if any.
+     */
     std::string output() const { return outpt; }
+    /*!
+     * \brief An exit status code to return if immediately exiting
+     * (e.g. if the user has requested help text).
+     */
     int status() const { return stat; }
+    /*!
+     * \brief Whether to enable logging in general.
+     */
     bool log() const { return lg; };
+    /*!
+     * \brief Whether to log debug messages from Vulkan.
+     */
     bool debug() const { return debg; }
+    /*!
+     * \brief Whether logging should be done asynchronously.
+     */
     bool async_log() const { return async_lg; }
+    /*!
+     * \brief Whether to print the help text.
+     */
     bool help() const { return hlp; }
 
 private:
