@@ -140,7 +140,7 @@ void Log::turn_off() noexcept
 void Log::async_on()
 {
     if (!async) {
-        emptier = guarded_thread {std::thread{&Log::wait_to_empty, this}};
+        emptier = GuardedThread {std::thread{&Log::wait_to_empty, this}};
         async = true;
     }
 }

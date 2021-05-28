@@ -36,10 +36,10 @@ namespace cu {
 //
 // this should probably be changed to use std::jthread once e.g.
 // debian stable switches to gcc >= 10
-struct guarded_thread {
+struct GuardedThread {
     std::thread t;
 
-    guarded_thread& operator=(guarded_thread&& other)
+    GuardedThread& operator=(GuardedThread&& other)
     {
         std::swap(t, other.t);
         return *this;
@@ -52,7 +52,7 @@ struct guarded_thread {
         }
     }
 
-    ~guarded_thread()
+    ~GuardedThread()
     {
         join();
     }
@@ -138,7 +138,7 @@ private:
     void wait_to_empty() noexcept;
     void empty_queue() noexcept;
 
-    guarded_thread emptier;
+    GuardedThread emptier;
 
     bool append_newline(std::string& entry, bool newline) noexcept;
     bool indent_entry(std::string& entry) noexcept;
