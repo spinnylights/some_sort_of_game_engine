@@ -38,7 +38,8 @@ Swapchain::Swapchain(PhysDevice& p_dev,
                      LogiDevice& l_dev,
                      Surface& surf,
                      SDL& sdl)
-    :create_swch{
+    :dev{l_dev.inner()},
+     create_swch{
         reinterpret_cast<PFN_vkCreateSwapchainKHR>(
             l_dev.get_proc_addr("vkCreateSwapchainKHR")
         )
@@ -113,19 +114,19 @@ Swapchain::Swapchain(PhysDevice& p_dev,
         .oldSwapchain = old_swch,
     };
 
-    Vulkan::vk_try(create_swch(l_dev.inner(), &create_info, NULL, &swch),
+    Vulkan::vk_try(create_swch(dev, &create_info, NULL, &swch),
                    "creating swapchain");
     log.brk();
 
     uint32_t imgs_cnt;
-    Vulkan::vk_try(get_swch_imgs(l_dev.inner(), swch, &imgs_cnt, NULL),
+    Vulkan::vk_try(get_swch_imgs(dev, swch, &imgs_cnt, NULL),
                    "getting swapchain images count");
     log.indent();
     log.enter("images count", imgs_cnt);
     log.brk();
 
     imgs.resize(imgs_cnt);
-    Vulkan::vk_try(get_swch_imgs(l_dev.inner(), swch, &imgs_cnt, imgs.data()),
+    Vulkan::vk_try(get_swch_imgs(dev, swch, &imgs_cnt, imgs.data()),
                    "getting swapchain images");
     log.brk();
 }
