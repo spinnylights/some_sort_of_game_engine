@@ -280,7 +280,7 @@ void Log::enter(std::string obj, std::string attr) noexcept
     }
 }
 
-void Log::enter_obj(LoggableObj&& obj) noexcept
+void Log::enter(LoggableObj&& obj) noexcept
 {
     if (on) {
         try {

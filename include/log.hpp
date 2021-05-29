@@ -115,7 +115,7 @@ public:
         enter(obj, std::to_string(attr));
     }
     void enter(std::string obj, std::string attr) noexcept;
-    void enter_obj(LoggableObj&& obj) noexcept;
+    void enter(LoggableObj&& obj) noexcept;
     void attempt(std::string entry) noexcept;
     void attempt(std::string domain, std::string entry) noexcept;
     void indent() noexcept;

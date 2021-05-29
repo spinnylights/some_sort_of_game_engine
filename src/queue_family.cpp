@@ -92,7 +92,7 @@ uint32_t QueueFamily::flag_count() const
 
 void QueueFamily::log_info() const
 {
-    log.enter_obj({
+    log.enter({
         .name = "queue family " + std::to_string(index()),
         .members = {
             {"graphics", graphics()},

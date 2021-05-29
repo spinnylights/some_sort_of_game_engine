@@ -55,7 +55,7 @@ void Instance::check_avail_layers(const std::vector<const char*>& layers)
                    "get layer properties");
     log.indent();
     for (const auto& lp : layer_props) {
-        log.enter_obj({
+        log.enter({
             .name = std::string{lp.layerName},
             .members = {
                 {"description", std::string{lp.description}}

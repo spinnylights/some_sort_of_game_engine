@@ -81,7 +81,7 @@ SDL_Window* create_window()
                  "creating window");
 
     log.indent();
-    log.enter_obj({
+    log.enter({
         .name = "Window",
         .members = {
             { "title", title },

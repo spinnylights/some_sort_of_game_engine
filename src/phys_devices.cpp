@@ -108,7 +108,7 @@ void log_dev(VkPhysicalDeviceProperties2& props,
              VkDeviceSize total_mem,
              const std::vector<std::string>& exts)
 {
-    log.enter_obj({
+    log.enter({
         .name = std::string{props.properties.deviceName},
         .members {
             {"api version",
@@ -129,7 +129,7 @@ void log_dev(VkPhysicalDeviceProperties2& props,
 void log_queue_fam(VkQueueFamilyProperties& q_fam_props, uint32_t ndx)
 {
     log.indent(2);
-    log.enter_obj({
+    log.enter({
         .name = "queue family " + std::to_string(ndx),
         .members {
             {"flags", q_fam_props.queueFlags},
@@ -142,7 +142,7 @@ void log_queue_fam(VkQueueFamilyProperties& q_fam_props, uint32_t ndx)
     log.brk();
 
     log.indent(3);
-    log.enter_obj({
+    log.enter({
         .name = "min. img. transfer granularity",
         .members {
             {"width", q_fam_props.minImageTransferGranularity.width},
