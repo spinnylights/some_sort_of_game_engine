@@ -8,5 +8,8 @@ compile
 .deps
 .dirstamp
 
-/doc/html
-/doc/latex
+/doc/*
+!/doc/Doxygen
+!/doc/logo.png
+!/doc/custom.css
+!/doc/main_page.md
