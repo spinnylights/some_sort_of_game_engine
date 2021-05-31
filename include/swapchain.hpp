@@ -34,9 +34,20 @@ class Surface;
 class Instance;
 class SDL;
 
+/*!
+ * \brief A Vulkan swapchain wrapper.
+ */
 class Swapchain {
 public:
-    Swapchain(PhysDevice&, LogiDevice&, Surface&, SDL&);
+    /*!
+     * \brief (constructor)
+     *
+     * \parm p_dev The PhysDevice in use.
+     * \parm l_dev The LogiDevice in use.
+     * \parm surf The Surface in use.
+     * \parm sdl The SDL instance in use.
+     */
+    Swapchain(PhysDevice& p_dev, LogiDevice& l_dev, Surface& surf, SDL& sdl);
 
     Swapchain(Swapchain&&) = delete;
     Swapchain(const Swapchain&) = delete;

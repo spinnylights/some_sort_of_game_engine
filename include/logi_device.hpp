@@ -30,9 +30,18 @@ namespace cu {
 
 class Instance;
 
+/*!
+ * \brief A Vulkan logical device wrapper.
+ */
 class LogiDevice {
 public:
-    LogiDevice(PhysDevice&, Instance&);
+    /*!
+     * \brief (constructor)
+     *
+     * \param dev The PhysDevice in use.
+     * \param inst The Instance in use.
+     */
+    LogiDevice(PhysDevice& dev, Instance& inst);
 
     LogiDevice(LogiDevice&&) = delete;
     LogiDevice(const LogiDevice&) = delete;
@@ -40,8 +49,19 @@ public:
 
     ~LogiDevice() noexcept;
 
+    /*!
+     * \copydoc Instance::inner()
+     */
     VkDevice inner() { return dev; }
 
+    /*!
+     * \brief Loads Vulkan functions that involve a logical
+     * device (see
+     * [VkGetDeviceProcAddr()](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/vkGetDeviceProcAddr.html)
+     * in the Vulkan manual).
+     *
+     * \copydetails Instance::get_proc_addr()
+     */
     PFN_vkVoidFunction get_proc_addr(const char* name);
 
 private:

@@ -34,10 +34,23 @@ namespace cu {
 class Instance;
 class Surface;
 
+/*!
+ * \brief Retrieves the physical devices visible to Vulkan.
+ */
 class PhysDevices {
 public:
-    PhysDevices(Instance&, Surface&);
+    /*!
+     * \brief (constructor)
+     *
+     * \param inst The Instance in use.
+     * \param surf The Surface in use.
+     */
+    PhysDevices(Instance& inst, Surface& surf);
 
+    /*!
+     * \brief Returns the default physical device, chosen
+     * according to a set of heuristics.
+     */
     PhysDevice& default_device() { return devs.at(default_dev); }
 
 private:

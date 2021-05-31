@@ -28,9 +28,19 @@
 
 namespace cu {
 
+/*!
+ * \brief A Vulkan debug messenger wrapper.
+ */
 class DebugMsgr {
 public:
-    DebugMsgr(Instance&, bool debug_on);
+    /*!
+     * \brief (constructor)
+     *
+     * \param inst The Instance in use.
+     * \param debug_on Whether the Vulkan debug layer is enabled.
+     * Only creates the messenger if this is true.
+     */
+    DebugMsgr(Instance& inst, bool debug_on);
 
     DebugMsgr(DebugMsgr&&) = delete;
     DebugMsgr(const DebugMsgr&) = delete;

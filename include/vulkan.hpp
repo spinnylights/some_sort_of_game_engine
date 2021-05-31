@@ -36,15 +36,47 @@ namespace cu {
 
 class SDL;
 
+/*!
+ * \brief The entry point into the Vulkan code; coordinates the
+ * activity of the Vulkan classes.
+ */
 class Vulkan {
 public:
-    static void vk_try(VkResult, std::string oper);
+    /*!
+     * \brief A convenient way to check the return code of a
+     * Vulkan operation. Throws in the event of a VK_ERROR* code
+     * (see the
+     * [VkResult](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VkResult.html)
+     * entry in the Vulkan manual). Behaves similarly to
+     * SDL::sdl_try().
+     *
+     * \copydetails SDL::sdl_try()
+     */
+    static void vk_try(VkResult result, std::string oper);
+
+    /*!
+     * \brief Converts a Vulkan boolean to a C++ boolean.
+     */
     static bool vkbool_to_bool(VkBool32);
+
+    /*!
+     * \brief Converts a Vulkan API version value to a
+     * human-readable string.
+     */
     static std::string api_ver_to_str(uint32_t ver);
 
+    /*!
+     * \brief (constructor) Initializes Vulkan, including the
+     * various components needed.
+     *
+     * \param exts The extensions required.
+     * \param layers The layers to enable.
+     * \param sdl The SDL instance in use.
+     * \param debug Whether to enable the debug utils.
+     */
     Vulkan(std::vector<const char*> exts,
            std::vector<const char*> layers,
-           SDL&,
+           SDL& sdl,
            bool debug = false);
 
     Vulkan(Vulkan&&) = delete;

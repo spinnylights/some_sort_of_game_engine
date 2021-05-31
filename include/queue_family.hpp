@@ -31,26 +31,91 @@ namespace cu {
 class Surface;
 class Instance;
 
+/*!
+ * \brief A representation of a Vulkan queue family available on
+ * a PhysDevice.
+ */
 class QueueFamily {
 public:
-    QueueFamily(VkQueueFamilyProperties&,
+    /*!
+     * \brief (constructor)
+     *
+     * \param handle The queue family properties handle populated
+     * by Vulkan (see
+     * [vkGetPhysicalDeviceQueueFamilyProperties()](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/vkGetPhysicalDeviceQueueFamilyProperties.html)
+     * in the Vulkan manual).
+     *
+     * \param ndex The index of the queue family on the device.
+     *
+     * \param dev The Vulkan physical device handle for the
+     * device which has this queue family (needed because this
+     * class is involved in PhysDevice instantiation).
+     *
+     * \param surf The Surface in use.
+     *
+     * \param inst The Instance in use.
+     */
+    QueueFamily(VkQueueFamilyProperties& handle,
                 uint32_t ndex,
-                VkPhysicalDevice,
-                Surface&,
-                Instance&);
+                VkPhysicalDevice dev,
+                Surface& surf,
+                Instance& inst);
 
+    /*!
+     * \brief Whether the queue family supports graphics
+     * operations.
+     */
     bool graphics() const;
+
+    /*!
+     * \brief Whether the queue family supports compute
+     * operations.
+     */
     bool compute() const;
+
+    /*!
+     * \brief Whether the queue family supports transfer
+     * operations.
+     */
     bool transfer() const;
+
+    /*!
+     * \brief Whether the queue family supports sparse memory
+     * management operations.
+     */
     bool sparse_binding() const;
+
+    /*!
+     * \brief Whether the queues in this queue family can be made
+     * protected-capable.
+     */
     bool protected_memory() const;
 
+    /*!
+     * \brief The number of capability flags enabled for the
+     * queue family.
+     */
     uint32_t flag_count() const;
 
-    uint32_t queue_count()       const { return queue_cnt; }
-    uint32_t index()             const { return ndx; }
+    /*!
+     * \brief Whether the queue family supports presentation to
+     * the Surface in use.
+     */
     bool     present_supported() const { return pres_support; }
 
+    /*!
+     * \brief The number of queues within the queue family.
+     */
+    uint32_t queue_count()       const { return queue_cnt; }
+
+    /*!
+     * \brief The index of the queue family on the device.
+     */
+    uint32_t index()             const { return ndx; }
+
+    /*!
+     * \brief Write a description of the queue family to the log.
+     */
     void log_info() const;
 
 private:

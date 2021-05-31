@@ -53,7 +53,7 @@ public:
      * operation succeeded. Logs the attempt if logging is turned
      * on. Throws if SDL reports an error.
      *
-     * \param result The result returned by the SDL operation.
+     * \param result The result returned by the operation.
      *
      * \param oper A description of what is being attempted (see
      * Log::attempt()).

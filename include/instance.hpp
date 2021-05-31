@@ -30,8 +30,17 @@
 
 namespace cu {
 
+/*!
+ * \brief A Vulkan instance wrapper.
+ */
 class Instance {
 public:
+    /*!
+     * \brief (constructor)
+     *
+     * \param exts The extensions required.
+     * \param layers The layers to enable.
+     */
     Instance(std::vector<const char*> exts,
              std::vector<const char*> layers);
 
@@ -41,8 +50,19 @@ public:
 
     ~Instance() noexcept;
 
+    /*!
+     * \brief Returns the handle wrapped by the class.
+     */
     VkInstance inner() { return inst; }
 
+    /*!
+     * \brief Loads Vulkan functions that do not involve a
+     * LogiDevice (see
+     * [VkGetInstanceProcAddr()](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/vkGetInstanceProcAddr.html)
+     * in the Vulkan manual).
+     *
+     * \param name The name of the function to load.
+     */
     PFN_vkVoidFunction get_proc_addr(const char* name);
 
 private:

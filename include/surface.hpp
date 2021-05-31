@@ -32,9 +32,18 @@ class SDL;
 class Instance;
 class PhysDevice;
 
+/*!
+ * \brief A Vulkan surface wrapper.
+ */
 class Surface {
 public:
-    Surface(SDL&, Instance&);
+    /*!
+     * \brief (constructor)
+     *
+     * \param sdl The SDL instance in use.
+     * \param inst The Instance instance in use.
+     */
+    Surface(SDL& sdl, Instance& inst);
 
     Surface(Surface&&) = delete;
     Surface(const Surface&) = delete;
@@ -42,10 +51,29 @@ public:
 
     ~Surface() noexcept;
 
+    /*!
+     * \copydoc Instance::inner()
+     */
     VkSurfaceKHR inner() { return surf; }
 
-    VkSurfaceCapabilitiesKHR capabilities(PhysDevice&);
-    std::vector<VkPresentModeKHR> present_modes(PhysDevice&);
+    /*!
+     * \brief Returns the capabilities of the surface (see
+     * [VkSurfaceCapabilitiesKHR](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VkSurfaceCapabilitiesKHR.html)
+     * in the Vulkan manual).
+     *
+     * \param dev The PhysDevice in use.
+     */
+    VkSurfaceCapabilitiesKHR capabilities(PhysDevice& dev);
+
+    /*!
+     * \brief Returns a list of the present modes supported by
+     * the surface (see
+     * [VkPresentModeKHR](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VkPresentModeKHR.html)
+     * in the Vulkan manual).
+     *
+     * \copydetails capabilities()
+     */
+    std::vector<VkPresentModeKHR> present_modes(PhysDevice& dev);
 
 private:
     VkSurfaceKHR surf;
