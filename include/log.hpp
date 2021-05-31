@@ -72,6 +72,11 @@ struct LoggableObjMember {
          value{vle}
     {}
 
+    LoggableObjMember(std::string nme, const char* vle)
+        :name{nme},
+         value{vle}
+    {}
+
     LoggableObjMember(std::string nme, std::vector<std::string> const& values)
         :name{nme}
     {
