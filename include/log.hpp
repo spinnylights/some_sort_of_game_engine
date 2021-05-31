@@ -72,15 +72,15 @@ struct LoggableObjMember {
          value{v}
     {}
 
-    LoggableObjMember(std::string n, std::vector<std::string> vs)
-        :name{n}
+    LoggableObjMember(std::string nme, std::vector<std::string> const& values)
+        :name{nme}
     {
         for (std::string::size_type i = 0;
-             i < vs.size() - 1;
+             i < values.size() - 1;
              ++i) {
-            value += vs.at(i) + "\n";
+            value += values.at(i) + "\n";
         }
-        value += vs.back();
+        value += values.back();
     }
 
     template <typename T> LoggableObjMember(std::string n, T v)
@@ -109,7 +109,8 @@ public:
     ~Log() noexcept;
 
     void enter(std::string entry, bool newline=true) noexcept;
-    void enter(std::string name, std::vector<const char*>& entries) noexcept;
+    void enter(std::string name,
+               std::vector<const char*> const& entries) noexcept;
     template <typename T> void enter(std::string obj, T attr) noexcept
     {
         enter(obj, std::to_string(attr));

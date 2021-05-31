@@ -249,7 +249,8 @@ void Log::enter(std::string entry, bool newline) noexcept
     }
 }
 
-void Log::enter(std::string name, std::vector<const char*>& entries) noexcept
+void Log::enter(std::string name,
+                std::vector<const char*> const& entries) noexcept
 {
     if (on) {
         try {
