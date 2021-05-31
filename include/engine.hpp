@@ -27,8 +27,19 @@
 
 namespace cu {
 
+/*!
+ * \brief The entry point into the game engine; coordinates its
+ * components. The tentative long-term plan is for this to take a
+ * reference to a Game once a frame and handle IO based on it.
+ */
 class Engine {
 public:
+    /*!
+     * \brief (constructor)
+     *
+     * \param debug Whether the Vulkan debug utils should be
+     * enabled.
+     */
     Engine(bool debug = false);
 
     Engine(Engine&&) = delete;
@@ -37,8 +48,14 @@ public:
 
     ~Engine() = default;
 
+    /*!
+     * \brief Returns the Vulkan layers required.
+     */
     std::vector<const char*> layers();
 
+    /*!
+     * \brief Returns the Vulkan extensions required.
+     */
     std::vector<const char*> extensions();
 
 private:
