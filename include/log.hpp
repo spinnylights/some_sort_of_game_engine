@@ -67,9 +67,9 @@ struct LoggableObjMember {
     std::string str(std::string::size_type opening_chars = 0,
                     std::string::size_type pre_spaces = 0);
 
-    LoggableObjMember(std::string n, std::string v)
-        :name{n},
-         value{v}
+    LoggableObjMember(std::string nme, std::string vle)
+        :name{nme},
+         value{vle}
     {}
 
     LoggableObjMember(std::string nme, std::vector<std::string> const& values)
@@ -83,9 +83,9 @@ struct LoggableObjMember {
         value += values.back();
     }
 
-    template <typename T> LoggableObjMember(std::string n, T v)
-        :name{n},
-         value{std::to_string(v)}
+    template <typename T> LoggableObjMember(std::string nme, T vle)
+        :name{nme},
+         value{std::to_string(vle)}
     {}
 };
 
