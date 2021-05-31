@@ -29,8 +29,6 @@ namespace cu {
 
 class Engine {
 public:
-    static std::vector<const char*> layers(bool debug);
-
     Engine(bool debug = false);
 
     Engine(Engine&&) = delete;
@@ -39,9 +37,12 @@ public:
 
     ~Engine() = default;
 
-    std::vector<const char*> extensions(bool debug);
+    std::vector<const char*> layers();
+
+    std::vector<const char*> extensions();
 
 private:
+    bool dbg;
     SDL sdl;
     Vulkan vulk;
 };

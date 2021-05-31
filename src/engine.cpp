@@ -23,19 +23,19 @@
 
 namespace cu {
 
-std::vector<const char*> Engine::layers(bool debug)
+std::vector<const char*> Engine::layers()
 {
-    if (debug) {
+    if (dbg) {
         return {"VK_LAYER_KHRONOS_validation"};
     } else {
         return {};
     }
 }
-std::vector<const char*> Engine::extensions(bool debug)
+std::vector<const char*> Engine::extensions()
 {
     auto exts = sdl.get_req_vulk_exts();
 
-    if (debug) {
+    if (dbg) {
         exts.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
     }
 
@@ -43,11 +43,12 @@ std::vector<const char*> Engine::extensions(bool debug)
 }
 
 Engine::Engine(bool debug)
-    : sdl{},
-      vulk{extensions(debug),
-           layers(debug),
-           sdl,
-           debug}
+    :dbg(debug),
+     sdl{},
+     vulk{extensions(),
+          layers(),
+          sdl,
+          debug}
 {}
 
 } // namespace cu
