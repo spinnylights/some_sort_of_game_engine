@@ -26,6 +26,11 @@
 
 namespace cu {
 
+/*!
+ * \brief The tentative plan is for this class to be the entry
+ * point into the logic and data of the game itself, apart from
+ * IO.
+ */
 class Game {
 public:
     static const inline std::string name = "Crypt Underworld";
