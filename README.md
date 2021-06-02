@@ -16,7 +16,12 @@ years ago that (among other things) saved me right as I was about
 to lose my housing, something for which I will always be
 grateful. Lily and I have decided to pivot to this game as our
 top priority as it seems like our work-in-progress game with the
-greatest demand, and I'm currently working on it full-time.
+greatest demand, and I'm currently working on it full-time M-F.
+(If activity here is looking a bit slow as of the past few days,
+it's possible I'm working on my [Vulkan
+notes](https://github.com/spinnylights/vulkan-notes/blob/main/vulkan_notes.md)
+to firm up my understanding of something before diving back into
+the code here.)
 
 There is a build available
 [here](https://lilithzone.itch.io/fundraisins). However, that
