@@ -38,6 +38,15 @@ using [SDL](https://www.libsdl.org/) and
 support for the three platforms we've been targeting (Linux,
 Windows, macOS) and maybe some others like FreeBSD and such.
 
+Note that we are _not_ starting the game over from scratch, so if
+you like the current build, don't worry. We're keeping the
+existing models, scenes, etc.—this is a port, not a reboot. To
+be specific, we're using Unity's [FBX
+exporter](https://docs.unity3d.com/Packages/com.unity.formats.fbx@2.0/manual/exporting.html)
+to extract scenes and then converting the resulting files to
+[glTF](https://www.khronos.org/gltf/) for use with the new
+engine.
+
 ## Documentation
 
 API documentation is available
