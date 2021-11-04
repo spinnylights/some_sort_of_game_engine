@@ -22,8 +22,6 @@ SDL_VERSION=2.0.14
 AM_PATH_SDL2($SDL_VERSION,
              :,
              AC_MSG_ERROR([SDL version $SDL_VERSION not found!]))
-CXXFLAGS="$CXXFLAGS $SDL_CFLAGS"
-LIBS="$LIBS $SDL_LIBS"
 
 dnl Check for Vulkan
 AC_CHECK_HEADERS([vulkan/vulkan.h, vulkan/vulkan_core.h],
