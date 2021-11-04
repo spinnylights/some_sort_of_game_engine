@@ -67,7 +67,8 @@ Swapchain::Swapchain(PhysDevice& p_dev,
     // spec (see VkSwapchainCreateInfoKHR in 33.9 WSI Swapchain)
     VkPresentModeKHR pres_mode = VK_PRESENT_MODE_FIFO_KHR;
     const auto pres_modes = surf.present_modes(p_dev);
-    if (std::find(begin(pres_modes), end(pres_modes),
+    if (std::find(begin(pres_modes),
+                  end(pres_modes),
                   VK_PRESENT_MODE_MAILBOX_KHR) != end(pres_modes)) {
         pres_mode = VK_PRESENT_MODE_MAILBOX_KHR;
     }
@@ -125,10 +126,15 @@ Swapchain::Swapchain(PhysDevice& p_dev,
     log.enter("images count", imgs_cnt);
     log.brk();
 
-    imgs.resize(imgs_cnt);
-    Vulkan::vk_try(get_swch_imgs(dev, swch, &imgs_cnt, imgs.data()),
+    std::vector<VkImage> vk_imgs;
+    vk_imgs.resize(imgs_cnt);
+    Vulkan::vk_try(get_swch_imgs(dev, swch, &imgs_cnt, vk_imgs.data()),
                    "getting swapchain images");
     log.brk();
+
+    for (auto&& vk_img : vk_imgs) {
+        imgs.push_back(Image {vk_img, l_dev});
+    }
 }
 
 Swapchain::~Swapchain() noexcept

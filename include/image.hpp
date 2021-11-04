@@ -19,53 +19,41 @@
  * Copyright (c) 2021 Zoë Sparks <zoe@milky.flowers>
  */
 
-#ifndef bfec49bf097c4235a5a04d7785daf8ff
-#define bfec49bf097c4235a5a04d7785daf8ff
-
-#include "image.hpp"
+#ifndef g78ee18adaaf43c58cfaf32de84d74b2
+#define g78ee18adaaf43c58cfaf32de84d74b2
 
 #include <vulkan/vulkan.h>
 
-#include <vector>
-
 namespace cu {
 
-class PhysDevice;
 class LogiDevice;
-class Surface;
-class Instance;
-class SDL;
 
 /*!
- * \brief A Vulkan swapchain wrapper.
+ * \brief A Vulkan image wrapper.
  */
-class Swapchain {
+class Image {
 public:
     /*!
-     * \brief (constructor)
+     * \brief (constructor) Wrap an existing VkImage, in order to
+     * handle `vkGetSwapchainImagesKHR` and the like.
      *
-     * \param p_dev The PhysDevice in use.
-     * \param l_dev The LogiDevice in use.
-     * \param surf The Surface in use.
-     * \param sdl The SDL instance in use.
+     * \param existing An already-initialized VkImage.
+     * \param l_dev    The logical device used to create the
+     *                 image.
+     * \param destroy  Whether the VkImage should be destroyed in
+     *                 the Image's destructor (Swapchain images
+     *                 are destroyed along with the Swapchain).
      */
-    Swapchain(PhysDevice& p_dev, LogiDevice& l_dev, Surface& surf, SDL& sdl);
+    Image(VkImage existing, LogiDevice& l_dev, bool destroy = false);
 
-    Swapchain(Swapchain&&) = delete;
-    Swapchain(const Swapchain&) = delete;
-    Swapchain& operator=(const Swapchain&) = delete;
-
-    ~Swapchain() noexcept;
-
+    ~Image() noexcept;
 private:
-    VkSwapchainKHR swch;
-    VkSwapchainKHR old_swch = VK_NULL_HANDLE;
+    VkImage img;
     VkDevice dev;
-    std::vector<Image> imgs;
 
-    PFN_vkCreateSwapchainKHR create_swch;
-    PFN_vkGetSwapchainImagesKHR get_swch_imgs;
-    PFN_vkDestroySwapchainKHR destroy_swch;
+    PFN_vkDestroyImage destroy_img;
+
+    bool should_destroy;
 };
 
 } // namespace cu
