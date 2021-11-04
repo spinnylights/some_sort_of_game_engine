@@ -35,23 +35,23 @@
 namespace cu {
 
 Swapchain::Swapchain(PhysDevice& p_dev,
-                     LogiDevice& l_dev,
+                     LogiDevice::ptr l_dev,
                      Surface& surf,
                      SDL& sdl)
-    :dev{l_dev.inner()},
+    :dev{l_dev},
      create_swch{
         reinterpret_cast<PFN_vkCreateSwapchainKHR>(
-            l_dev.get_proc_addr("vkCreateSwapchainKHR")
+            l_dev->get_proc_addr("vkCreateSwapchainKHR")
         )
      },
      get_swch_imgs{
         reinterpret_cast<PFN_vkGetSwapchainImagesKHR>(
-            l_dev.get_proc_addr("vkGetSwapchainImagesKHR")
+            l_dev->get_proc_addr("vkGetSwapchainImagesKHR")
         )
      },
      destroy_swch{
         reinterpret_cast<PFN_vkDestroySwapchainKHR>(
-            l_dev.get_proc_addr("vkDestroySwapchainKHR")
+            l_dev->get_proc_addr("vkDestroySwapchainKHR")
         )
      }
 {
@@ -115,12 +115,12 @@ Swapchain::Swapchain(PhysDevice& p_dev,
         .oldSwapchain = old_swch,
     };
 
-    Vulkan::vk_try(create_swch(dev, &create_info, NULL, &swch),
+    Vulkan::vk_try(create_swch(dev->inner(), &create_info, NULL, &swch),
                    "creating swapchain");
     log.brk();
 
     uint32_t imgs_cnt;
-    Vulkan::vk_try(get_swch_imgs(dev, swch, &imgs_cnt, NULL),
+    Vulkan::vk_try(get_swch_imgs(dev->inner(), swch, &imgs_cnt, NULL),
                    "getting swapchain images count");
     log.indent();
     log.enter("images count", imgs_cnt);
@@ -128,7 +128,7 @@ Swapchain::Swapchain(PhysDevice& p_dev,
 
     std::vector<VkImage> vk_imgs;
     vk_imgs.resize(imgs_cnt);
-    Vulkan::vk_try(get_swch_imgs(dev, swch, &imgs_cnt, vk_imgs.data()),
+    Vulkan::vk_try(get_swch_imgs(dev->inner(), swch, &imgs_cnt, vk_imgs.data()),
                    "getting swapchain images");
     log.brk();
 
@@ -140,7 +140,7 @@ Swapchain::Swapchain(PhysDevice& p_dev,
 Swapchain::~Swapchain() noexcept
 {
     log.attempt("Vulkan", "destroying swapchain");
-    destroy_swch(dev, swch, NULL);
+    destroy_swch(dev->inner(), swch, NULL);
     log.finish();
     log.brk();
 }

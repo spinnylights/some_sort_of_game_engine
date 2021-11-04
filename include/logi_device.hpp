@@ -22,26 +22,28 @@
 #ifndef xe47e6d7980140aa9940894be9435fc2
 #define xe47e6d7980140aa9940894be9435fc2
 
+#include "instance.hpp"
+
 #include <vulkan/vulkan.h>
 
 #include "phys_device.hpp"
 
 namespace cu {
 
-class Instance;
-
 /*!
  * \brief A Vulkan logical device wrapper.
  */
 class LogiDevice {
 public:
+    using ptr = std::shared_ptr<LogiDevice>;
+
     /*!
      * \brief (constructor)
      *
      * \param dev The PhysDevice in use.
      * \param inst The Instance in use.
      */
-    LogiDevice(PhysDevice& dev, Instance& inst);
+    LogiDevice(PhysDevice& dev, Instance::ptr inst);
 
     LogiDevice(LogiDevice&&) = delete;
     LogiDevice(const LogiDevice&) = delete;

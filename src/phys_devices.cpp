@@ -31,10 +31,10 @@
 namespace cu {
 
 
-uint32_t PhysDevices::get_dev_cnt(Instance& inst)
+uint32_t PhysDevices::get_dev_cnt(Instance::ptr inst)
 {
     uint32_t dev_cnt;
-    Vulkan::vk_try(enum_phys_devs(inst.inner(), &dev_cnt, NULL),
+    Vulkan::vk_try(enum_phys_devs(inst->inner(), &dev_cnt, NULL),
                    "getting physical device count");
     log.indent();
     log.enter("physical device count", dev_cnt);
@@ -43,11 +43,11 @@ uint32_t PhysDevices::get_dev_cnt(Instance& inst)
     return dev_cnt;
 }
 
-std::vector<VkPhysicalDevice> PhysDevices::enumerate_devs(Instance& inst,
+std::vector<VkPhysicalDevice> PhysDevices::enumerate_devs(Instance::ptr inst,
                                                           uint32_t dev_cnt)
 {
     std::vector<VkPhysicalDevice> potential_devs (dev_cnt);
-    Vulkan::vk_try(enum_phys_devs(inst.inner(),
+    Vulkan::vk_try(enum_phys_devs(inst->inner(),
                                   &dev_cnt,
                                   potential_devs.data()),
                    "enumerating physical devices");
@@ -181,7 +181,7 @@ std::vector<std::string> PhysDevices::get_dev_exts(VkPhysicalDevice dev)
         return ext_names;
 }
 
-void PhysDevices::populate_devs(Instance& inst, Surface& surf)
+void PhysDevices::populate_devs(Instance::ptr inst, Surface& surf)
 {
     auto dev_cnt        = get_dev_cnt(inst);
     auto potential_devs = enumerate_devs(inst, dev_cnt);
@@ -270,30 +270,30 @@ void PhysDevices::populate_default()
     log.brk();
 }
 
-PhysDevices::PhysDevices(Instance& inst, Surface& surf)
+PhysDevices::PhysDevices(Instance::ptr inst, Surface& surf)
     :enum_phys_devs{
          reinterpret_cast<PFN_vkEnumeratePhysicalDevices>(
-             inst.get_proc_addr("vkEnumeratePhysicalDevices")
+             inst->get_proc_addr("vkEnumeratePhysicalDevices")
          )
      },
      get_phys_dev_props{
          reinterpret_cast<PFN_vkGetPhysicalDeviceProperties2>(
-             inst.get_proc_addr("vkGetPhysicalDeviceProperties2")
+             inst->get_proc_addr("vkGetPhysicalDeviceProperties2")
          )
      },
      get_phys_dev_mem_props{
          reinterpret_cast<PFN_vkGetPhysicalDeviceMemoryProperties2>(
-             inst.get_proc_addr("vkGetPhysicalDeviceMemoryProperties2")
+             inst->get_proc_addr("vkGetPhysicalDeviceMemoryProperties2")
          )
      },
      get_phys_dev_queue_fam_props{
          reinterpret_cast<PFN_vkGetPhysicalDeviceQueueFamilyProperties>(
-             inst.get_proc_addr("vkGetPhysicalDeviceQueueFamilyProperties")
+             inst->get_proc_addr("vkGetPhysicalDeviceQueueFamilyProperties")
          )
      },
      enum_dev_ext_props{
          reinterpret_cast<PFN_vkEnumerateDeviceExtensionProperties>(
-             inst.get_proc_addr("vkEnumerateDeviceExtensionProperties")
+             inst->get_proc_addr("vkEnumerateDeviceExtensionProperties")
          )
      }
 {

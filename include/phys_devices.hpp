@@ -22,6 +22,8 @@
 #ifndef rbd14ff256e547b690e922fd8ac2dbb9
 #define rbd14ff256e547b690e922fd8ac2dbb9
 
+#include "instance.hpp"
+
 #include <string>
 #include <vector>
 
@@ -31,7 +33,6 @@
 
 namespace cu {
 
-class Instance;
 class Surface;
 
 /*!
@@ -45,7 +46,7 @@ public:
      * \param inst The Instance in use.
      * \param surf The Surface in use.
      */
-    PhysDevices(Instance& inst, Surface& surf);
+    PhysDevices(Instance::ptr inst, Surface& surf);
 
     /*!
      * \brief Returns the default physical device, chosen
@@ -57,11 +58,11 @@ private:
     std::vector<PhysDevice> devs;
     std::vector<PhysDevice>::size_type default_dev;
 
-    void populate_devs(Instance&, Surface&);
+    void populate_devs(Instance::ptr, Surface&);
     void populate_default();
-    uint32_t get_dev_cnt(Instance& inst);
+    uint32_t get_dev_cnt(Instance::ptr inst);
     std::vector<std::string> get_dev_exts(VkPhysicalDevice dev);
-    std::vector<VkPhysicalDevice> enumerate_devs(Instance& inst,
+    std::vector<VkPhysicalDevice> enumerate_devs(Instance::ptr inst,
                                                  uint32_t dev_cnt);
     std::vector<VkQueueFamilyProperties>
     get_queue_fam_props(VkPhysicalDevice& dev);

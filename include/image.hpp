@@ -22,6 +22,8 @@
 #ifndef g78ee18adaaf43c58cfaf32de84d74b2
 #define g78ee18adaaf43c58cfaf32de84d74b2
 
+#include "logi_device.hpp"
+
 #include <vulkan/vulkan.h>
 
 namespace cu {
@@ -44,12 +46,12 @@ public:
      *                 the Image's destructor (Swapchain images
      *                 are destroyed along with the Swapchain).
      */
-    Image(VkImage existing, LogiDevice& l_dev, bool destroy = false);
+    Image(VkImage existing, LogiDevice::ptr l_dev, bool destroy = false);
 
     ~Image() noexcept;
 private:
     VkImage img;
-    VkDevice dev;
+    LogiDevice::ptr dev;
 
     PFN_vkDestroyImage destroy_img;
 

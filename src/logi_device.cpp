@@ -50,15 +50,15 @@ uint32_t pick_queue_ndx(PhysDevice& phys_dev,
     return ndx;
 }
 
-LogiDevice::LogiDevice(PhysDevice& phys_dev, Instance& inst)
+LogiDevice::LogiDevice(PhysDevice& phys_dev, Instance::ptr inst)
     :create_dev {
         reinterpret_cast<PFN_vkCreateDevice>(
-            inst.get_proc_addr("vkCreateDevice")
+            inst->get_proc_addr("vkCreateDevice")
         )
      },
      get_dev_proc_addr {
          reinterpret_cast<PFN_vkGetDeviceProcAddr>(
-             inst.get_proc_addr("vkGetDeviceProcAddr")
+             inst->get_proc_addr("vkGetDeviceProcAddr")
          )
      }
 

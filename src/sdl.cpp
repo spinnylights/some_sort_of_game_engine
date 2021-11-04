@@ -146,9 +146,9 @@ std::vector<const char*> SDL::get_req_vulk_exts() const
     return exts;
 }
 
-void SDL::create_surface(Instance& inst, VkSurfaceKHR* surf)
+void SDL::create_surface(Instance::ptr inst, VkSurfaceKHR* surf)
 {
-    sdl_try(SDL_Vulkan_CreateSurface(win, inst.inner(), surf),
+    sdl_try(SDL_Vulkan_CreateSurface(win, inst->inner(), surf),
             "creating surface");
     log.brk();
 }

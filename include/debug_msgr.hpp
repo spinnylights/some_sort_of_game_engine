@@ -26,6 +26,8 @@
 
 #include <vulkan/vulkan_core.h>
 
+#include <memory>
+
 namespace cu {
 
 /*!
@@ -40,7 +42,7 @@ public:
      * \param debug_on Whether the Vulkan debug layer is enabled.
      * Only creates the messenger if this is true.
      */
-    DebugMsgr(Instance& inst, bool debug_on);
+    DebugMsgr(Instance::ptr inst, bool debug_on);
 
     DebugMsgr(DebugMsgr&&) = delete;
     DebugMsgr(const DebugMsgr&) = delete;
@@ -49,13 +51,14 @@ public:
     ~DebugMsgr() noexcept;
 
 private:
-    bool dbg_on;
-    VkInstance inst;
+    VkDebugUtilsMessengerEXT msgr;
 
     PFN_vkCreateDebugUtilsMessengerEXT create_dbg_msgr;
     PFN_vkDestroyDebugUtilsMessengerEXT destroy_dbg_msgr;
 
-    VkDebugUtilsMessengerEXT msgr;
+    Instance::ptr inst;
+
+    bool dbg_on;
 };
 
 } // namespace cu

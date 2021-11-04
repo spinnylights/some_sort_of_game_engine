@@ -22,14 +22,16 @@
 #ifndef b1f51f6bee864d8cb4da54dd7c09f340
 #define b1f51f6bee864d8cb4da54dd7c09f340
 
+#include "instance.hpp"
+
 #include <vulkan/vulkan.h>
 
 #include <vector>
+#include <memory>
 
 namespace cu {
 
 class SDL;
-class Instance;
 class PhysDevice;
 
 /*!
@@ -43,7 +45,7 @@ public:
      * \param sdl The SDL instance in use.
      * \param inst The Instance instance in use.
      */
-    Surface(SDL& sdl, Instance& inst);
+    Surface(SDL& sdl, Instance::ptr inst);
 
     Surface(Surface&&) = delete;
     Surface(const Surface&) = delete;
@@ -76,12 +78,13 @@ public:
     std::vector<VkPresentModeKHR> present_modes(PhysDevice& dev);
 
 private:
-    VkSurfaceKHR surf;
-    VkInstance inst;
-
     PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR get_surf_caps;
     PFN_vkGetPhysicalDeviceSurfacePresentModesKHR get_pres_modes;
     PFN_vkDestroySurfaceKHR destroy_surf;
+
+    Instance::ptr inst;
+
+    VkSurfaceKHR surf;
 };
 
 } // namespace cu

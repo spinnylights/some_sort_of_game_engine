@@ -23,6 +23,7 @@
 #define bfec49bf097c4235a5a04d7785daf8ff
 
 #include "image.hpp"
+#include "logi_device.hpp"
 
 #include <vulkan/vulkan.h>
 
@@ -30,8 +31,6 @@
 
 namespace cu {
 
-class PhysDevice;
-class LogiDevice;
 class Surface;
 class Instance;
 class SDL;
@@ -49,7 +48,7 @@ public:
      * \param surf The Surface in use.
      * \param sdl The SDL instance in use.
      */
-    Swapchain(PhysDevice& p_dev, LogiDevice& l_dev, Surface& surf, SDL& sdl);
+    Swapchain(PhysDevice& p_dev, LogiDevice::ptr l_dev, Surface& surf, SDL& sdl);
 
     Swapchain(Swapchain&&) = delete;
     Swapchain(const Swapchain&) = delete;
@@ -60,7 +59,7 @@ public:
 private:
     VkSwapchainKHR swch;
     VkSwapchainKHR old_swch = VK_NULL_HANDLE;
-    VkDevice dev;
+    LogiDevice::ptr dev;
     std::vector<Image> imgs;
 
     PFN_vkCreateSwapchainKHR create_swch;

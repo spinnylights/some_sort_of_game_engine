@@ -220,11 +220,13 @@ Vulkan::Vulkan(std::vector<const char*> exts,
                std::vector<const char*> layers,
                SDL& sdl,
                bool debug)
-    : inst{exts, layers},
+    : inst{std::make_shared<Instance>(exts, layers)},
       dbg_msgr{inst, debug},
       surf{sdl, inst},
       phys_devs{inst, surf},
-      logi_dev{phys_devs.default_device(), inst},
+      logi_dev {
+          std::make_shared<LogiDevice>(phys_devs.default_device(), inst)
+      },
       swch{phys_devs.default_device(), logi_dev, surf, sdl}
 {}
 

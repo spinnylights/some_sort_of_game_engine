@@ -22,6 +22,8 @@
 #ifndef Zf3e510f4ae1456bbb00eb41d1469268
 #define Zf3e510f4ae1456bbb00eb41d1469268
 
+#include "instance.hpp"
+
 #include <string>
 #include <vector>
 
@@ -31,8 +33,6 @@
 #include <vulkan/vulkan.h>
 
 namespace cu {
-
-class Instance;
 
 /*!
  * \brief The size of the drawable area of the platform window
@@ -113,7 +113,7 @@ public:
      * initialize. Doesn't take a Surface& because this function
      * is needed in Surface initialization.
      */
-    void create_surface(Instance& inst, VkSurfaceKHR* surf);
+    void create_surface(Instance::ptr inst, VkSurfaceKHR* surf);
 
     /*!
      * \brief Returns the size of the drawable area of the

@@ -24,6 +24,7 @@
 
 #include <vector>
 #include <string>
+#include <memory>
 
 #include "instance.hpp"
 #include "debug_msgr.hpp"
@@ -86,11 +87,11 @@ public:
     ~Vulkan() = default;
 
 private:
-    Instance inst;
+    Instance::ptr inst;
     DebugMsgr dbg_msgr;
     Surface surf;
     PhysDevices phys_devs;
-    LogiDevice logi_dev;
+    LogiDevice::ptr logi_dev;
     Swapchain swch;
 };
 

@@ -22,6 +22,8 @@
 #ifndef nf881038f94847228e50390dc7437b5e
 #define nf881038f94847228e50390dc7437b5e
 
+#include "instance.hpp"
+
 #include <vulkan/vulkan.h>
 
 #include <cstdint>
@@ -59,7 +61,7 @@ public:
                 uint32_t ndex,
                 VkPhysicalDevice dev,
                 Surface& surf,
-                Instance& inst);
+                Instance::ptr inst);
 
     /*!
      * \brief Whether the queue family supports graphics

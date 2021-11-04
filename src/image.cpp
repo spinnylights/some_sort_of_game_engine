@@ -27,12 +27,12 @@
 
 namespace cu {
 
-Image::Image(VkImage existing, LogiDevice& l_dev, bool destroy)
+Image::Image(VkImage existing, LogiDevice::ptr l_dev, bool destroy)
     : img {existing},
-      dev {l_dev.inner()},
+      dev {l_dev},
       destroy_img {
           reinterpret_cast<PFN_vkDestroyImage>(
-              l_dev.get_proc_addr("vkDestroyImage")
+              l_dev->get_proc_addr("vkDestroyImage")
           )
       },
       should_destroy {destroy}
@@ -42,7 +42,7 @@ Image::~Image() noexcept
 {
     if (should_destroy) {
         log.attempt("Vulkan", "destroying image");
-        destroy_img(dev, img, NULL);
+        destroy_img(dev->inner(), img, NULL);
         log.finish();
         log.brk();
     }

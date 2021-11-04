@@ -27,6 +27,7 @@
 
 #include <vector>
 #include <string>
+#include <memory>
 
 namespace cu {
 
@@ -35,6 +36,8 @@ namespace cu {
  */
 class Instance {
 public:
+    using ptr = std::shared_ptr<Instance>;
+
     /*!
      * \brief (constructor)
      *

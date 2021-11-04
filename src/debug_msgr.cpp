@@ -39,19 +39,19 @@ debug_callback(VkDebugUtilsMessageSeverityFlagBitsEXT msg_severity,
     return VK_FALSE;
 }
 
-DebugMsgr::DebugMsgr(Instance& outer_instance, bool debug_on)
-    :dbg_on{debug_on},
-     inst{outer_instance.inner()}
+DebugMsgr::DebugMsgr(Instance::ptr outer_instance, bool debug_on)
+    : inst{outer_instance},
+      dbg_on{debug_on}
 {
     if (dbg_on) {
         create_dbg_msgr =
             reinterpret_cast<PFN_vkCreateDebugUtilsMessengerEXT>(
-               outer_instance.get_proc_addr("vkCreateDebugUtilsMessengerEXT")
+               outer_instance->get_proc_addr("vkCreateDebugUtilsMessengerEXT")
             );
 
         destroy_dbg_msgr =
             reinterpret_cast<PFN_vkDestroyDebugUtilsMessengerEXT>(
-                outer_instance.get_proc_addr("vkDestroyDebugUtilsMessengerEXT")
+                outer_instance->get_proc_addr("vkDestroyDebugUtilsMessengerEXT")
             );
 
         VkDebugUtilsMessengerCreateInfoEXT dbg_create_info = {
@@ -70,7 +70,7 @@ DebugMsgr::DebugMsgr(Instance& outer_instance, bool debug_on)
             .pfnUserCallback = debug_callback
         };
 
-        Vulkan::vk_try(create_dbg_msgr(inst,
+        Vulkan::vk_try(create_dbg_msgr(inst->inner(),
                                        &dbg_create_info,
                                        NULL,
                                        &msgr),
@@ -84,7 +84,7 @@ DebugMsgr::~DebugMsgr() noexcept
 {
     if (dbg_on) {
         log.attempt("Vulkan", "destroying debug messenger");
-        destroy_dbg_msgr(inst, msgr, NULL);
+        destroy_dbg_msgr(inst->inner(), msgr, NULL);
         log.finish();
         log.brk();
     }

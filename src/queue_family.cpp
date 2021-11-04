@@ -32,10 +32,10 @@ QueueFamily::QueueFamily(VkQueueFamilyProperties& q_family_props,
                          uint32_t ndex,
                          VkPhysicalDevice dev,
                          Surface& surf,
-                         Instance& inst)
+                         Instance::ptr inst)
     :get_surf_support{
         reinterpret_cast<PFN_vkGetPhysicalDeviceSurfaceSupportKHR>(
-            inst.get_proc_addr("vkGetPhysicalDeviceSurfaceSupportKHR")
+            inst->get_proc_addr("vkGetPhysicalDeviceSurfaceSupportKHR")
         )
      }
 {

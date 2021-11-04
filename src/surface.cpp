@@ -24,37 +24,36 @@
 #include "log.hpp"
 
 #include "sdl.hpp"
-#include "instance.hpp"
 #include "phys_device.hpp"
 #include "vulkan.hpp"
 
 namespace cu {
 
-Surface::Surface(SDL& sdl, Instance& instance)
+Surface::Surface(SDL& sdl, Instance::ptr instance)
     :get_surf_caps{
          reinterpret_cast<PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR>(
-             instance.get_proc_addr("vkGetPhysicalDeviceSurfaceCapabilitiesKHR")
+             instance->get_proc_addr("vkGetPhysicalDeviceSurfaceCapabilitiesKHR")
          )
      },
      get_pres_modes{
          reinterpret_cast<PFN_vkGetPhysicalDeviceSurfacePresentModesKHR>(
-             instance.get_proc_addr("vkGetPhysicalDeviceSurfacePresentModesKHR")
+             instance->get_proc_addr("vkGetPhysicalDeviceSurfacePresentModesKHR")
          )
      },
      destroy_surf{
          reinterpret_cast<PFN_vkDestroySurfaceKHR>(
-             instance.get_proc_addr("vkDestroySurfaceKHR")
+             instance->get_proc_addr("vkDestroySurfaceKHR")
          )
-     }
+     },
+     inst {instance}
 {
     sdl.create_surface(instance, &surf);
-    inst = instance.inner();
 }
 
 Surface::~Surface() noexcept
 {
     log.attempt("Vulkan", "destroying surface");
-    destroy_surf(inst, surf, NULL);
+    destroy_surf(inst->inner(), surf, NULL);
     log.finish();
     log.brk();
 }
