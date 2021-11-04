@@ -1,9 +1,5 @@
 # _Crypt Underworld_
 
-**Note**: Until Oct. 12th, Lily and I are preparing another
-game for submission to the IGF, so my work on this is on pause
-for the next couple weeks.
-
 **Note**: If you don't see much going on here and you're
 wondering what I'm up to, you can check my
 [vulkan-notes](https://github.com/spinnylights/vulkan-notes) and
