@@ -42,10 +42,10 @@ public:
     /*!
      * \brief (constructor)
      *
-     * \parm p_dev The PhysDevice in use.
-     * \parm l_dev The LogiDevice in use.
-     * \parm surf The Surface in use.
-     * \parm sdl The SDL instance in use.
+     * \param p_dev The PhysDevice in use.
+     * \param l_dev The LogiDevice in use.
+     * \param surf The Surface in use.
+     * \param sdl The SDL instance in use.
      */
     Swapchain(PhysDevice& p_dev, LogiDevice& l_dev, Surface& surf, SDL& sdl);
 
