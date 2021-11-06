@@ -132,8 +132,27 @@ Swapchain::Swapchain(PhysDevice& p_dev,
                    "getting swapchain images");
     log.brk();
 
+    Image::params ps {
+        .extent           = {
+            .width  = create_info.imageExtent.width,
+            .height = create_info.imageExtent.height,
+            .depth  = 1,
+        },
+        .usage            = create_info.imageUsage,
+        .flags            = 0,
+        .dimens           = VK_IMAGE_TYPE_2D,
+        .format           = create_info.imageFormat,
+        .mip_lvl_cnt      = 1,
+        .layer_cnt        = create_info.imageArrayLayers,
+        .samples          = VK_SAMPLE_COUNT_1_BIT,
+        .tiling           = VK_IMAGE_TILING_OPTIMAL,
+        .sharing_mode     = create_info.imageSharingMode,
+        .queue_fam_ndcies = {},
+        .layout           = VK_IMAGE_LAYOUT_UNDEFINED,
+    };
+
     for (auto&& vk_img : vk_imgs) {
-        imgs.push_back(Image {vk_img, l_dev});
+        imgs.push_back(Image {vk_img, l_dev, ps});
     }
 }
 

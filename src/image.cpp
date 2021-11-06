@@ -23,26 +23,86 @@
 
 #include "log.hpp"
 
+#include "vulkan.hpp"
 #include "logi_device.hpp"
 
 namespace cu {
 
-Image::Image(VkImage existing, LogiDevice::ptr l_dev, bool destroy)
-    : img {existing},
-      dev {l_dev},
-      destroy_img {
+Image::Image(LogiDevice::ptr l_dev, const Image::params& ps)
+    : _dev              {l_dev},
+      _destroy_img      {
           reinterpret_cast<PFN_vkDestroyImage>(
-              l_dev->get_proc_addr("vkDestroyImage")
+              _dev->get_proc_addr("vkDestroyImage")
           )
       },
-      should_destroy {destroy}
+      _queue_fam_ndcies {ps.queue_fam_ndcies},
+      _extent           {ps.extent},
+      _format           {ps.format},
+      _sharing_mode     {ps.sharing_mode},
+      _layout           {ps.layout},
+      _usage            {ps.usage},
+      _flags            {ps.flags},
+      _dimens           {ps.dimens},
+      _samples          {ps.samples},
+      _tiling           {ps.tiling},
+      _mip_lvl_cnt      {ps.mip_lvl_cnt},
+      _layer_cnt        {ps.layer_cnt},
+      _should_destroy   {true}
+{
+    VkImageCreateInfo create_inf = {
+        .sType                 = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
+        .pNext                 = NULL,
+        .flags                 = _flags,
+        .imageType             = _dimens,
+        .format                = _format,
+        .extent                = _extent,
+        .mipLevels             = _mip_lvl_cnt,
+        .arrayLayers           = _layer_cnt,
+        .samples               = _samples,
+        .tiling                = _tiling,
+        .usage                 = _usage,
+        .sharingMode           = _sharing_mode,
+        .queueFamilyIndexCount =
+            static_cast<uint32_t>(_queue_fam_ndcies.size()),
+        .pQueueFamilyIndices   = _queue_fam_ndcies.data(),
+        .initialLayout         = _layout,
+    };
+
+    Vulkan::vk_try(vkCreateImage(_dev->inner(), &create_inf, NULL, &_img),
+                   "create image");
+}
+
+Image::Image(VkImage existing,
+             LogiDevice::ptr l_dev,
+             const Image::params& ps,
+             bool destroy)
+    : _img              {existing},
+      _dev              {l_dev},
+      _destroy_img      {
+          reinterpret_cast<PFN_vkDestroyImage>(
+              _dev->get_proc_addr("vkDestroyImage")
+          )
+      },
+      _queue_fam_ndcies {ps.queue_fam_ndcies},
+      _extent           {ps.extent},
+      _format           {ps.format},
+      _sharing_mode     {ps.sharing_mode},
+      _layout           {ps.layout},
+      _usage            {ps.usage},
+      _flags            {ps.flags},
+      _dimens           {ps.dimens},
+      _samples          {ps.samples},
+      _tiling           {ps.tiling},
+      _mip_lvl_cnt      {ps.mip_lvl_cnt},
+      _layer_cnt        {ps.layer_cnt},
+      _should_destroy   {destroy}
 {}
 
 Image::~Image() noexcept
 {
-    if (should_destroy) {
+    if (_should_destroy) {
         log.attempt("Vulkan", "destroying image");
-        destroy_img(dev->inner(), img, NULL);
+        _destroy_img(_dev->inner(), _img, NULL);
         log.finish();
         log.brk();
     }
