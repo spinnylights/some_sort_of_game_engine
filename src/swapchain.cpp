@@ -58,7 +58,7 @@ Swapchain::Swapchain(PhysDevice& p_dev,
     const auto win_size = sdl.get_win_size();
 
     const auto surface_caps = surf.capabilities(p_dev);
-    uint32_t min_img_cnt = 3;
+    uint32_t   min_img_cnt  = 3;
     if (surface_caps.maxImageCount < 3) {
         min_img_cnt = surface_caps.maxImageCount;
     }
@@ -66,21 +66,29 @@ Swapchain::Swapchain(PhysDevice& p_dev,
     // support for VK_PRESENT_MODE_FIFO_KHR is required by the
     // spec (see VkSwapchainCreateInfoKHR in 33.9 WSI Swapchain)
     VkPresentModeKHR pres_mode = VK_PRESENT_MODE_FIFO_KHR;
-    const auto pres_modes = surf.present_modes(p_dev);
-    if (std::find(begin(pres_modes),
-                  end(pres_modes),
-                  VK_PRESENT_MODE_MAILBOX_KHR) != end(pres_modes)) {
-        pres_mode = VK_PRESENT_MODE_MAILBOX_KHR;
+
+    {
+        const auto pres_modes = surf.present_modes(p_dev);
+
+        const bool mailbox_supported =
+            std::find(begin(pres_modes),
+                      end(pres_modes),
+                      VK_PRESENT_MODE_MAILBOX_KHR) != end(pres_modes);
+
+        if (mailbox_supported) {
+            pres_mode = VK_PRESENT_MODE_MAILBOX_KHR;
+        }
     }
+
     log.enter("present mode used", pres_mode);
     log.brk();
 
     VkSwapchainCreateInfoKHR create_info {
-        .sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR,
-        .pNext = NULL,
-        .flags = 0,
-        .surface = surf.inner(),
-        .minImageCount = min_img_cnt,
+        .sType                 = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR,
+        .pNext                 = NULL,
+        .flags                 = 0,
+        .surface               = surf.inner(),
+        .minImageCount         = min_img_cnt,
 
         // The Vulkan spec requires that all implementations support
         // the sRGB pixel format and transfer function (see
@@ -92,27 +100,29 @@ Swapchain::Swapchain(PhysDevice& p_dev,
         // there right now that support fancier color spaces, but
         // that will have to wait until Lily and I can actually get
         // our hands on such things.
-        .imageFormat = VK_FORMAT_B8G8R8A8_SRGB,
-        .imageColorSpace = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR,
+        .imageFormat           = VK_FORMAT_B8G8R8A8_SRGB,
+        .imageColorSpace       = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR,
 
-        .imageExtent = { .width = static_cast<uint32_t>(win_size.width),
-                         .height = static_cast<uint32_t>(win_size.height) },
-        .imageArrayLayers = 1,
+        .imageExtent           = {
+            .width  = static_cast<uint32_t>(win_size.width),
+            .height = static_cast<uint32_t>(win_size.height)
+        },
+        .imageArrayLayers      = 1,
 
         // this will probably need to be changed later
-        .imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
+        .imageUsage            = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
 
-        .imageSharingMode = VK_SHARING_MODE_EXCLUSIVE,
+        .imageSharingMode      = VK_SHARING_MODE_EXCLUSIVE,
         .queueFamilyIndexCount = 0,
-        .pQueueFamilyIndices = NULL,
-        .preTransform = surface_caps.currentTransform,
-        .compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR,
-        .presentMode = pres_mode,
-        .clipped = VK_TRUE,
+        .pQueueFamilyIndices   = NULL,
+        .preTransform          = surface_caps.currentTransform,
+        .compositeAlpha        = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR,
+        .presentMode           = pres_mode,
+        .clipped               = VK_TRUE,
 
         // TODO: remember to set this properly during swap chain
         // recreation
-        .oldSwapchain = old_swch,
+        .oldSwapchain          = old_swch,
     };
 
     Vulkan::vk_try(create_swch(dev->inner(), &create_info, NULL, &swch),
@@ -128,7 +138,10 @@ Swapchain::Swapchain(PhysDevice& p_dev,
 
     std::vector<VkImage> vk_imgs;
     vk_imgs.resize(imgs_cnt);
-    Vulkan::vk_try(get_swch_imgs(dev->inner(), swch, &imgs_cnt, vk_imgs.data()),
+    Vulkan::vk_try(get_swch_imgs(dev->inner(),
+                                 swch,
+                                 &imgs_cnt,
+                                 vk_imgs.data()),
                    "getting swapchain images");
     log.brk();
 
