@@ -35,6 +35,11 @@ Image::Image(LogiDevice::ptr l_dev, const Image::params& ps)
               _dev->get_proc_addr("vkDestroyImage")
           )
       },
+      _create_img      {
+          reinterpret_cast<PFN_vkCreateImage>(
+              _dev->get_proc_addr("vkCreateImage")
+          )
+      },
       _queue_fam_ndcies {ps.queue_fam_ndcies},
       _extent           {ps.extent},
       _format           {ps.format},
@@ -68,7 +73,7 @@ Image::Image(LogiDevice::ptr l_dev, const Image::params& ps)
         .initialLayout         = _layout,
     };
 
-    Vulkan::vk_try(vkCreateImage(_dev->inner(), &create_inf, NULL, &_img),
+    Vulkan::vk_try(_create_img(_dev->inner(), &create_inf, NULL, &_img),
                    "create image");
 }
 
@@ -81,6 +86,11 @@ Image::Image(VkImage existing,
       _destroy_img      {
           reinterpret_cast<PFN_vkDestroyImage>(
               _dev->get_proc_addr("vkDestroyImage")
+          )
+      },
+      _create_img      {
+          reinterpret_cast<PFN_vkCreateImage>(
+              _dev->get_proc_addr("vkCreateImage")
           )
       },
       _queue_fam_ndcies {ps.queue_fam_ndcies},

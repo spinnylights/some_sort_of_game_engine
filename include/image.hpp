@@ -80,6 +80,7 @@ private:
     LogiDevice::ptr       _dev;
 
     PFN_vkDestroyImage    _destroy_img;
+    PFN_vkCreateImage     _create_img;
 
     std::vector<uint32_t> _queue_fam_ndcies;
     VkExtent3D            _extent;
