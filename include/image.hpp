@@ -184,6 +184,17 @@ public:
         return _usage & VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
     }
 
+    /*!
+     * \brief A subresource range specifying all valid subresources of the
+     * image.
+     */
+    VkImageSubresourceRange all_subresources() const;
+
+    /*!
+     * \brief A Vulkan image view type matching the image's dimensionality.
+     */
+    VkImageViewType view_type() const;
+
 private:
     VkImage               _img;
     LogiDevice::ptr       _dev;

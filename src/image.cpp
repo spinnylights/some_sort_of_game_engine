@@ -25,6 +25,7 @@
 
 #include "vulkan.hpp"
 #include "logi_device.hpp"
+#include "image_format.hpp"
 
 namespace cu {
 
@@ -146,6 +147,50 @@ Image::~Image() noexcept
         log.finish();
         log.brk();
     }
+}
+
+VkImageSubresourceRange Image::all_subresources() const
+{
+    VkImageAspectFlags aspect_mask = 0;
+
+    if (color()) {
+        aspect_mask |= VK_IMAGE_ASPECT_COLOR_BIT;
+    }
+
+    if (depth_stencil()) {
+        if ((ImageFormat {_format}).has_depth()) {
+            aspect_mask |= VK_IMAGE_ASPECT_DEPTH_BIT;
+        }
+
+        if ((ImageFormat {_format}).has_stencil()) {
+            aspect_mask |= VK_IMAGE_ASPECT_STENCIL_BIT;
+        }
+    }
+
+    return {
+            .aspectMask     = aspect_mask,
+            .baseMipLevel   = 0,
+            .levelCount     = VK_REMAINING_MIP_LEVELS,
+            .baseArrayLayer = 0,
+            .layerCount     = VK_REMAINING_ARRAY_LAYERS,
+    };
+}
+
+VkImageViewType Image::view_type() const
+{
+    switch (_dimens) {
+        case VK_IMAGE_TYPE_1D:
+            return VK_IMAGE_VIEW_TYPE_1D;
+        case VK_IMAGE_TYPE_2D:
+            return VK_IMAGE_VIEW_TYPE_2D;
+        case VK_IMAGE_TYPE_3D:
+            return VK_IMAGE_VIEW_TYPE_3D;
+        case VK_IMAGE_TYPE_MAX_ENUM:
+            return VK_IMAGE_VIEW_TYPE_MAX_ENUM;
+    };
+
+    // to make the compiler happy
+    return VK_IMAGE_VIEW_TYPE_2D;
 }
 
 } // namespace cu
