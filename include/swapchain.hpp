@@ -23,6 +23,7 @@
 #define bfec49bf097c4235a5a04d7785daf8ff
 
 #include "image.hpp"
+#include "image_view.hpp"
 #include "logi_device.hpp"
 
 #include <vulkan/vulkan.h>
@@ -61,6 +62,7 @@ private:
     VkSwapchainKHR old_swch = VK_NULL_HANDLE;
     LogiDevice::ptr dev;
     std::vector<Image> imgs;
+    std::vector<ImageView> _img_views;
 
     PFN_vkCreateSwapchainKHR create_swch;
     PFN_vkGetSwapchainImagesKHR get_swch_imgs;

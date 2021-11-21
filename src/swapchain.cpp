@@ -167,6 +167,10 @@ Swapchain::Swapchain(PhysDevice& p_dev,
     for (auto&& vk_img : vk_imgs) {
         imgs.push_back(Image {vk_img, l_dev, ps});
     }
+
+    for (auto&& img : imgs) {
+        _img_views.push_back(ImageView {img});
+    }
 }
 
 Swapchain::~Swapchain() noexcept
@@ -176,4 +180,5 @@ Swapchain::~Swapchain() noexcept
     log.finish();
     log.brk();
 }
+
 } // namespace cu

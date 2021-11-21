@@ -17,5 +17,6 @@ crypt_underworld_SOURCES = \
 	src/cli.cpp \
 	src/debug_msgr.cpp \
 	src/image.cpp \
+	src/image_view.cpp \
 	src/image_format.cpp \
 	src/engine.cpp
