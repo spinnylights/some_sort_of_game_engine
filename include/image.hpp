@@ -74,6 +74,11 @@ public:
           const params& ps,
           bool destroy = false);
 
+    Image(Image&&);
+
+    Image(const Image&)            = delete;
+    Image& operator=(const Image&) = delete;
+
     ~Image() noexcept;
 
     /*!

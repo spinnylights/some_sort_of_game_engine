@@ -108,6 +108,36 @@ Image::Image(VkImage existing,
       _should_destroy   {destroy}
 {}
 
+Image::Image(Image&& other)
+    : _img              {other.inner()},
+      _dev              {other.device()},
+      _destroy_img      {
+          reinterpret_cast<PFN_vkDestroyImage>(
+              _dev->get_proc_addr("vkDestroyImage")
+          )
+      },
+      _create_img      {
+          reinterpret_cast<PFN_vkCreateImage>(
+              _dev->get_proc_addr("vkCreateImage")
+          )
+      },
+      _queue_fam_ndcies {other.queue_fam_indicies()},
+      _extent           {other.extent()},
+      _format           {other.format()},
+      _sharing_mode     {other.sharing_mode()},
+      _layout           {other.layout()},
+      _usage            {other.usage()},
+      _flags            {other.flags()},
+      _dimens           {other.dimens()},
+      _samples          {other.samples()},
+      _tiling           {other.tiling()},
+      _mip_lvl_cnt      {other.mip_lvl_cnt()},
+      _layer_cnt        {other.layer_cnt()},
+      _should_destroy   {other.will_be_destroyed()}
+{
+    other.should_destroy(false);
+}
+
 Image::~Image() noexcept
 {
     if (_should_destroy) {
