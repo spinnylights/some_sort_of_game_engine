@@ -75,6 +75,110 @@ public:
           bool destroy = false);
 
     ~Image() noexcept;
+
+    /*!
+     * \brief The handle wrapped by the class.
+     */
+    VkImage inner() { return _img; }
+
+    /*!
+     * \brief A shared pointer to the device used to create the image.
+     */
+    LogiDevice::ptr device() const { return _dev; }
+
+    /*!
+     * \brief The indicies of the queue families that will access the image, if
+     * the image is in the concurrent sharing mode.
+     */
+    std::vector<uint32_t> queue_fam_indicies() const
+    {
+        return _queue_fam_ndcies;
+    }
+
+    /*!
+     * \brief The element count on each axis of the image.
+     */
+    VkExtent3D extent() const { return _extent; }
+
+    /*!
+     * \brief The image's format (i.e. its representation in memory).
+     */
+    VkFormat format() const { return _format; }
+
+    /*!
+     * \brief Whether the image can be accessed by more than one queue family
+     * simultaneously.
+     */
+    VkSharingMode sharing_mode() const { return _sharing_mode; }
+
+    /*!
+     * \brief How the image is laid out in memory, at a high level.
+     */
+    VkImageLayout layout() const { return _layout; }
+
+    /*!
+     * \brief What the image can be used for (a color attachment, storage image,
+     * etc.).
+     */
+    VkImageUsageFlags usage() const { return _usage; }
+
+    /*!
+     * \brief Miscellaneous (Vulkan) properties of the image expressed as a
+     * bitmask.
+     */
+    VkImageCreateFlags flags() const { return _flags; }
+
+    /*!
+     * \brief Returns the image's Vulkan image type (i.e. its dimensionality).
+     */
+    VkImageType dimens() const { return _dimens; }
+
+    /*!
+     * \brief The image's number of samples per texel.
+     */
+    VkSampleCountFlagBits samples() const { return _samples; }
+
+    /*!
+     * \brief Whether the image's texels are laid out linearly or for efficient
+     * device access in memory.
+     */
+    VkImageTiling tiling() const { return _tiling; }
+
+    /*!
+     * \brief The number of MIP levels available within the image.
+     */
+    uint32_t mip_lvl_cnt() const { return _mip_lvl_cnt; }
+
+    /*!
+     * \brief The number of (Vulkan) layers available within the image.
+     */
+    uint32_t layer_cnt() const { return _layer_cnt; }
+
+    /*!
+     * \brief Whether the underlying Vulkan image will be destroyed in this
+     * instance's destructor or not.
+     */
+    bool will_be_destroyed() const { return _should_destroy; }
+
+    /*!
+     * \brief Whether the underlying Vulkan image should be destroyed in this
+     * instance's destructor or not.
+     */
+    void should_destroy(bool destroy) { _should_destroy = destroy; }
+
+    /*!
+     * \brief Whether the image can be used as a color attachment.
+     */
+    bool color() const { return _usage & VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT; }
+
+    /*!
+     * \brief Whether the image can be used as a depth/stencil attachment.
+     */
+    bool depth_stencil() const
+    {
+        return _usage & VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+    }
+
 private:
     VkImage               _img;
     LogiDevice::ptr       _dev;
