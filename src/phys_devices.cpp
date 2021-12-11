@@ -56,11 +56,10 @@ std::vector<VkPhysicalDevice> PhysDevices::enumerate_devs(Instance::ptr inst,
     return potential_devs;
 }
 
-VkPhysicalDeviceProperties2 PhysDevices::get_dev_props(VkPhysicalDevice& dev)
+VkPhysicalDeviceProperties PhysDevices::get_dev_props(VkPhysicalDevice& dev)
 {
-    VkPhysicalDeviceProperties2 props = {
-        .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2,
-    };
+    VkPhysicalDeviceProperties props;
+
     get_phys_dev_props(dev, &props);
 
     return props;
@@ -75,22 +74,6 @@ PhysDevices::get_mem_props(VkPhysicalDevice& dev)
     return mem_props;
 }
 
-VkDeviceSize calc_total_mem(VkPhysicalDeviceMemoryProperties& mem_props)
-{
-    VkDeviceSize total_mem = 0;
-    for (std::size_t i = 0;
-         i < mem_props.memoryHeapCount;
-         ++i) {
-        VkMemoryHeap heap = mem_props.memoryHeaps[i];
-        if ((heap.flags & VK_MEMORY_HEAP_DEVICE_LOCAL_BIT)
-            == VK_MEMORY_HEAP_DEVICE_LOCAL_BIT) {
-            total_mem += heap.size;
-        }
-    }
-
-    return total_mem;
-}
-
 std::vector<VkQueueFamilyProperties>
 PhysDevices::get_queue_fam_props(VkPhysicalDevice& dev)
 {
@@ -100,28 +83,6 @@ PhysDevices::get_queue_fam_props(VkPhysicalDevice& dev)
     get_phys_dev_queue_fam_props(dev, &q_family_cnt, q_family_props.data());
 
     return q_family_props;
-}
-
-void log_dev(VkPhysicalDeviceProperties2& props,
-             VkDeviceSize total_mem,
-             const std::vector<std::string>& exts)
-{
-    log.enter({
-        .name = std::string{props.properties.deviceName},
-        .members {
-            {"api version",
-                Vulkan::api_ver_to_str(props.properties.apiVersion)},
-            {"driver version",
-                props.properties.driverVersion},
-            {"vendor ID", props.properties.vendorID},
-            {"device ID", props.properties.deviceID},
-            {"device type", props.properties.deviceType},
-            {"video memory", std::to_string(total_mem) + " bytes"},
-            {"extensions", exts}
-        }
-    });
-
-    log.brk();
 }
 
 void log_queue_fam(VkQueueFamilyProperties& q_fam_props, uint32_t ndx)
@@ -185,34 +146,25 @@ void PhysDevices::populate_devs(Instance::ptr inst, Surface& surf)
     auto potential_devs = enumerate_devs(inst, dev_cnt);
 
     for (auto potential_dev : potential_devs) {
-        auto props     = get_dev_props(potential_dev);
-        auto mem_props = get_mem_props(potential_dev);
-        auto total_mem = calc_total_mem(mem_props);
-        auto exts      = get_dev_exts(potential_dev);
-
-        PhysDevice phys_dev {
-            .dev        = potential_dev,
-            .name       = props.properties.deviceName,
-            .type       = props.properties.deviceType,
-            .mem        = total_mem,
-            .extensions = exts,
-        };
-
-        log_dev(props, total_mem, exts);
 
         auto q_family_props = get_queue_fam_props(potential_dev);
 
+        PhysDevice phys_dev {
+            potential_dev,
+            surf,
+            inst,
+            get_dev_props(potential_dev),
+            get_mem_props(potential_dev),
+            q_family_props,
+            get_dev_exts(potential_dev),
+        };
+
+        phys_dev.log();
+
         bool supports_graphics = false;
         bool supports_present = false;
-        for (uint32_t i = 0; i < q_family_props.size(); ++i) {
-            QueueFamily fam = {
-                q_family_props.at(i),
-                i,
-                potential_dev,
-                surf,
-                inst
-            };
 
+        for (const auto& fam : phys_dev.queue_families) {
             if (fam.graphics()) {
                 supports_graphics = true;
             }
@@ -220,11 +172,6 @@ void PhysDevices::populate_devs(Instance::ptr inst, Surface& surf)
             if (fam.present_supported()) {
                 supports_present = true;
             }
-
-            phys_dev.queue_families.push_back(fam);
-
-            log.indent(2);
-            fam.log_info();
         }
 
         if (supports_graphics && supports_present) {
@@ -275,8 +222,8 @@ PhysDevices::PhysDevices(Instance::ptr inst, Surface& surf)
          )
      },
      get_phys_dev_props{
-         reinterpret_cast<PFN_vkGetPhysicalDeviceProperties2>(
-             inst->get_proc_addr("vkGetPhysicalDeviceProperties2")
+         reinterpret_cast<PFN_vkGetPhysicalDeviceProperties>(
+             inst->get_proc_addr("vkGetPhysicalDeviceProperties")
          )
      },
      get_phys_dev_mem_props{

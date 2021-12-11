@@ -9,6 +9,7 @@ crypt_underworld_SOURCES = \
 	src/vulkan.cpp \
 	src/instance.cpp \
 	src/phys_devices.cpp \
+	src/phys_device.cpp \
 	src/surface.cpp \
 	src/queue_family.cpp \
 	src/logi_device.cpp \
