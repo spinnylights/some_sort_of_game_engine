@@ -66,24 +66,22 @@ VkPhysicalDeviceProperties2 PhysDevices::get_dev_props(VkPhysicalDevice& dev)
     return props;
 }
 
-VkPhysicalDeviceMemoryProperties2
+VkPhysicalDeviceMemoryProperties
 PhysDevices::get_mem_props(VkPhysicalDevice& dev)
 {
-    VkPhysicalDeviceMemoryProperties2 mem_props = {
-        .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PROPERTIES_2
-    };
+    VkPhysicalDeviceMemoryProperties mem_props;
     get_phys_dev_mem_props(dev, &mem_props);
 
     return mem_props;
 }
 
-VkDeviceSize calc_total_mem(VkPhysicalDeviceMemoryProperties2& mem_props)
+VkDeviceSize calc_total_mem(VkPhysicalDeviceMemoryProperties& mem_props)
 {
     VkDeviceSize total_mem = 0;
     for (std::size_t i = 0;
-         i < mem_props.memoryProperties.memoryHeapCount;
+         i < mem_props.memoryHeapCount;
          ++i) {
-        VkMemoryHeap heap = mem_props.memoryProperties.memoryHeaps[i];
+        VkMemoryHeap heap = mem_props.memoryHeaps[i];
         if ((heap.flags & VK_MEMORY_HEAP_DEVICE_LOCAL_BIT)
             == VK_MEMORY_HEAP_DEVICE_LOCAL_BIT) {
             total_mem += heap.size;
@@ -282,8 +280,8 @@ PhysDevices::PhysDevices(Instance::ptr inst, Surface& surf)
          )
      },
      get_phys_dev_mem_props{
-         reinterpret_cast<PFN_vkGetPhysicalDeviceMemoryProperties2>(
-             inst->get_proc_addr("vkGetPhysicalDeviceMemoryProperties2")
+         reinterpret_cast<PFN_vkGetPhysicalDeviceMemoryProperties>(
+             inst->get_proc_addr("vkGetPhysicalDeviceMemoryProperties")
          )
      },
      get_phys_dev_queue_fam_props{
