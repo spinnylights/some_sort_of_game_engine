@@ -61,6 +61,23 @@ void PhysDevice::get_queue_fams(std::vector<VkQueueFamilyProperties>&
 
 }
 
+void PhysDevice::populate_mem_props(const VkPhysicalDeviceMemoryProperties&
+                                        props)
+{
+    for (std::size_t i = 0; i < props.memoryTypeCount; ++i) {
+        mem_types.push_back({
+            .inner = props.memoryTypes[i],
+            ._ndx  = i,
+        });
+    }
+
+    for (std::size_t i = 0; i < props.memoryHeapCount; ++i) {
+        mem_heaps.push_back({
+            .inner = props.memoryHeaps[i],
+            ._ndx  = i,
+        });
+    }
+}
 
 PhysDevice::PhysDevice(VkPhysicalDevice                     device,
                        Surface&                             surf,
@@ -78,10 +95,10 @@ PhysDevice::PhysDevice(VkPhysicalDevice                     device,
       vk_vend_id        {device_props.vendorID},
       vk_vend_dev_id    {device_props.deviceID},
       mem               {calc_total_mem(vk_memory_props)},
-      mem_props         {vk_memory_props},
       extensions        {extensions_supported}
 {
     get_queue_fams(vk_queue_props, surf, inst);
+    populate_mem_props(vk_memory_props);
 }
 
 PhysDevice::VkVersionNumber PhysDevice::vk_ver_spprtd() const
@@ -130,6 +147,35 @@ void PhysDevice::log() const
     for (const auto& fam : queue_families) {
         cu::log.indent(2);
         fam.log_info();
+    }
+
+    for (const auto& heap : mem_heaps) {
+        cu::log.indent(2);
+        cu::log.enter({
+            .name = "heap " + std::to_string(heap.ndx()),
+            .members = {
+                {"size", std::to_string(heap.size()) + " bytes"},
+                {"device local", heap.device_local()},
+            }
+        });
+        cu::log.brk();
+
+        for (const auto& type : mem_types) {
+            if (type.heap_ndx() == heap.ndx()) {
+                cu::log.indent(3);
+                cu::log.enter({
+                    .name = "type " + std::to_string(type.ndx()),
+                    .members = {
+                        {"heap index",    type.heap_ndx()},
+                        {"device local",  type.device_local()},
+                        {"host visible",  type.host_visible()},
+                        {"host coherent", type.host_coherent()},
+                        {"host cached",   type.host_cached()},
+                    }
+                });
+                cu::log.brk();
+            }
+        }
     }
 }
 
