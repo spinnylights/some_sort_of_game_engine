@@ -33,9 +33,9 @@ namespace cu {
 /*!
  * \brief A Vulkan logical device wrapper.
  */
-class LogiDevice {
+class Device {
 public:
-    using ptr = std::shared_ptr<LogiDevice>;
+    using ptr = std::shared_ptr<Device>;
 
     /*!
      * \brief (constructor)
@@ -43,13 +43,13 @@ public:
      * \param dev The PhysDevice in use.
      * \param inst The Instance in use.
      */
-    LogiDevice(PhysDevice& dev, Instance::ptr inst);
+    Device(PhysDevice& dev, Instance::ptr inst);
 
-    LogiDevice(LogiDevice&&) = delete;
-    LogiDevice(const LogiDevice&) = delete;
-    LogiDevice& operator=(const LogiDevice&) = delete;
+    Device(Device&&) = delete;
+    Device(const Device&) = delete;
+    Device& operator=(const Device&) = delete;
 
-    ~LogiDevice() noexcept;
+    ~Device() noexcept;
 
     /*!
      * \copydoc Instance::inner()

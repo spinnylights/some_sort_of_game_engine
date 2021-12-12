@@ -60,7 +60,7 @@ public:
 
     /*!
      * \brief Loads Vulkan functions that do not involve a
-     * LogiDevice (see
+     * Device (see
      * [VkGetInstanceProcAddr()](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/vkGetInstanceProcAddr.html)
      * in the Vulkan manual).
      *

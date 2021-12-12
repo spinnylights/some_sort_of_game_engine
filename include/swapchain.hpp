@@ -24,7 +24,7 @@
 
 #include "image.hpp"
 #include "image_view.hpp"
-#include "logi_device.hpp"
+#include "device.hpp"
 
 #include <vulkan/vulkan.h>
 
@@ -45,11 +45,11 @@ public:
      * \brief (constructor)
      *
      * \param p_dev The PhysDevice in use.
-     * \param l_dev The LogiDevice in use.
+     * \param l_dev The Device in use.
      * \param surf The Surface in use.
      * \param sdl The SDL instance in use.
      */
-    Swapchain(PhysDevice& p_dev, LogiDevice::ptr l_dev, Surface& surf, SDL& sdl);
+    Swapchain(PhysDevice& p_dev, Device::ptr l_dev, Surface& surf, SDL& sdl);
 
     Swapchain(Swapchain&&) = delete;
     Swapchain(const Swapchain&) = delete;
@@ -60,7 +60,7 @@ public:
 private:
     VkSwapchainKHR swch;
     VkSwapchainKHR old_swch = VK_NULL_HANDLE;
-    LogiDevice::ptr dev;
+    Device::ptr dev;
     std::vector<Image> imgs;
     std::vector<ImageView> _img_views;
 

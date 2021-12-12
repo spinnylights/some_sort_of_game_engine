@@ -225,7 +225,7 @@ Vulkan::Vulkan(std::vector<const char*> exts,
       surf{sdl, inst},
       phys_devs{inst, surf},
       logi_dev {
-          std::make_shared<LogiDevice>(phys_devs.default_device(), inst)
+          std::make_shared<Device>(phys_devs.default_device(), inst)
       },
       swch{phys_devs.default_device(), logi_dev, surf, sdl}
 {}

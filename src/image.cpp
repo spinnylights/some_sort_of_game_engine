@@ -24,12 +24,12 @@
 #include "log.hpp"
 
 #include "vulkan.hpp"
-#include "logi_device.hpp"
+#include "device.hpp"
 #include "image_format.hpp"
 
 namespace cu {
 
-Image::Image(LogiDevice::ptr l_dev, const Image::params& ps)
+Image::Image(Device::ptr l_dev, const Image::params& ps)
     : _dev              {l_dev},
       _destroy_img      {
           reinterpret_cast<PFN_vkDestroyImage>(
@@ -79,7 +79,7 @@ Image::Image(LogiDevice::ptr l_dev, const Image::params& ps)
 }
 
 Image::Image(VkImage existing,
-             LogiDevice::ptr l_dev,
+             Device::ptr l_dev,
              const Image::params& ps,
              bool destroy)
     : _img              {existing},

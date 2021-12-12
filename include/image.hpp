@@ -22,13 +22,13 @@
 #ifndef g78ee18adaaf43c58cfaf32de84d74b2
 #define g78ee18adaaf43c58cfaf32de84d74b2
 
-#include "logi_device.hpp"
+#include "device.hpp"
 
 #include <vulkan/vulkan.h>
 
 namespace cu {
 
-class LogiDevice;
+class Device;
 
 /*!
  * \brief A Vulkan image wrapper.
@@ -56,7 +56,7 @@ public:
      * \param l_dev The logical device you want to create the image with.
      * \param ps    The characteristics you want the image to have.
      */
-    Image(LogiDevice::ptr l_dev, const params& ps);
+    Image(Device::ptr l_dev, const params& ps);
 
     /*!
      * \brief (constructor) Wrap an existing VkImage, in order to
@@ -70,7 +70,7 @@ public:
      *                 Swapchain).
      */
     Image(VkImage existing,
-          LogiDevice::ptr l_dev,
+          Device::ptr l_dev,
           const params& ps,
           bool destroy = false);
 
@@ -89,7 +89,7 @@ public:
     /*!
      * \brief A shared pointer to the device used to create the image.
      */
-    LogiDevice::ptr device() const { return _dev; }
+    Device::ptr device() const { return _dev; }
 
     /*!
      * \brief The indicies of the queue families that will access the image, if
@@ -197,7 +197,7 @@ public:
 
 private:
     VkImage               _img;
-    LogiDevice::ptr       _dev;
+    Device::ptr       _dev;
 
     PFN_vkDestroyImage    _destroy_img;
     PFN_vkCreateImage     _create_img;

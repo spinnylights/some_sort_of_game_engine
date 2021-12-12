@@ -19,7 +19,7 @@
  * Copyright (c) 2021 Zoë Sparks <zoe@milky.flowers>
  */
 
-#include "logi_device.hpp"
+#include "device.hpp"
 
 #include "log.hpp"
 
@@ -50,7 +50,7 @@ uint32_t pick_queue_ndx(PhysDevice& phys_dev,
     return ndx;
 }
 
-LogiDevice::LogiDevice(PhysDevice& phys_dev, Instance::ptr inst)
+Device::Device(PhysDevice& phys_dev, Instance::ptr inst)
     :create_dev {
         reinterpret_cast<PFN_vkCreateDevice>(
             inst->get_proc_addr("vkCreateDevice")
@@ -140,7 +140,7 @@ LogiDevice::LogiDevice(PhysDevice& phys_dev, Instance::ptr inst)
     log.brk();
 }
 
-LogiDevice::~LogiDevice() noexcept
+Device::~Device() noexcept
 {
     log.attempt("Vulkan", "destroying logical device");
     destroy_dev(dev, NULL);
@@ -148,7 +148,7 @@ LogiDevice::~LogiDevice() noexcept
     log.brk();
 }
 
-PFN_vkVoidFunction LogiDevice::get_proc_addr(const char* name)
+PFN_vkVoidFunction Device::get_proc_addr(const char* name)
 {
     auto fn = get_dev_proc_addr(dev, name);
 

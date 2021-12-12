@@ -22,7 +22,7 @@
 #ifndef Sbc8f25127734054a45054192569a723
 #define Sbc8f25127734054a45054192569a723
 
-#include "logi_device.hpp"
+#include "device.hpp"
 
 #include <vulkan/vulkan.h>
 
@@ -57,7 +57,7 @@ public:
      * \brief Returns a shared pointer to the device used to create the image
      * view.
      */
-    LogiDevice::ptr device() const { return _dev; }
+    Device::ptr device() const { return _dev; }
 
     /*!
      * \brief Miscellaneous (Vulkan) properties of the image view, expressed
@@ -104,7 +104,7 @@ public:
 
 private:
     VkImageView             _inner;
-    LogiDevice::ptr         _dev;
+    Device::ptr         _dev;
 
     PFN_vkCreateImageView   _create_inner;
     PFN_vkDestroyImageView  _destroy_inner;

@@ -30,7 +30,7 @@
 #include "debug_msgr.hpp"
 #include "surface.hpp"
 #include "phys_devices.hpp"
-#include "logi_device.hpp"
+#include "device.hpp"
 #include "swapchain.hpp"
 
 namespace cu {
@@ -91,7 +91,7 @@ private:
     DebugMsgr dbg_msgr;
     Surface surf;
     PhysDevices phys_devs;
-    LogiDevice::ptr logi_dev;
+    Device::ptr logi_dev;
     Swapchain swch;
 };
 

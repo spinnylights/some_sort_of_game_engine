@@ -24,7 +24,7 @@
 #include "log.hpp"
 
 #include "phys_device.hpp"
-#include "logi_device.hpp"
+#include "device.hpp"
 #include "surface.hpp"
 #include "vulkan.hpp"
 #include "sdl.hpp"
@@ -35,7 +35,7 @@
 namespace cu {
 
 Swapchain::Swapchain(PhysDevice& p_dev,
-                     LogiDevice::ptr l_dev,
+                     Device::ptr l_dev,
                      Surface& surf,
                      SDL& sdl)
     :dev{l_dev},
