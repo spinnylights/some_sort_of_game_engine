@@ -22,12 +22,14 @@
 #ifndef J2f15c99194b4bc4bef27446c0d923d0
 #define J2f15c99194b4bc4bef27446c0d923d0
 
-#include <string>
-#include <vector>
+#include "queue_family.hpp"
+#include "memory_heap.hpp"
+#include "memory_type.hpp"
 
 #include <vulkan/vulkan.h>
 
-#include "queue_family.hpp"
+#include <string>
+#include <vector>
 
 namespace cu {
 
@@ -99,69 +101,10 @@ struct PhysDevice {
      */
     VkDeviceSize mem;
 
-    struct MemoryType {
-        VkMemoryType inner;
-        std::size_t  _ndx;
-
-        std::size_t ndx() const
-        {
-            return _ndx;
-        }
-
-        std::size_t heap_ndx() const
-        {
-            return inner.heapIndex;
-        }
-
-        bool device_local() const
-        {
-            return   inner.propertyFlags
-                   & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
-        }
-
-        bool host_visible() const
-        {
-            return   inner.propertyFlags
-                   & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;
-        }
-
-        bool host_coherent() const
-        {
-            return   inner.propertyFlags
-                   & VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
-        }
-
-        bool host_cached() const
-        {
-            return   inner.propertyFlags
-                   & VK_MEMORY_PROPERTY_HOST_CACHED_BIT;
-        }
-    };
-
     /*!
      * \brief The Vulkan types of memory available to the device.
      */
     std::vector<MemoryType> mem_types;
-
-    struct MemoryHeap {
-        VkMemoryHeap inner;
-        std::size_t  _ndx;
-
-        std::size_t ndx() const
-        {
-            return _ndx;
-        }
-
-        std::size_t size() const
-        {
-            return inner.size;
-        }
-
-        bool device_local() const
-        {
-            return inner.flags & VK_MEMORY_HEAP_DEVICE_LOCAL_BIT;
-        }
-    };
 
     /*!
      * \brief The Vulkan heaps of memory available to the device.
