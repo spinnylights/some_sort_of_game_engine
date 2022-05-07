@@ -36,6 +36,9 @@ namespace cu {
  */
 class Instance {
 public:
+    /*!
+     * \brief A pointer to the Instance.
+     */
     using ptr = std::shared_ptr<Instance>;
 
     /*!

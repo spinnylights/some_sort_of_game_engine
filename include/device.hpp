@@ -35,6 +35,9 @@ namespace cu {
  */
 class Device {
 public:
+    /*!
+     * \brief A pointer to the Device.
+     */
     using ptr = std::shared_ptr<Device>;
 
     /*!
