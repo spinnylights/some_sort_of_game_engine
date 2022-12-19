@@ -24,7 +24,6 @@
 #include "game.hpp"
 
 #include <getopt.h>
-#include <filesystem>
 #include <iostream>
 
 namespace cu {
@@ -32,6 +31,11 @@ namespace cu {
 // Obviously this could be DRYer, but it's so small right now that I don't feel
 // like it's worth working over yet. Once it really starts to get on my nerves
 // I'll make an Options class or the like.
+
+bool CLI::minicomp() const
+{
+    return !compute_shdr_path.empty();
+}
 
 CLI::CLI(int argc, char** argv)
 {
@@ -57,8 +61,6 @@ CLI::CLI(int argc, char** argv)
         {"help",      no_argument,       NULL, 'h'},
         {0, 0, 0, 0},
     };
-
-    std::filesystem::path compute_shdr_path;
 
     int opt;
     while ((opt = getopt_long(argc, argv, "ldam:h", long_options, nullptr))
