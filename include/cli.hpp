@@ -41,6 +41,8 @@ public:
     /*!
      * \brief (constructor)
      *
+     * Parses the command line.
+     *
      * \param argc the length of argv.
      * \param argv the arguments array.
      */
@@ -50,23 +52,28 @@ public:
      * \brief Text to write to stdout, if any.
      */
     std::string output() const { return outpt; }
+
     /*!
      * \brief An exit status code to return if immediately exiting
      * (e.g. if the user has requested help text).
      */
     int status() const { return stat; }
+
     /*!
      * \brief Whether to enable logging in general.
      */
     bool log() const { return lg; };
+
     /*!
      * \brief Whether to log debug messages from Vulkan.
      */
     bool debug() const { return debg; }
+
     /*!
      * \brief Whether logging should be done asynchronously.
      */
     bool async_log() const { return async_lg; }
+
     /*!
      * \brief Whether to print the help text.
      */
