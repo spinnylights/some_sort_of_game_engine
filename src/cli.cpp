@@ -24,30 +24,45 @@
 #include "game.hpp"
 
 #include <getopt.h>
+#include <filesystem>
+#include <iostream>
 
 namespace cu {
 
+// Obviously this could be DRYer, but it's so small right now that I don't feel
+// like it's worth working over yet. Once it really starts to get on my nerves
+// I'll make an Options class or the like.
+
 CLI::CLI(int argc, char** argv)
 {
-    std::string help_txt = "Usage: " + std::string{argv[0]} + " [OPTION]...\n"
-                           "Play a game called " + Game::name + ".\n"
-                           "\n"
-                           "    -l, --log       Enable log output\n"
-                           "    -d, --debug     Enable Vulkan debug output\n"
-                           "                    (silent without --log)\n"
-                           "    -a, --async-log Log messages asynchronously\n"
-                           "    -h, --help      Print this message and exit\n";
+    std::string help_txt =
+        "Usage: \n"
+        "    " + std::string{argv[0]} + " [OPTION...]\n"
+        "    " + std::string{argv[0]} + " [OPTION...] -m COMPUTE_SHADER\n"
+        "\n"
+        "Play a game called " + Game::name + ".\n"
+        "\n"
+        "    -l, --log                         Enable log output\n"
+        "    -d, --debug                       Enable Vulkan debug output\n"
+        "                                      (silent without --log)\n"
+        "    -a, --async-log                   Log messages asynchronously\n"
+        "    -m, --minicomp=COMPUTE_SHADER     Run COMPUTE_SHADER in minicomp mode\n"
+        "    -h, --help                        Print this message and exit\n";
 
     constexpr struct option long_options[] = {
-        {"log",       no_argument, NULL, 'l'},
-        {"debug",     no_argument, NULL, 'd'},
-        {"async-log", no_argument, NULL, 'a'},
-        {"help",      no_argument, NULL, 'h'},
+        {"log",       no_argument,       NULL, 'l'},
+        {"debug",     no_argument,       NULL, 'd'},
+        {"async-log", no_argument,       NULL, 'a'},
+        {"minicomp",  required_argument, NULL, 'm'},
+        {"help",      no_argument,       NULL, 'h'},
         {0, 0, 0, 0},
     };
 
+    std::filesystem::path compute_shdr_path;
+
     int opt;
-    while ((opt = getopt_long(argc, argv, "ldah", long_options, nullptr)) != -1) {
+    while ((opt = getopt_long(argc, argv, "ldam:h", long_options, nullptr))
+            != -1) {
         switch(opt) {
         case 'h':
             outpt = help_txt;
@@ -61,6 +76,10 @@ CLI::CLI(int argc, char** argv)
             break;
         case 'a':
             async_lg = true;
+            break;
+        case 'm':
+            compute_shdr_path = {std::string(optarg)};
+            std::cout << compute_shdr_path;
             break;
         default:
             outpt = "\n***\n\n" + help_txt;
