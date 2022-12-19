@@ -24,6 +24,7 @@
 
 #include <vector>
 #include <string>
+#include <filesystem>
 
 namespace cu {
 
@@ -79,8 +80,18 @@ public:
      */
     bool help() const { return hlp; }
 
+    /*!
+     * \brief Whether minicomp mode is on.
+     */
+    bool minicomp() const;
+
 private:
     std::string outpt;
+
+private:
+    std::filesystem::path compute_shdr_path;
+
+private:
     int stat = 0;
     bool lg = false;
     bool debg = false;
