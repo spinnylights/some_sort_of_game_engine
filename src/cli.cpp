@@ -23,38 +23,12 @@
 
 #include "game.hpp"
 
+#include <getopt.h>
+
 namespace cu {
-
-bool grouped_single_char_args(std::string arg)
-{
-    return arg.length() > 2 && arg.at(1) != '-';
-}
-
-std::vector<std::string> parse_argv(int argc, char** argv)
-{
-    std::vector<std::string> args;
-
-    for (int i = 1; i < argc; ++i) {
-        std::string arg {argv[i]};
-
-        if (grouped_single_char_args(arg)) {
-            for (auto c : arg) {
-                if (c != '-') {
-                    args.push_back("-" + std::string{c});
-                }
-            }
-        } else {
-            args.push_back(arg);
-        }
-    }
-
-    return args;
-}
 
 CLI::CLI(int argc, char** argv)
 {
-    auto args = parse_argv(argc, argv);
-
     std::string help_txt = "Usage: " + std::string{argv[0]} + " [OPTION]...\n"
                            "Play a game called " + Game::name + ".\n"
                            "\n"
@@ -64,18 +38,32 @@ CLI::CLI(int argc, char** argv)
                            "    -a, --async-log Log messages asynchronously\n"
                            "    -h, --help      Print this message and exit\n";
 
-    for (const auto& arg : args) {
-        if (arg == "-h" || arg == "--help") {
+    constexpr struct option long_options[] = {
+        {"log",       no_argument, NULL, 'l'},
+        {"debug",     no_argument, NULL, 'd'},
+        {"async-log", no_argument, NULL, 'a'},
+        {"help",      no_argument, NULL, 'h'},
+        {0, 0, 0, 0},
+    };
+
+    int opt;
+    while ((opt = getopt_long(argc, argv, "ldah", long_options, nullptr)) != -1) {
+        switch(opt) {
+        case 'h':
             outpt = help_txt;
             hlp = true;
-        } else if (arg == "-d" || arg == "--debug") {
+            break;
+        case 'd':
             debg = true;
-        } else if (arg == "-l" || arg == "--log") {
+            break;
+        case 'l':
             lg = true;
-        } else if (arg == "-a" || arg == "--async-log") {
+            break;
+        case 'a':
             async_lg = true;
-        } else {
-            outpt = "*** Option " + arg + " not recognized.\n\n" + help_txt;
+            break;
+        default:
+            outpt = "\n***\n\n" + help_txt;
             hlp = true;
             stat = EINVAL;
         }
