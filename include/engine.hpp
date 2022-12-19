@@ -34,6 +34,9 @@ namespace cu {
  */
 class Engine {
 public:
+    enum class Mode { normal, minicomp };
+    using enum Mode;
+
     /*!
      * \brief (constructor)
      *
@@ -58,10 +61,42 @@ public:
      */
     std::vector<const char*> extensions();
 
+    /*!
+     * \brief Returns the current mode.
+     */
+    Mode mode() const { return mde; }
+
+    /*!
+     * \brief Returns the current mode as a string.
+     */
+    constexpr std::string mode_str()
+    {
+        switch(mde) {
+        case normal:
+            return "normal";
+        case minicomp:
+            return "minicomp";
+        default:
+            return "UNKNOWN";
+        }
+    }
+
+    /*!
+     * \brief Sets the current mode.
+     */
+    void mode(Mode new_mode) { mde = new_mode; }
+
 private:
     bool dbg;
+
+private:
     SDL sdl;
+
+private:
     Vulkan vulk;
+
+private:
+    Mode mde = normal;
 };
 
 } // namespace cu

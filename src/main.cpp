@@ -47,5 +47,11 @@ int main(int argc, char** argv)
 
     cu::Engine e {cli.debug()};
 
+    if (cli.minicomp()) {
+        e.mode(cu::Engine::minicomp);
+    }
+
+    std::cout << e.mode_str() << "\n";
+
     return 0;
 }

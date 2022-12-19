@@ -31,6 +31,7 @@ std::vector<const char*> Engine::layers()
         return {};
     }
 }
+
 std::vector<const char*> Engine::extensions()
 {
     auto exts = sdl.get_req_vulk_exts();
