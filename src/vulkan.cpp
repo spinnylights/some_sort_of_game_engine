@@ -230,4 +230,9 @@ Vulkan::Vulkan(std::vector<const char*> exts,
       swch{phys_devs.default_device(), logi_dev, surf, sdl}
 {}
 
+void Vulkan::add_shader(BinFile f)
+{
+    shdrs.push_back({logi_dev, f});
+}
+
 } // namespace cu

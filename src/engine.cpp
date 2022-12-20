@@ -52,4 +52,9 @@ Engine::Engine(bool debug)
           debug}
 {}
 
+void Engine::add_shader(BinFile f)
+{
+    vulk.add_shader(f);
+}
+
 } // namespace cu

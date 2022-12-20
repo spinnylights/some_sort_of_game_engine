@@ -86,6 +86,11 @@ public:
      */
     void mode(Mode new_mode) { mde = new_mode; }
 
+    /*!
+     * \brief Add a new compiled (SPIR-V) shader.
+     */
+    void add_shader(BinFile compiled_shader);
+
 private:
     bool dbg;
 

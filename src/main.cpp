@@ -27,6 +27,8 @@
 
 #include "bin_file.hpp"
 
+#include "shader_module.hpp"
+
 #include <string>
 #include <iostream>
 
@@ -55,6 +57,8 @@ int main(int argc, char** argv)
         std::cout << compshdr.data().substr(0, 4) << "\n";
         std::cout << compshdr.u32()[0] << "\n";
         std::cout << compshdr.size() << "\n";
+
+        e.add_shader(compshdr);
     }
 
     std::cout << e.mode_str() << "\n";

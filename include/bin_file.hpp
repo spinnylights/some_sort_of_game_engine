@@ -40,6 +40,12 @@ public:
      */
     BinFile(std::filesystem::path fpath);
 
+    BinFile(const BinFile&);
+    BinFile& operator=(const BinFile&);
+
+    BinFile(BinFile&&);
+    BinFile& operator=(BinFile&&);
+
     /*!
      * \brief Returns the filepath.
      */
@@ -63,10 +69,10 @@ public:
      */
     std::size_t size() const { return dta.size(); }
 
-private:
+public:
     std::filesystem::path pth;
 
-private:
+public:
     std::string dta;
 };
 

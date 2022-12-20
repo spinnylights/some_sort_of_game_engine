@@ -23,6 +23,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <utility>
 
 namespace fs = std::filesystem;
 
@@ -38,6 +39,35 @@ BinFile::BinFile(fs::path fpath)
         is.read(reinterpret_cast<char*>(dta.data()), bytesize);
         is.close();
     }
+}
+
+BinFile::BinFile(const BinFile& f)
+    : pth {f.path()},
+      dta {f.data()}
+{}
+
+BinFile& BinFile::operator=(const BinFile& f)
+{
+    pth = f.path();
+    dta = f.data();
+
+    return *this;
+}
+
+BinFile::BinFile(BinFile&& f)
+    : pth {std::move(f.pth)},
+      dta {std::move(f.dta)}
+{
+    f.pth = "";
+    f.dta = "";
+}
+
+BinFile& BinFile::operator=(BinFile&& f)
+{
+    std::swap(pth, f.pth);
+    std::swap(dta, f.dta);
+
+    return *this;
 }
 
 } // namespace cu
