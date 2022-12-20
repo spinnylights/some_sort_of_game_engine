@@ -19,45 +19,25 @@
  * Copyright (c) 2021 Zoë Sparks <zoe@milky.flowers>
  */
 
-#include "engine.hpp"
-
-#include "log.hpp"
-
-#include "cli.hpp"
-
 #include "bin_file.hpp"
 
-#include <string>
+#include <fstream>
 #include <iostream>
 
-int main(int argc, char** argv)
+namespace fs = std::filesystem;
+
+namespace cu {
+
+BinFile::BinFile(fs::path fpath)
+    : pth {fpath}
 {
-    cu::CLI cli {argc, argv};
-
-    if (cli.help()) {
-        std::cout << cli.output();
-        return cli.status();
+    if (std::ifstream is {fpath, std::ios::binary | std::ios::ate}) {
+        auto bytesize = is.tellg();
+        dta.resize(bytesize, '\0');
+        is.seekg(0);
+        is.read(reinterpret_cast<char*>(dta.data()), bytesize);
+        is.close();
     }
-
-    if (cli.log()) {
-        cu::log.turn_on();
-    }
-
-    if (cli.async_log()) {
-        cu::log.async_on();
-    }
-
-    cu::Engine e {cli.debug()};
-
-    if (cli.minicomp()) {
-        e.mode(cu::Engine::minicomp);
-        cu::BinFile compshdr {cli.comp_path()};
-        std::cout << compshdr.data().substr(0, 4) << "\n";
-        std::cout << compshdr.u32()[0] << "\n";
-        std::cout << compshdr.size() << "\n";
-    }
-
-    std::cout << e.mode_str() << "\n";
-
-    return 0;
 }
+
+} // namespace cu
