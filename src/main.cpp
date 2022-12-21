@@ -28,6 +28,7 @@
 #include "bin_file.hpp"
 
 #include "shader_module.hpp"
+#include "descriptor_binding.hpp"
 
 #include <string>
 #include <iostream>
@@ -59,6 +60,12 @@ int main(int argc, char** argv)
         std::cout << compshdr.size() << "\n";
 
         e.add_shader(compshdr);
+
+        cu::DescriptorBinding swapimg {
+            cu::DescriptorBinding::Access::rw,
+            cu::DescriptorBinding::Role::raw_color,
+            cu::DescriptorBinding::KindOfShader::compute,
+        };
     }
 
     std::cout << e.mode_str() << "\n";
