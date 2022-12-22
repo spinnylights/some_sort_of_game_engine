@@ -14,7 +14,7 @@ DescriptorBinding::DescriptorBinding(Access access,
     using enum Access;
     using enum KindOfShader;
 
-    log.enter("new descriptor bind point");
+    log.enter("Vulkan: new descriptor bind point description");
     log.indent();
 
     inner.binding = binding_index;

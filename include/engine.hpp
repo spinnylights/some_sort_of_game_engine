@@ -84,7 +84,7 @@ public:
     /*!
      * \brief Sets the current mode.
      */
-    void mode(Mode new_mode) { mde = new_mode; }
+    void mode(Mode new_mode);
 
     /*!
      * \brief Add a new compiled (SPIR-V) shader.

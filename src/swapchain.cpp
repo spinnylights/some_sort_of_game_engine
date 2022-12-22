@@ -58,8 +58,8 @@ Swapchain::Swapchain(PhysDevice& p_dev,
     const auto win_size = sdl.get_win_size();
 
     const auto surface_caps = surf.capabilities(p_dev);
-    uint32_t   min_img_cnt  = 3;
-    if (surface_caps.maxImageCount < 3) {
+    uint32_t   min_img_cnt  = 2;
+    if (surface_caps.maxImageCount < min_img_cnt) {
         min_img_cnt = surface_caps.maxImageCount;
     }
 
@@ -80,7 +80,9 @@ Swapchain::Swapchain(PhysDevice& p_dev,
         }
     }
 
-    log.enter("present mode used", pres_mode);
+    log.enter("Vulkan: using present mode "
+              + VulkanUtil::present_mode_str(pres_mode));
+
     log.brk();
 
     VkSwapchainCreateInfoKHR create_info {
@@ -127,6 +129,23 @@ Swapchain::Swapchain(PhysDevice& p_dev,
 
     Vulkan::vk_try(create_swch(dev->inner(), &create_info, NULL, &swch),
                    "creating swapchain");
+    log.indent();
+    log.enter("min image count", min_img_cnt);
+    log.enter("image format", VulkanUtil::format_str(create_info.imageFormat));
+    log.enter("image color space",
+              VulkanUtil::color_space_to_str(create_info.imageColorSpace));
+    log.enter("image extent");
+    log.indent(2);
+    log.enter("width", create_info.imageExtent.width);
+    log.enter("height", create_info.imageExtent.height);
+    log.indent(1);
+    log.enter("image array layers", create_info.imageArrayLayers);
+    log.enter("image usage",
+              VulkanUtil::img_usage_to_cstrs(create_info.imageUsage));
+    log.enter("image sharing mode",
+              VulkanUtil::sharing_mode_to_str(create_info.imageSharingMode));
+    log.enter("present mode",
+              VulkanUtil::present_mode_str(create_info.presentMode));
     log.brk();
 
     uint32_t imgs_cnt;

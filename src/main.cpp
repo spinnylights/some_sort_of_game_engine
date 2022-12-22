@@ -55,9 +55,6 @@ int main(int argc, char** argv)
     if (cli.minicomp()) {
         e.mode(cu::Engine::minicomp);
         cu::BinFile compshdr {cli.comp_path()};
-        std::cout << compshdr.data().substr(0, 4) << "\n";
-        std::cout << compshdr.u32()[0] << "\n";
-        std::cout << compshdr.size() << "\n";
 
         e.add_shader(compshdr);
 
@@ -67,8 +64,6 @@ int main(int argc, char** argv)
             cu::DescriptorBinding::KindOfShader::compute,
         };
     }
-
-    std::cout << e.mode_str() << "\n";
 
     return 0;
 }

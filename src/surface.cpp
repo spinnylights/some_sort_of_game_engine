@@ -26,6 +26,7 @@
 #include "sdl.hpp"
 #include "phys_device.hpp"
 #include "vulkan.hpp"
+#include "vulkan_util.hpp"
 
 namespace cu {
 
@@ -83,7 +84,7 @@ std::vector<VkPresentModeKHR> Surface::present_modes(PhysDevice& dev)
                    "get present modes");
     log.indent();
     for (auto&& m : modes) {
-        log.enter("mode", m);
+        log.enter("mode", VulkanUtil::present_mode_str(m));
     }
     log.brk();
 

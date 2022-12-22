@@ -235,6 +235,10 @@ Vulkan::Vulkan(std::vector<const char*> exts,
 
 void Vulkan::add_shader(BinFile f)
 {
+    log.enter("Vulkan: adding shader", std::string(f.path()));
+    log.indent();
+    log.enter("at", shdrs.size());
+    log.brk();
     shdrs.push_back({logi_dev, f});
 }
 

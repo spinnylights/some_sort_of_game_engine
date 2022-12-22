@@ -21,6 +21,8 @@
 
 #include "engine.hpp"
 
+#include "log.hpp"
+
 namespace cu {
 
 std::vector<const char*> Engine::layers()
@@ -51,6 +53,13 @@ Engine::Engine(bool debug)
           sdl,
           debug}
 {}
+
+void Engine::mode(Mode new_mode)
+{
+    mde = new_mode;
+    log.enter("Engine: switching to " +  mode_str() + " mode");
+    log.brk();
+}
 
 void Engine::add_shader(BinFile f)
 {

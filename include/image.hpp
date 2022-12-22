@@ -26,6 +26,8 @@
 
 #include <vulkan/vulkan.h>
 
+#include "vulkan_util.hpp"
+
 namespace cu {
 
 class Device;
@@ -103,67 +105,85 @@ public:
     /*!
      * \brief The element count on each axis of the image.
      */
-    VkExtent3D extent() const { return _extent; }
+    constexpr VkExtent3D extent() { return _extent; }
 
     /*!
      * \brief The image's format (i.e. its representation in memory).
      */
-    VkFormat format() const { return _format; }
+    constexpr VkFormat format() { return _format; }
 
     /*!
      * \brief Whether the image can be accessed by more than one queue family
      * simultaneously.
      */
-    VkSharingMode sharing_mode() const { return _sharing_mode; }
+    constexpr VkSharingMode sharing_mode() { return _sharing_mode; }
 
     /*!
      * \brief How the image is laid out in memory, at a high level.
      */
-    VkImageLayout layout() const { return _layout; }
+    constexpr VkImageLayout layout() { return _layout; }
 
     /*!
      * \brief What the image can be used for (a color attachment, storage image,
      * etc.).
      */
-    VkImageUsageFlags usage() const { return _usage; }
+    constexpr VkImageUsageFlags usage() { return _usage; }
 
     /*!
      * \brief Miscellaneous (Vulkan) properties of the image expressed as a
      * bitmask.
      */
-    VkImageCreateFlags flags() const { return _flags; }
+    constexpr VkImageCreateFlags flags() { return _flags; }
+
+    /*!
+     * \brief Returns the image's dimensionality (i.e. its Vulkan image type).
+     */
+    constexpr VkImageType dimens() { return _dimens; }
 
     /*!
      * \brief Returns the image's Vulkan image type (i.e. its dimensionality).
      */
-    VkImageType dimens() const { return _dimens; }
+    constexpr VkImageType image_type() { return _dimens; }
+
+    /*!
+     * \brief Returns the image's Vulkan image type/dimensionality as a string.
+     */
+    constexpr std::string image_type_str()
+    {
+        return VulkanUtil::img_type_str(image_type());
+    }
+
+    /*!
+     * \brief Returns the image's dimensionality/Vulkan image type as a string.
+     */
+    constexpr std::string dimens_str() { return image_type_str(); }
 
     /*!
      * \brief The image's number of samples per texel.
      */
-    VkSampleCountFlagBits samples() const { return _samples; }
+    constexpr VkSampleCountFlagBits samples() { return _samples; }
 
     /*!
      * \brief Whether the image's texels are laid out linearly or for efficient
      * device access in memory.
      */
-    VkImageTiling tiling() const { return _tiling; }
+    constexpr VkImageTiling tiling() { return _tiling; }
 
     /*!
      * \brief The number of MIP levels available within the image.
      */
-    uint32_t mip_lvl_cnt() const { return _mip_lvl_cnt; }
+    constexpr uint32_t mip_lvl_cnt() { return _mip_lvl_cnt; }
 
     /*!
      * \brief The number of (Vulkan) layers available within the image.
      */
-    uint32_t layer_cnt() const { return _layer_cnt; }
+    constexpr uint32_t layer_cnt() { return _layer_cnt; }
 
     /*!
      * \brief Whether the underlying Vulkan image will be destroyed in this
      * instance's destructor or not.
      */
-    bool will_be_destroyed() const { return _should_destroy; }
+    constexpr bool will_be_destroyed() { return _should_destroy; }
 
     /*!
      * \brief Whether the underlying Vulkan image should be destroyed in this

@@ -26,6 +26,8 @@
 
 #include <vulkan/vulkan.h>
 
+#include "vulkan_util.hpp"
+
 namespace cu {
 
 class Image;
@@ -63,29 +65,45 @@ public:
      * \brief Miscellaneous (Vulkan) properties of the image view, expressed
      * as a bitmask.
      */
-    VkImageViewCreateFlags flags() const { return _flags; }
+    constexpr VkImageViewCreateFlags flags() { return _flags; }
 
     /*!
      * \brief The (Vulkan) type of image view this is (1–3D, cube, etc.).
      */
-    VkImageViewType type() const { return _type; }
+    constexpr VkImageViewType type() { return _type; }
+
+    /*!
+     * \brief The (Vulkan) "image view type" of the image view as a string.
+     */
+    constexpr std::string type_str()
+    {
+        return VulkanUtil::img_view_type_str(type());
+    };
+
+    /*!
+     * \brief The (Vulkan) memory format as a string.
+     */
+    constexpr std::string format_str()
+    {
+        return VulkanUtil::format_str(_format);
+    }
 
     /*!
      * \brief The image view's format (i.e. the manner in which it represents
      * the data in memory of the viewed image).
      */
-    VkFormat format() const { return _format; }
+    constexpr VkFormat format() { return _format; }
 
     /*!
      * \brief The manner in which the viewed image's color components
      * are swizzled in the view.
      */
-    VkComponentMapping swizzle() const { return _swizzle; }
+    constexpr VkComponentMapping swizzle() { return _swizzle; }
 
     /*!
      * \brief The subresource range of the viewed image represented in the view.
      */
-    VkImageSubresourceRange subresource_range() const
+    constexpr VkImageSubresourceRange subresource_range()
     {
         return _subresource_range;
     }
@@ -94,11 +112,11 @@ public:
      * \brief Whether the underlying Vulkan image view will be destroyed in this
      * instance's destructor or not.
      */
-    bool will_be_destroyed() const { return _should_destroy; }
+    constexpr bool will_be_destroyed() { return _should_destroy; }
 
     /*!
-     * \brief Whether the underlying Vulkan image view should be destroyed in
-     * this instance's destructor or not.
+     * \brief Set whether the underlying Vulkan image view should be destroyed
+     * in this instance's destructor or not.
      */
     void should_destroy(bool destroy) { _should_destroy = destroy; }
 
