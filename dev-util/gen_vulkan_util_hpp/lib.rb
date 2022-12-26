@@ -193,6 +193,189 @@ class String
 end
 
 ##
+# If you include this module in a class, you will be able to get
+#
+# * a list of all the instance methods you've defined in the class
+#     * after the point where you included this module
+# * in the order you added them
+# * using the instance method inst_mthds_in_order.
+module OrderedInstMethds
+  def self.included(klass)
+    klass.class_eval %Q{
+      @@inst_mthds_in_order = []
+
+      def inst_mthds_in_order
+        @@inst_mthds_in_order
+      end
+
+      def self.method_added(name)
+        @@inst_mthds_in_order << name
+      end
+    }
+  end
+end
+
+##
+# A fairly abstract representation of the definition of some C++ construct
+# relating to a type with "members," such as an enum class.
+#
+# If you inherit from CPPMembersDefn, it expects that every instance method
+# you define in the subclass will return a string. The subclass's to_s method
+# will then return a single string made by calling each of the subclass's
+# instance methods in the order you defined them. See the existing subclasses of
+# CPPMembersDefn for examples.
+class CPPMembersDefn
+  def self.inherited(klass)
+    klass.include(OrderedInstMethds)
+    # this is convenient, but it does mean that every instance method of the
+    # subclass must produce a component of the source string
+    #
+    # if that becomes a problem, an alternative is to have the subclass include
+    # OrderedInstMethds after any instance methods that should be left out, like
+    # so:
+    #
+    #     class A
+    #       def non
+    #       end
+    #
+    #       include OrderedInstMethds
+    #
+    #       def a
+    #       end
+    #
+    #       def b
+    #       end
+    #
+    #       def c
+    #       end
+    #     end
+    #
+    #     puts A.new.inst_mthds_in_order
+    #     #=> a
+    #         b
+    #         c
+    #
+  end
+
+  attr_reader :name, :val_names
+  def initialize(name, val_names)
+    @name      = name
+    @val_names = val_names
+  end
+
+  def to_s
+    inst_mthds_in_order.inject("") {|res, methd| res.puts send(methd) }
+  end
+end
+
+##
+# The definition of a C++ enum class.
+class CPPEnumClassDefn < CPPMembersDefn
+  def opening
+    <<~END
+    /*!
+     * \\brief Maps to #{name.name}. Should be safe to static_cast between.
+     */
+    enum class #{name.no_vk} {
+    END
+  end
+
+  def val_entries
+    val_names.map do |new_name|
+      unless new_name.bad?
+        "    #{new_name.abbrev} = #{new_name.old_name},"
+      end
+    end.join("\n")
+  end
+
+  def closer
+    "};\n\n"
+  end
+end
+
+##
+# The definition of a function to convert members of a Vulkan-type-wrapping enum
+# class to easily-readable strings, including an overload for values of the
+# Vulkan type.
+class CPPEnumStringConvDefn < CPPMembersDefn
+  def opening
+    <<~END
+    #{name.str_fn_sig}(#{name.no_vk} val)
+    {
+        using enum #{name.no_vk};
+
+        switch(val) {
+    END
+  end
+
+  def cases
+    out = ""
+    val_names.each do |new_name|
+      unless new_name.bad?
+        out.puts "    case #{new_name.abbrev}:"
+        out.puts "        return \"#{new_name.loggable}\";"
+      end
+    end
+    out
+  end
+
+  def closer
+    <<~END
+        default:
+            return std::to_string(static_cast<int>(val));
+        }
+    }
+
+    END
+  end
+
+  def vk_overload
+    <<~END
+    #{name.str_fn_sig}(#{name.name} val)
+    {
+        return #{name.str_fn_name}(static_cast<#{name.no_vk}>(val));
+    }
+
+    END
+  end
+end
+
+##
+# The definition of a function to convert a Vulkan-bitmask-wrapping
+# enum class object to a vector of log-friendly C-style strings describing each
+# enabled flag.
+class CPPBitflagsCstrsConvDefn < CPPMembersDefn
+  def opening
+    <<~END
+    constexpr std::vector<const char*> #{name.cstrs_fn_name}(#{name.gsub('Bits', 's')} vals)
+    {
+        std::vector<const char*> cstrs;
+
+    END
+  end
+
+  def cases
+    out = ""
+    val_names.each do |new_name|
+      unless new_name.bad?
+        out.puts "    if (vals & #{new_name.old_name}) {"
+        out.puts "        cstrs.push_back(\"#{new_name.loggable}\");"
+        out.puts "    }\n\n"
+      end
+    end
+    out
+  end
+
+  def closer
+    <<~END
+        return cstrs;
+    }
+
+    END
+  end
+end
+
+##
 # A fairly abstract class representing a Vulkan enum identifier.
 class EnumClassName
   attr_reader :name
@@ -265,6 +448,13 @@ class EnumClassName
       super
     end
   end
+
+  ##
+  # The name of our function that converts a bitflags value using members of
+  # this enum to a vector of C strings representing each enabled flag.
+  def cstrs_fn_name
+    "#{fn_prename.abbrev}_flags_cstrs"
+  end
 end
 
 ##
@@ -288,13 +478,6 @@ class BitmaskName < EnumClassName
 
   def str_fn_name
     super("_flag")
-  end
-
-  ##
-  # The name of our function that converts a bitflags value using members of
-  # this enum to a vector of C strings representing each enabled flag.
-  def cstrs_fn_name
-    "#{fn_prename.abbrev}_flags_cstrs"
   end
 end
 
@@ -394,6 +577,7 @@ class EnumValName < EnumClassValName
   end
 end
 
+##
 # The name of a Vulkan bitmask flag.
 class BitmaskValName < EnumClassValName
   def mod_new_name(n)
@@ -414,11 +598,22 @@ class EnumClass
   # @param name   Vulkan's name for this type.
   # @param vk_xml The Nokogiri-wrapped contents of Vulkan's `vk.xml`.
   def initialize(name, vk_xml)
-    @name = name_class.new(name)
-
-    @val_names = new_val_names(vk_xml)
+    @name           = name_class.new(name)
+    @val_names      = new_val_names(vk_xml)
   end
 
+  ##
+  # Methods that generate C++ definitions relating to the enum class.
+  [
+    [:defn,           CPPEnumClassDefn],
+    [:string_conv_fn, CPPEnumStringConvDefn],
+    [:cstrs_fn,       CPPBitflagsCstrsConvDefn],
+  ].each do |meth_name, defn_class|
+    define_method(meth_name) do
+      defn_class.new(name, val_names).to_s
+    end
+  end
+  
   ##
   # The type to represent the name of the enum class.
   #
@@ -472,121 +667,6 @@ class EnumClass
   end
 
   ##
-  # The opening of our C++ definition for this enum class.
-  def defn_opening
-    <<~END
-    /*!
-     * \\brief Maps to #{name.name}. Should be safe to static_cast between.
-     */
-    enum class #{name.no_vk} {
-    END
-  end
-
-  ##
-  # The C++ definitions of each of the enum's members.
-  def defn_val_entries
-    val_names.map do |new_name|
-      unless new_name.bad?
-        "    #{new_name.abbrev} = #{new_name.old_name},"
-      end
-    end.join("\n")
-  end
-
-  ##
-  # The closing source text of our C++ enum class definition.
-  def defn_closer
-    "};\n\n"
-  end
-
-  ##
-  # The C++ definition of our enum class.
-  def defn
-    out = ""
-
-    %w(
-      opening
-      val_entries
-      closer
-    ).each do |decl_part|
-      out.puts send(__method__.to_s + '_' + decl_part)
-    end
-
-    out
-  end
-
-  ##
-  # The opening of a C++ function designed to convert members of our enum class
-  # to pretty, print-friendly strings.
-  def string_conv_fn_opening
-    <<~END
-    #{name.str_fn_sig}(#{name.no_vk} val)
-    {
-        using enum #{name.no_vk};
-
-        switch(val) {
-    END
-  end
-
-  ##
-  # The by-member cases of a C++ function designed to convert members of our
-  # enum class to pretty, print-friendly strings.
-  def string_conv_fn_cases
-    out = ""
-    val_names.each do |new_name|
-      unless new_name.bad?
-        out.puts "    case #{new_name.abbrev}:"
-        out.puts "        return \"#{new_name.loggable}\";"
-      end
-    end
-    out
-  end
-
-  ##
-  # The closing source text of a C++ function designed to convert members of our
-  # enum class to pretty, print-friendly strings.
-  def string_conv_fn_closer
-    <<~END
-        default:
-            return std::to_string(static_cast<int>(val));
-        }
-    }
-
-    END
-  end
-
-  ##
-  # An overload for our C++ string conversion function, accepting values of the
-  # corresponding Vulkan type.
-  def string_conv_fn_vk_overload
-    <<~END
-    #{name.str_fn_sig}(#{name.name} val)
-    {
-        return #{name.str_fn_name}(static_cast<#{name.no_vk}>(val));
-    }
-
-    END
-  end
-
-  ##
-  # A C++ function designed to convert members of our enum class to pretty,
-  # print-friendly strings, with an overload for values of the corresponding
-  # Vulkan type.
-  def string_conv_fn
-    out = ""
-
-    %w(
-      opening
-      cases
-      closer
-      vk_overload
-    ).each do |decl_part|
-      out.puts send(__method__.to_s + '_' + decl_part)
-    end
-
-    out
-  end
-
-  ##
   # The complete C++ source text for our enum class.
   def source(extra = "")
     if empty?
@@ -615,65 +695,6 @@ end
 ##
 # Our enum class corresponding to a Vulkan bitmask.
 class Bitmask < EnumClass
-  ##
-  # Without this, extraneous entries that don't contain the member names get
-  # picked up.
-  def extra_selectors
-    '[type=bitmask]'
-  end
-
-  ##
-  # The opening of cstrs_fn.
-  def cstrs_fn_opening
-    <<~END
-    constexpr std::vector<const char*> #{name.cstrs_fn_name}(#{name.gsub('Bits', 's')} vals)
-    {
-        std::vector<const char*> cstrs;
-
-    END
-  end
-
-  ##
-  # The member-by-member cases of cstrs_fn.
-  def cstrs_fn_cases
-    out = ""
-    val_names.each do |new_name|
-      unless new_name.bad?
-        out.puts "    if (vals & #{new_name.old_name}) {"
-        out.puts "        cstrs.push_back(\"#{new_name.loggable}\");"
-        out.puts "    }\n\n"
-      end
-    end
-    out
-  end
-
-  ##
-  # The closing source text of cstrs_fn.
-  def cstrs_fn_closer
-    <<~END
-        return cstrs;
-    }
-
-    END
-  end
-
-  ##
-  # A C++ function designed to convert a Vulkan bitmask (`*Flags`) value
-  # corresponding to this type to a vector of C strings suitable for the logger.
-  def cstrs_fn
-    out = ""
-
-    %w(
-      opening
-      cases
-      closer
-    ).each do |decl_part|
-      out.puts send(__method__.to_s + '_' + decl_part)
-    end
-
-    out
-  end
-
   def source
     super(cstrs_fn)
   end
