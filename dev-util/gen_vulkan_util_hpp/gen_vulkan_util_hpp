@@ -19,38 +19,6 @@
 # 
 # Copyright (c) 2022 Zoë Sparks <zoe@milky.flowers>
 
-# Vulkan has a lot of enums and bitflags and things with huge
-# numbers of entries. As opposed to exposing these directly in
-# our Vulkan API, I think it's nice to wrap them in our own
-# types, mainly to insulate us a bit from changes in Vulkan's
-# types but also for easier-to-read code on our side. Doing this
-# entirely by hand isn't very practical because of how numerous
-# these types are and how large some of them are, so this script
-# exists to do some of the work automatically.
-#
-# You can pass this script a path to a `vulkan/vulkan.h` and it
-# will generate a C++ header suitable for use as our
-# `vulkan_util.hpp`. However, I intend for this script to be used
-# "by hand"; I plan to use it by redirecting the results to a
-# temporary file and comparing it with the existing
-# `vulkan_util.hpp` using a diff tool. We won't really get the
-# full benefit of the indirection if we just generate that header
-# completely automatically; if Vulkan does change in ways we need
-# to react to, we'll want to do that deliberately as part of the
-# process of changing our header. Also, some of the functions
-# provided by the header provide for getting text representations
-# of Vulkan enum and bitflag values, and those can benefit from
-# some direct human attention since they're meant for human
-# consumption. Of course, if something about the output isn't
-# right, edit this script instead of fixing the problem by hand.
-#
-# This script uses Nokogiri (https://nokogiri.org/) to parse
-# `vk.xml`. If you have Ruby installed, you probably also have
-# Nokogiri installed, but if not, `gem install nokogiri` should
-# install it. In theory we could use Bundler here but I don't
-# think Nokogiri has ever broken backwards compatability so right
-# now I don't think it's really needed just for that one gem.
-
 require_relative 'lib'
 
 require 'optparse'
