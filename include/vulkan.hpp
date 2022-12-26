@@ -32,6 +32,7 @@
 #include "phys_devices.hpp"
 #include "device.hpp"
 #include "swapchain.hpp"
+#include "shader_module.hpp"
 
 namespace cu {
 
@@ -86,6 +87,11 @@ public:
 
     ~Vulkan() = default;
 
+    /*!
+     * \brief Add a new compiled (SPIR-V) shader.
+     */
+    void add_shader(BinFile compiled_shader);
+
 private:
     Instance::ptr inst;
     DebugMsgr dbg_msgr;
@@ -93,6 +99,9 @@ private:
     PhysDevices phys_devs;
     Device::ptr logi_dev;
     Swapchain swch;
+
+private:
+    std::vector<ShaderModule> shdrs;
 };
 
 } // namespace cu

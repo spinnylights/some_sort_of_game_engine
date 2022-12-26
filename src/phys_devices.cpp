@@ -27,6 +27,7 @@
 
 #include <stdexcept>
 #include <iostream>
+#include <algorithm>
 
 namespace cu {
 

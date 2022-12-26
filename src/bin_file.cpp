@@ -19,51 +19,55 @@
  * Copyright (c) 2021 Zoë Sparks <zoe@milky.flowers>
  */
 
-#include "engine.hpp"
+#include "bin_file.hpp"
 
-#include "log.hpp"
+#include <fstream>
+#include <iostream>
+#include <utility>
+
+namespace fs = std::filesystem;
 
 namespace cu {
 
-std::vector<const char*> Engine::layers()
+BinFile::BinFile(fs::path fpath)
+    : pth {fpath}
 {
-    if (dbg) {
-        return {"VK_LAYER_KHRONOS_validation"};
-    } else {
-        return {};
+    if (std::ifstream is {fpath, std::ios::binary | std::ios::ate}) {
+        auto bytesize = is.tellg();
+        dta.resize(bytesize, '\0');
+        is.seekg(0);
+        is.read(reinterpret_cast<char*>(dta.data()), bytesize);
+        is.close();
     }
 }
 
-std::vector<const char*> Engine::extensions()
-{
-    auto exts = sdl.get_req_vulk_exts();
-
-    if (dbg) {
-        exts.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
-    }
-
-    return exts;
-}
-
-Engine::Engine(bool debug)
-    :dbg(debug),
-     sdl{},
-     vulk{extensions(),
-          layers(),
-          sdl,
-          debug}
+BinFile::BinFile(const BinFile& f)
+    : pth {f.path()},
+      dta {f.data()}
 {}
 
-void Engine::mode(Mode new_mode)
+BinFile& BinFile::operator=(const BinFile& f)
 {
-    mde = new_mode;
-    log.enter("Engine: switching to " +  mode_str() + " mode");
-    log.brk();
+    pth = f.path();
+    dta = f.data();
+
+    return *this;
 }
 
-void Engine::add_shader(BinFile f)
+BinFile::BinFile(BinFile&& f)
+    : pth {std::move(f.pth)},
+      dta {std::move(f.dta)}
 {
-    vulk.add_shader(f);
+    f.pth = "";
+    f.dta = "";
+}
+
+BinFile& BinFile::operator=(BinFile&& f)
+{
+    std::swap(pth, f.pth);
+    std::swap(dta, f.dta);
+
+    return *this;
 }
 
 } // namespace cu

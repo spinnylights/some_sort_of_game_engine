@@ -149,6 +149,9 @@ std::string map_vk_result(VkResult res)
         case VK_PIPELINE_COMPILE_REQUIRED_EXT:
             msg = "pipeline compile required";
             break;
+        case VK_ERROR_COMPRESSION_EXHAUSTED_EXT:
+            msg = "compression exhausted";
+            break;
         case VK_RESULT_MAX_ENUM:
             msg = "max result enum value (something is very wrong)";
             break;
@@ -229,5 +232,14 @@ Vulkan::Vulkan(std::vector<const char*> exts,
       },
       swch{phys_devs.default_device(), logi_dev, surf, sdl}
 {}
+
+void Vulkan::add_shader(BinFile f)
+{
+    log.enter("Vulkan: adding shader", std::string(f.path()));
+    log.indent();
+    log.enter("at", shdrs.size());
+    log.brk();
+    shdrs.push_back({logi_dev, f});
+}
 
 } // namespace cu

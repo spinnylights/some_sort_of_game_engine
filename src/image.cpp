@@ -107,7 +107,27 @@ Image::Image(VkImage existing,
       _mip_lvl_cnt      {ps.mip_lvl_cnt},
       _layer_cnt        {ps.layer_cnt},
       _should_destroy   {destroy}
-{}
+{
+    log.enter("Vulkan: new image from existing VkImage");
+    log.indent();
+    log.enter("flags", vk::img_create_flags_cstrs(_flags));
+    log.enter("dimens/type", dimens_str());
+    log.enter("format", vk::format_str(_format));
+    log.enter("extent");
+    log.indent(2);
+    log.enter("width", _extent.width);
+    log.enter("height", _extent.height);
+    log.enter("depth", _extent.depth);
+    log.indent(1);
+    log.enter("MIP levels", _mip_lvl_cnt);
+    log.enter("array layers", _layer_cnt);
+    log.enter("samples", vk::sample_count_flag_str(_samples));
+    log.enter("tiling", vk::img_tiling_str(_tiling));
+    log.enter("usage", vk::img_usage_flags_cstrs(_usage));
+    log.enter("sharing mode", vk::shrng_mode_str(_sharing_mode));
+    log.enter("layout", vk::img_layout_str(layout()));
+    log.brk();
+}
 
 Image::Image(Image&& other)
     : _img              {other.inner()},

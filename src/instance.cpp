@@ -160,7 +160,7 @@ Instance::Instance(std::vector<const char*> exts,
         .applicationVersion = Game::version,
         .pEngineName = Game::name.c_str(),
         .engineVersion = Game::version,
-        .apiVersion = VK_MAKE_API_VERSION(0, 1, 2, 0)
+        .apiVersion = VK_MAKE_API_VERSION(0, 1, 3, 0)
     };
 
     VkInstanceCreateInfo inst_inf = {

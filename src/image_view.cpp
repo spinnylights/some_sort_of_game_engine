@@ -60,6 +60,11 @@ ImageView::ImageView(Image& img)
                                     NULL,
                                     &_inner),
                    "create image view");
+    log.indent();
+    log.enter("flags", vk::img_create_flags_cstrs(_flags));
+    log.enter("type", type_str());
+    log.enter("format", format_str());
+    log.brk();
 }
 
 ImageView::ImageView(ImageView&& other)

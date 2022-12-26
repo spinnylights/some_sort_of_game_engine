@@ -85,6 +85,11 @@ public:
      */
     bool minicomp() const;
 
+    /*!
+     * \brief The path to the compute shader, if any.
+     */
+    std::filesystem::path comp_path() const { return compute_shdr_path; }
+
 private:
     std::string outpt;
 

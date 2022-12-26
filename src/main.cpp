@@ -25,6 +25,11 @@
 
 #include "cli.hpp"
 
+#include "bin_file.hpp"
+
+#include "shader_module.hpp"
+#include "descriptor_binding.hpp"
+
 #include <string>
 #include <iostream>
 
@@ -46,6 +51,19 @@ int main(int argc, char** argv)
     }
 
     cu::Engine e {cli.debug()};
+
+    if (cli.minicomp()) {
+        e.mode(cu::Engine::minicomp);
+        cu::BinFile compshdr {cli.comp_path()};
+
+        e.add_shader(compshdr);
+
+        cu::DescriptorBinding swapimg {
+            cu::DescriptorBinding::Access::rw,
+            cu::DescriptorBinding::Role::raw_color,
+            cu::DescriptorBinding::KindOfShader::compute,
+        };
+    }
 
     return 0;
 }
