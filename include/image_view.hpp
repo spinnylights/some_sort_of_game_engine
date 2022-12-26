@@ -77,7 +77,7 @@ public:
      */
     constexpr std::string type_str()
     {
-        return VulkanUtil::img_view_type_str(type());
+        return vk::img_view_type_str(type());
     };
 
     /*!
@@ -85,7 +85,7 @@ public:
      */
     constexpr std::string format_str()
     {
-        return VulkanUtil::format_str(_format);
+        return vk::format_str(_format);
     }
 
     /*!

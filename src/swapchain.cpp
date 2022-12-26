@@ -81,7 +81,7 @@ Swapchain::Swapchain(PhysDevice& p_dev,
     }
 
     log.enter("Vulkan: using present mode "
-              + VulkanUtil::present_mode_str(pres_mode));
+              + vk::prsnt_mode_str(pres_mode));
 
     log.brk();
 
@@ -131,9 +131,9 @@ Swapchain::Swapchain(PhysDevice& p_dev,
                    "creating swapchain");
     log.indent();
     log.enter("min image count", min_img_cnt);
-    log.enter("image format", VulkanUtil::format_str(create_info.imageFormat));
+    log.enter("image format", vk::format_str(create_info.imageFormat));
     log.enter("image color space",
-              VulkanUtil::color_space_to_str(create_info.imageColorSpace));
+              vk::color_space_str(create_info.imageColorSpace));
     log.enter("image extent");
     log.indent(2);
     log.enter("width", create_info.imageExtent.width);
@@ -141,11 +141,11 @@ Swapchain::Swapchain(PhysDevice& p_dev,
     log.indent(1);
     log.enter("image array layers", create_info.imageArrayLayers);
     log.enter("image usage",
-              VulkanUtil::img_usage_to_cstrs(create_info.imageUsage));
+              vk::img_usage_flags_cstrs(create_info.imageUsage));
     log.enter("image sharing mode",
-              VulkanUtil::sharing_mode_to_str(create_info.imageSharingMode));
+              vk::shrng_mode_str(create_info.imageSharingMode));
     log.enter("present mode",
-              VulkanUtil::present_mode_str(create_info.presentMode));
+              vk::prsnt_mode_str(create_info.presentMode));
     log.brk();
 
     uint32_t imgs_cnt;

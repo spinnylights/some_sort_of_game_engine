@@ -84,7 +84,7 @@ std::vector<VkPresentModeKHR> Surface::present_modes(PhysDevice& dev)
                    "get present modes");
     log.indent();
     for (auto&& m : modes) {
-        log.enter("mode", VulkanUtil::present_mode_str(m));
+        log.enter("mode", vk::prsnt_mode_str(m));
     }
     log.brk();
 

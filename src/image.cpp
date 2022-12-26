@@ -110,9 +110,9 @@ Image::Image(VkImage existing,
 {
     log.enter("Vulkan: new image from existing VkImage");
     log.indent();
-    log.enter("flags", _flags);
+    log.enter("flags", vk::img_create_flags_cstrs(_flags));
     log.enter("dimens/type", dimens_str());
-    log.enter("format", VulkanUtil::format_str(_format));
+    log.enter("format", vk::format_str(_format));
     log.enter("extent");
     log.indent(2);
     log.enter("width", _extent.width);
@@ -121,11 +121,11 @@ Image::Image(VkImage existing,
     log.indent(1);
     log.enter("MIP levels", _mip_lvl_cnt);
     log.enter("array layers", _layer_cnt);
-    log.enter("samples", VulkanUtil::smpl_count_to_str(_samples));
-    log.enter("tiling", VulkanUtil::tiling_to_str(_tiling));
-    log.enter("usage", VulkanUtil::img_usage_to_cstrs(_usage));
-    log.enter("sharing mode", VulkanUtil::sharing_mode_to_str(_sharing_mode));
-    log.enter("layout", VulkanUtil::img_layout_to_str(layout()));
+    log.enter("samples", vk::sample_count_flag_str(_samples));
+    log.enter("tiling", vk::img_tiling_str(_tiling));
+    log.enter("usage", vk::img_usage_flags_cstrs(_usage));
+    log.enter("sharing mode", vk::shrng_mode_str(_sharing_mode));
+    log.enter("layout", vk::img_layout_str(layout()));
     log.brk();
 }
 

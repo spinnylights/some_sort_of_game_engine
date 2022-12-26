@@ -46,7 +46,7 @@ public:
      * The binding number.
      */
     constexpr uint32_t binding_ndx() { return inner.binding; }
-    
+
     /*!
      * Sets the binding number.
      */

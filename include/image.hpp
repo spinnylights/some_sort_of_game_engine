@@ -150,7 +150,7 @@ public:
      */
     constexpr std::string image_type_str()
     {
-        return VulkanUtil::img_type_str(image_type());
+        return vk::img_type_str(image_type());
     }
 
     /*!
