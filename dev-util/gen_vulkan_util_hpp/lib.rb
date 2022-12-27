@@ -19,6 +19,7 @@
 
 require 'nokogiri'
 require 'strscan'
+require 'securerandom'
 
 class String
   ##
@@ -540,10 +541,6 @@ class EnumClassValName
       ])
   end
 
-  def ==(other)
-    (value == other.value) || (new_name == other.new_name)
-  end
-
   ##
   # If true, we leave this member out of our version of the enum.
   def bad?
@@ -649,15 +646,25 @@ class EnumClass
   #
   # @param vk_xml The Nokogiri-wrapped contents of Vulkan's `vk.xml`.
   def new_val_names(vk_xml)
-    vk_xml
-      .css("enums[name=#{name.name}]#{extra_selectors} > enum:not([alias])")
-      .map do |val|
-        val_name_class.new(
-          val['name'],
-          val['value'] ? val['value'] : val['bitpos'],
-          name,
+    vk_xml.css(
+      "enums[name=#{name.name}]#{extra_selectors} > enum:not([alias])"
+    ).then do |els|
+      %w(1.0 1.1 1.2 1.3).each do |vk_ver|
+        els += vk_xml.css(
+          "feature[api=vulkan][number='#{vk_ver}'] " \
+          + "enum[extends=#{name.name}]:not([alias])"
         )
-      end.uniq
+      end
+
+      els
+    end.map do |val|
+      val_name_class.new(
+        val['name'],
+        val['value'] ? val['value'] : val['bitpos'],
+        name,
+      )
+    end.uniq(&:new_name)
+       .uniq(&:old_name)
   end
 
   ##
