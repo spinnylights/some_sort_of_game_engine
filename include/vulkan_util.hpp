@@ -49,6 +49,14 @@ enum class ImageLayout {
     trnsfr_src_optml = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
     trnsfr_dst_optml = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
     prntlzd = VK_IMAGE_LAYOUT_PREINITIALIZED,
+    depth_read_only_stncl_attchmt_optml = VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL,
+    depth_attchmt_stncl_read_only_optml = VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL,
+    depth_attchmt_optml = VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL,
+    depth_read_only_optml = VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL,
+    stncl_attchmt_optml = VK_IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL,
+    stncl_read_only_optml = VK_IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL,
+    read_only_optml = VK_IMAGE_LAYOUT_READ_ONLY_OPTIMAL,
+    attchmt_optml = VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL,
 };
 
 constexpr std::string img_layout_str(ImageLayout val)
@@ -74,6 +82,22 @@ constexpr std::string img_layout_str(ImageLayout val)
         return "transfer dst optimal";
     case prntlzd:
         return "preinitialized";
+    case depth_read_only_stncl_attchmt_optml:
+        return "depth read only stencil attachment optimal";
+    case depth_attchmt_stncl_read_only_optml:
+        return "depth attachment stencil read only optimal";
+    case depth_attchmt_optml:
+        return "depth attachment optimal";
+    case depth_read_only_optml:
+        return "depth read only optimal";
+    case stncl_attchmt_optml:
+        return "stencil attachment optimal";
+    case stncl_read_only_optml:
+        return "stencil read only optimal";
+    case read_only_optml:
+        return "read only optimal";
+    case attchmt_optml:
+        return "attachment optimal";
     default:
         return std::to_string(static_cast<int>(val));
     }
@@ -120,6 +144,7 @@ constexpr std::string attchmt_load_op_str(VkAttachmentLoadOp val)
 enum class AttachmentStoreOp {
     store = VK_ATTACHMENT_STORE_OP_STORE,
     dont_care = VK_ATTACHMENT_STORE_OP_DONT_CARE,
+    none = VK_ATTACHMENT_STORE_OP_NONE,
 };
 
 constexpr std::string attchmt_store_op_str(AttachmentStoreOp val)
@@ -131,6 +156,8 @@ constexpr std::string attchmt_store_op_str(AttachmentStoreOp val)
         return "store";
     case dont_care:
         return "dont care";
+    case none:
+        return "none";
     default:
         return std::to_string(static_cast<int>(val));
     }
@@ -324,6 +351,7 @@ enum class DescriptorType {
     unfrm_buffer_dynmc = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC,
     strge_buffer_dynmc = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC,
     input_attchmt = VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT,
+    inline_unfrm_block = VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK,
 };
 
 constexpr std::string dscrpt_type_str(DescriptorType val)
@@ -353,6 +381,8 @@ constexpr std::string dscrpt_type_str(DescriptorType val)
         return "storage buffer dynamic";
     case input_attchmt:
         return "input attachment";
+    case inline_unfrm_block:
+        return "inline uniform block";
     default:
         return std::to_string(static_cast<int>(val));
     }
@@ -653,6 +683,7 @@ enum class SamplerAddressMode {
     mrrrd_repeat = VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT,
     clamp_to_edge = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
     clamp_to_border = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER,
+    mirror_clamp_to_edge = VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE,
 };
 
 constexpr std::string smplr_addrss_mode_str(SamplerAddressMode val)
@@ -668,6 +699,8 @@ constexpr std::string smplr_addrss_mode_str(SamplerAddressMode val)
         return "clamp to edge";
     case clamp_to_border:
         return "clamp to border";
+    case mirror_clamp_to_edge:
+        return "mirror clamp to edge";
     default:
         return std::to_string(static_cast<int>(val));
     }
@@ -1320,6 +1353,60 @@ enum class Format {
     astc_12x10_srgb_block = VK_FORMAT_ASTC_12x10_SRGB_BLOCK,
     astc_12x12_unorm_block = VK_FORMAT_ASTC_12x12_UNORM_BLOCK,
     astc_12x12_srgb_block = VK_FORMAT_ASTC_12x12_SRGB_BLOCK,
+    g8b8g8_422_unorm = VK_FORMAT_G8B8G8R8_422_UNORM,
+    b8g8r8_422_unorm = VK_FORMAT_B8G8R8G8_422_UNORM,
+    g8_b8_r8_3plane_420_unorm = VK_FORMAT_G8_B8_R8_3PLANE_420_UNORM,
+    g8_b8r8_2plane_420_unorm = VK_FORMAT_G8_B8R8_2PLANE_420_UNORM,
+    g8_b8_r8_3plane_422_unorm = VK_FORMAT_G8_B8_R8_3PLANE_422_UNORM,
+    g8_b8r8_2plane_422_unorm = VK_FORMAT_G8_B8R8_2PLANE_422_UNORM,
+    g8_b8_r8_3plane_444_unorm = VK_FORMAT_G8_B8_R8_3PLANE_444_UNORM,
+    r10x6_unorm_pack16 = VK_FORMAT_R10X6_UNORM_PACK16,
+    r10x6g_unorm_2pack1 = VK_FORMAT_R10X6G10X6_UNORM_2PACK16,
+    r10x6g_unorm_4pack1 = VK_FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16,
+    g10x6b_422_unorm_4pack1 = VK_FORMAT_G10X6B10X6G10X6R10X6_422_UNORM_4PACK16,
+    b10x6g_422_unorm_4pack1 = VK_FORMAT_B10X6G10X6R10X6G10X6_422_UNORM_4PACK16,
+    g10x6_b10x6_r10x6_3plane_420_unorm_3pack1 = VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16,
+    g10x6_b10x6r_2plane_420_unorm_3pack1 = VK_FORMAT_G10X6_B10X6R10X6_2PLANE_420_UNORM_3PACK16,
+    g10x6_b10x6_r10x6_3plane_422_unorm_3pack1 = VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_422_UNORM_3PACK16,
+    g10x6_b10x6r_2plane_422_unorm_3pack1 = VK_FORMAT_G10X6_B10X6R10X6_2PLANE_422_UNORM_3PACK16,
+    g10x6_b10x6_r10x6_3plane_444_unorm_3pack1 = VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_444_UNORM_3PACK16,
+    r12x4_unorm_pack16 = VK_FORMAT_R12X4_UNORM_PACK16,
+    r12x4g_unorm_2pack1 = VK_FORMAT_R12X4G12X4_UNORM_2PACK16,
+    r12x4g_unorm_4pack1 = VK_FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16,
+    g12x4b_422_unorm_4pack1 = VK_FORMAT_G12X4B12X4G12X4R12X4_422_UNORM_4PACK16,
+    b12x4g_422_unorm_4pack1 = VK_FORMAT_B12X4G12X4R12X4G12X4_422_UNORM_4PACK16,
+    g12x4_b12x4_r12x4_3plane_420_unorm_3pack1 = VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_420_UNORM_3PACK16,
+    g12x4_b12x4r_2plane_420_unorm_3pack1 = VK_FORMAT_G12X4_B12X4R12X4_2PLANE_420_UNORM_3PACK16,
+    g12x4_b12x4_r12x4_3plane_422_unorm_3pack1 = VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_422_UNORM_3PACK16,
+    g12x4_b12x4r_2plane_422_unorm_3pack1 = VK_FORMAT_G12X4_B12X4R12X4_2PLANE_422_UNORM_3PACK16,
+    g12x4_b12x4_r12x4_3plane_444_unorm_3pack1 = VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_444_UNORM_3PACK16,
+    g16b16_422_unorm = VK_FORMAT_G16B16G16R16_422_UNORM,
+    b16g16_422_unorm = VK_FORMAT_B16G16R16G16_422_UNORM,
+    g16_b16_r16_3plane_420_unorm = VK_FORMAT_G16_B16_R16_3PLANE_420_UNORM,
+    g16_b16r16_2plane_420_unorm = VK_FORMAT_G16_B16R16_2PLANE_420_UNORM,
+    g16_b16_r16_3plane_422_unorm = VK_FORMAT_G16_B16_R16_3PLANE_422_UNORM,
+    g16_b16r16_2plane_422_unorm = VK_FORMAT_G16_B16R16_2PLANE_422_UNORM,
+    g16_b16_r16_3plane_444_unorm = VK_FORMAT_G16_B16_R16_3PLANE_444_UNORM,
+    g8_b8r8_2plane_444_unorm = VK_FORMAT_G8_B8R8_2PLANE_444_UNORM,
+    g10x6_b10x6r_2plane_444_unorm_3pack1 = VK_FORMAT_G10X6_B10X6R10X6_2PLANE_444_UNORM_3PACK16,
+    g12x4_b12x4r_2plane_444_unorm_3pack1 = VK_FORMAT_G12X4_B12X4R12X4_2PLANE_444_UNORM_3PACK16,
+    g16_b16r16_2plane_444_unorm = VK_FORMAT_G16_B16R16_2PLANE_444_UNORM,
+    a4r4g4b4_unorm_pack16 = VK_FORMAT_A4R4G4B4_UNORM_PACK16,
+    a4b4g4r4_unorm_pack16 = VK_FORMAT_A4B4G4R4_UNORM_PACK16,
+    astc_4x4_sfloat_block = VK_FORMAT_ASTC_4x4_SFLOAT_BLOCK,
+    astc_5x4_sfloat_block = VK_FORMAT_ASTC_5x4_SFLOAT_BLOCK,
+    astc_5x5_sfloat_block = VK_FORMAT_ASTC_5x5_SFLOAT_BLOCK,
+    astc_6x5_sfloat_block = VK_FORMAT_ASTC_6x5_SFLOAT_BLOCK,
+    astc_6x6_sfloat_block = VK_FORMAT_ASTC_6x6_SFLOAT_BLOCK,
+    astc_8x5_sfloat_block = VK_FORMAT_ASTC_8x5_SFLOAT_BLOCK,
+    astc_8x6_sfloat_block = VK_FORMAT_ASTC_8x6_SFLOAT_BLOCK,
+    astc_8x8_sfloat_block = VK_FORMAT_ASTC_8x8_SFLOAT_BLOCK,
+    astc_10x5_sfloat_block = VK_FORMAT_ASTC_10x5_SFLOAT_BLOCK,
+    astc_10x6_sfloat_block = VK_FORMAT_ASTC_10x6_SFLOAT_BLOCK,
+    astc_10x8_sfloat_block = VK_FORMAT_ASTC_10x8_SFLOAT_BLOCK,
+    astc_10x10_sfloat_block = VK_FORMAT_ASTC_10x10_SFLOAT_BLOCK,
+    astc_12x10_sfloat_block = VK_FORMAT_ASTC_12x10_SFLOAT_BLOCK,
+    astc_12x12_sfloat_block = VK_FORMAT_ASTC_12x12_SFLOAT_BLOCK,
 };
 
 constexpr std::string format_str(Format val)
@@ -1697,6 +1784,114 @@ constexpr std::string format_str(Format val)
         return "astc 12x12 unorm block";
     case astc_12x12_srgb_block:
         return "astc 12x12 sRGB block";
+    case g8b8g8_422_unorm:
+        return "g8b8g8r8 422 unorm";
+    case b8g8r8_422_unorm:
+        return "b8g8r8g8 422 unorm";
+    case g8_b8_r8_3plane_420_unorm:
+        return "g8 b8 r8 3plane 420 unorm";
+    case g8_b8r8_2plane_420_unorm:
+        return "g8 b8r8 2plane 420 unorm";
+    case g8_b8_r8_3plane_422_unorm:
+        return "g8 b8 r8 3plane 422 unorm";
+    case g8_b8r8_2plane_422_unorm:
+        return "g8 b8r8 2plane 422 unorm";
+    case g8_b8_r8_3plane_444_unorm:
+        return "g8 b8 r8 3plane 444 unorm";
+    case r10x6_unorm_pack16:
+        return "r10x6 unorm pack16";
+    case r10x6g_unorm_2pack1:
+        return "r10x6g10x6 unorm 2pack16";
+    case r10x6g_unorm_4pack1:
+        return "r10x6g10x6b10x6a10x6 unorm 4pack16";
+    case g10x6b_422_unorm_4pack1:
+        return "g10x6b10x6g10x6r10x6 422 unorm 4pack16";
+    case b10x6g_422_unorm_4pack1:
+        return "b10x6g10x6r10x6g10x6 422 unorm 4pack16";
+    case g10x6_b10x6_r10x6_3plane_420_unorm_3pack1:
+        return "g10x6 b10x6 r10x6 3plane 420 unorm 3pack16";
+    case g10x6_b10x6r_2plane_420_unorm_3pack1:
+        return "g10x6 b10x6r10x6 2plane 420 unorm 3pack16";
+    case g10x6_b10x6_r10x6_3plane_422_unorm_3pack1:
+        return "g10x6 b10x6 r10x6 3plane 422 unorm 3pack16";
+    case g10x6_b10x6r_2plane_422_unorm_3pack1:
+        return "g10x6 b10x6r10x6 2plane 422 unorm 3pack16";
+    case g10x6_b10x6_r10x6_3plane_444_unorm_3pack1:
+        return "g10x6 b10x6 r10x6 3plane 444 unorm 3pack16";
+    case r12x4_unorm_pack16:
+        return "r12x4 unorm pack16";
+    case r12x4g_unorm_2pack1:
+        return "r12x4g12x4 unorm 2pack16";
+    case r12x4g_unorm_4pack1:
+        return "r12x4g12x4b12x4a12x4 unorm 4pack16";
+    case g12x4b_422_unorm_4pack1:
+        return "g12x4b12x4g12x4r12x4 422 unorm 4pack16";
+    case b12x4g_422_unorm_4pack1:
+        return "b12x4g12x4r12x4g12x4 422 unorm 4pack16";
+    case g12x4_b12x4_r12x4_3plane_420_unorm_3pack1:
+        return "g12x4 b12x4 r12x4 3plane 420 unorm 3pack16";
+    case g12x4_b12x4r_2plane_420_unorm_3pack1:
+        return "g12x4 b12x4r12x4 2plane 420 unorm 3pack16";
+    case g12x4_b12x4_r12x4_3plane_422_unorm_3pack1:
+        return "g12x4 b12x4 r12x4 3plane 422 unorm 3pack16";
+    case g12x4_b12x4r_2plane_422_unorm_3pack1:
+        return "g12x4 b12x4r12x4 2plane 422 unorm 3pack16";
+    case g12x4_b12x4_r12x4_3plane_444_unorm_3pack1:
+        return "g12x4 b12x4 r12x4 3plane 444 unorm 3pack16";
+    case g16b16_422_unorm:
+        return "g16b16g16r16 422 unorm";
+    case b16g16_422_unorm:
+        return "b16g16r16g16 422 unorm";
+    case g16_b16_r16_3plane_420_unorm:
+        return "g16 b16 r16 3plane 420 unorm";
+    case g16_b16r16_2plane_420_unorm:
+        return "g16 b16r16 2plane 420 unorm";
+    case g16_b16_r16_3plane_422_unorm:
+        return "g16 b16 r16 3plane 422 unorm";
+    case g16_b16r16_2plane_422_unorm:
+        return "g16 b16r16 2plane 422 unorm";
+    case g16_b16_r16_3plane_444_unorm:
+        return "g16 b16 r16 3plane 444 unorm";
+    case g8_b8r8_2plane_444_unorm:
+        return "g8 b8r8 2plane 444 unorm";
+    case g10x6_b10x6r_2plane_444_unorm_3pack1:
+        return "g10x6 b10x6r10x6 2plane 444 unorm 3pack16";
+    case g12x4_b12x4r_2plane_444_unorm_3pack1:
+        return "g12x4 b12x4r12x4 2plane 444 unorm 3pack16";
+    case g16_b16r16_2plane_444_unorm:
+        return "g16 b16r16 2plane 444 unorm";
+    case a4r4g4b4_unorm_pack16:
+        return "a4r4g4b4 unorm pack16";
+    case a4b4g4r4_unorm_pack16:
+        return "a4b4g4r4 unorm pack16";
+    case astc_4x4_sfloat_block:
+        return "astc 4x4 sfloat block";
+    case astc_5x4_sfloat_block:
+        return "astc 5x4 sfloat block";
+    case astc_5x5_sfloat_block:
+        return "astc 5x5 sfloat block";
+    case astc_6x5_sfloat_block:
+        return "astc 6x5 sfloat block";
+    case astc_6x6_sfloat_block:
+        return "astc 6x6 sfloat block";
+    case astc_8x5_sfloat_block:
+        return "astc 8x5 sfloat block";
+    case astc_8x6_sfloat_block:
+        return "astc 8x6 sfloat block";
+    case astc_8x8_sfloat_block:
+        return "astc 8x8 sfloat block";
+    case astc_10x5_sfloat_block:
+        return "astc 10x5 sfloat block";
+    case astc_10x6_sfloat_block:
+        return "astc 10x6 sfloat block";
+    case astc_10x8_sfloat_block:
+        return "astc 10x8 sfloat block";
+    case astc_10x10_sfloat_block:
+        return "astc 10x10 sfloat block";
+    case astc_12x10_sfloat_block:
+        return "astc 12x10 sfloat block";
+    case astc_12x12_sfloat_block:
+        return "astc 12x12 sfloat block";
     default:
         return std::to_string(static_cast<int>(val));
     }
@@ -1760,6 +1955,173 @@ enum class StructureType {
     memory_brrr = VK_STRUCTURE_TYPE_MEMORY_BARRIER,
     loader_instnc_create_info = VK_STRUCTURE_TYPE_LOADER_INSTANCE_CREATE_INFO,
     loader_device_create_info = VK_STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO,
+    physcl_device_sbgrp_prprts = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES,
+    bind_buffer_memory_info = VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO,
+    bind_img_memory_info = VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO,
+    physcl_device_16bit_strge_ftrs = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES,
+    memory_ddctd_rqrmnts = VK_STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS,
+    memory_ddctd_allcte_info = VK_STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO,
+    memory_allcte_flags_info = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO,
+    device_group_render_pass_begin_info = VK_STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO,
+    device_group_cmmnd_buffer_begin_info = VK_STRUCTURE_TYPE_DEVICE_GROUP_COMMAND_BUFFER_BEGIN_INFO,
+    device_group_submit_info = VK_STRUCTURE_TYPE_DEVICE_GROUP_SUBMIT_INFO,
+    device_group_bind_sparse_info = VK_STRUCTURE_TYPE_DEVICE_GROUP_BIND_SPARSE_INFO,
+    bind_buffer_memory_device_group_info = VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO,
+    bind_img_memory_device_group_info = VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO,
+    physcl_device_group_prprts = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GROUP_PROPERTIES,
+    device_group_device_create_info = VK_STRUCTURE_TYPE_DEVICE_GROUP_DEVICE_CREATE_INFO,
+    buffer_memory_rqrmnts_info_2 = VK_STRUCTURE_TYPE_BUFFER_MEMORY_REQUIREMENTS_INFO_2,
+    img_memory_rqrmnts_info_2 = VK_STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2,
+    img_sparse_memory_rqrmnts_info_2 = VK_STRUCTURE_TYPE_IMAGE_SPARSE_MEMORY_REQUIREMENTS_INFO_2,
+    memory_rqrmnts_2 = VK_STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2,
+    sparse_img_memory_rqrmnts_2 = VK_STRUCTURE_TYPE_SPARSE_IMAGE_MEMORY_REQUIREMENTS_2,
+    physcl_device_ftrs_2 = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2,
+    physcl_device_prprts_2 = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2,
+    format_prprts_2 = VK_STRUCTURE_TYPE_FORMAT_PROPERTIES_2,
+    img_format_prprts_2 = VK_STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2,
+    physcl_device_img_format_info_2 = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2,
+    queue_family_prprts_2 = VK_STRUCTURE_TYPE_QUEUE_FAMILY_PROPERTIES_2,
+    physcl_device_memory_prprts_2 = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PROPERTIES_2,
+    sparse_img_format_prprts_2 = VK_STRUCTURE_TYPE_SPARSE_IMAGE_FORMAT_PROPERTIES_2,
+    physcl_device_sparse_img_format_info_2 = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SPARSE_IMAGE_FORMAT_INFO_2,
+    physcl_device_point_clppng_prprts = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES,
+    render_pass_input_attchmt_aspect_create_info = VK_STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO,
+    img_view_usage_create_info = VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO,
+    pplne_tsslltn_domain_origin_state_create_info = VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO,
+    render_pass_mltvw_create_info = VK_STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO,
+    physcl_device_mltvw_ftrs = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES,
+    physcl_device_mltvw_prprts = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES,
+    physcl_device_vrble_pntrs_ftrs = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES,
+    prtctd_submit_info = VK_STRUCTURE_TYPE_PROTECTED_SUBMIT_INFO,
+    physcl_device_prtctd_memory_ftrs = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_FEATURES,
+    physcl_device_prtctd_memory_prprts = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_PROPERTIES,
+    device_queue_info_2 = VK_STRUCTURE_TYPE_DEVICE_QUEUE_INFO_2,
+    smplr_ycbcr_cnvrsn_create_info = VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO,
+    smplr_ycbcr_cnvrsn_info = VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO,
+    bind_img_plane_memory_info = VK_STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO,
+    img_plane_memory_rqrmnts_info = VK_STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO,
+    physcl_device_smplr_ycbcr_cnvrsn_ftrs = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES,
+    smplr_ycbcr_cnvrsn_img_format_prprts = VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES,
+    dscrpt_update_tmplte_create_info = VK_STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO,
+    physcl_device_extrnl_img_format_info = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO,
+    extrnl_img_format_prprts = VK_STRUCTURE_TYPE_EXTERNAL_IMAGE_FORMAT_PROPERTIES,
+    physcl_device_extrnl_buffer_info = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_BUFFER_INFO,
+    extrnl_buffer_prprts = VK_STRUCTURE_TYPE_EXTERNAL_BUFFER_PROPERTIES,
+    physcl_device_id_prprts = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ID_PROPERTIES,
+    extrnl_memory_buffer_create_info = VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_BUFFER_CREATE_INFO,
+    extrnl_memory_img_create_info = VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO,
+    export_memory_allcte_info = VK_STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO,
+    physcl_device_extrnl_fence_info = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FENCE_INFO,
+    extrnl_fence_prprts = VK_STRUCTURE_TYPE_EXTERNAL_FENCE_PROPERTIES,
+    export_fence_create_info = VK_STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO,
+    export_smphre_create_info = VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO,
+    physcl_device_extrnl_smphre_info = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO,
+    extrnl_smphre_prprts = VK_STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES,
+    physcl_device_mntnnc_3_prprts = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES,
+    dscrpt_set_layout_spprt = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT,
+    physcl_device_shader_draw_prmtrs_ftrs = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES,
+    physcl_device_vulkan_1_1_ftrs = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES,
+    physcl_device_vulkan_1_1_prprts = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_PROPERTIES,
+    physcl_device_vulkan_1_2_ftrs = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES,
+    physcl_device_vulkan_1_2_prprts = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_PROPERTIES,
+    img_format_list_create_info = VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO,
+    attchmt_dscrptn_2 = VK_STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2,
+    attchmt_rfrnce_2 = VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2,
+    sbpss_dscrptn_2 = VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2,
+    sbpss_dpndncy_2 = VK_STRUCTURE_TYPE_SUBPASS_DEPENDENCY_2,
+    render_pass_create_info_2 = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO_2,
+    sbpss_begin_info = VK_STRUCTURE_TYPE_SUBPASS_BEGIN_INFO,
+    sbpss_end_info = VK_STRUCTURE_TYPE_SUBPASS_END_INFO,
+    physcl_device_8bit_strge_ftrs = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES,
+    physcl_device_driver_prprts = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES,
+    physcl_device_shader_atomic_int64_ftrs = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES,
+    physcl_device_shader_float16_int8_ftrs = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT16_INT8_FEATURES,
+    physcl_device_float_cntrls_prprts = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES,
+    dscrpt_set_layout_bndng_flags_create_info = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO,
+    physcl_device_dscrpt_indxng_ftrs = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES,
+    physcl_device_dscrpt_indxng_prprts = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_PROPERTIES,
+    dscrpt_set_vrble_dscrpt_count_allcte_info = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO,
+    dscrpt_set_vrble_dscrpt_count_layout_spprt = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_LAYOUT_SUPPORT,
+    physcl_device_depth_stncl_rslve_prprts = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES,
+    sbpss_dscrptn_depth_stncl_rslve = VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE,
+    physcl_device_scalar_block_layout_ftrs = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES,
+    img_stncl_usage_create_info = VK_STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_CREATE_INFO,
+    physcl_device_smplr_filter_minmax_prprts = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_FILTER_MINMAX_PROPERTIES,
+    smplr_rdctn_mode_create_info = VK_STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO,
+    physcl_device_vulkan_memory_model_ftrs = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES,
+    physcl_device_imglss_frmbff_ftrs = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGELESS_FRAMEBUFFER_FEATURES,
+    frmbff_attchms_create_info = VK_STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENTS_CREATE_INFO,
+    frmbff_attchmt_img_info = VK_STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENT_IMAGE_INFO,
+    render_pass_attchmt_begin_info = VK_STRUCTURE_TYPE_RENDER_PASS_ATTACHMENT_BEGIN_INFO,
+    physcl_device_unfrm_buffer_stndrd_layout_ftrs = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_UNIFORM_BUFFER_STANDARD_LAYOUT_FEATURES,
+    physcl_device_shader_sbgrp_extndd_types_ftrs = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_EXTENDED_TYPES_FEATURES,
+    physcl_device_sprte_depth_stncl_lyts_ftrs = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SEPARATE_DEPTH_STENCIL_LAYOUTS_FEATURES,
+    attchmt_rfrnce_stncl_layout = VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_STENCIL_LAYOUT,
+    attchmt_dscrptn_stncl_layout = VK_STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_STENCIL_LAYOUT,
+    physcl_device_host_query_reset_ftrs = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES,
+    physcl_device_tmlne_smphre_ftrs = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TIMELINE_SEMAPHORE_FEATURES,
+    physcl_device_tmlne_smphre_prprts = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TIMELINE_SEMAPHORE_PROPERTIES,
+    smphre_type_create_info = VK_STRUCTURE_TYPE_SEMAPHORE_TYPE_CREATE_INFO,
+    tmlne_smphre_submit_info = VK_STRUCTURE_TYPE_TIMELINE_SEMAPHORE_SUBMIT_INFO,
+    smphre_wait_info = VK_STRUCTURE_TYPE_SEMAPHORE_WAIT_INFO,
+    smphre_signal_info = VK_STRUCTURE_TYPE_SEMAPHORE_SIGNAL_INFO,
+    physcl_device_buffer_device_addrss_ftrs = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES,
+    buffer_device_addrss_info = VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO,
+    buffer_opaque_cptre_addrss_create_info = VK_STRUCTURE_TYPE_BUFFER_OPAQUE_CAPTURE_ADDRESS_CREATE_INFO,
+    memory_opaque_cptre_addrss_allcte_info = VK_STRUCTURE_TYPE_MEMORY_OPAQUE_CAPTURE_ADDRESS_ALLOCATE_INFO,
+    device_memory_opaque_cptre_addrss_info = VK_STRUCTURE_TYPE_DEVICE_MEMORY_OPAQUE_CAPTURE_ADDRESS_INFO,
+    physcl_device_vulkan_1_3_ftrs = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES,
+    physcl_device_vulkan_1_3_prprts = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_PROPERTIES,
+    pplne_crtn_fdbck_create_info = VK_STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO,
+    physcl_device_shader_trmnte_invctn_ftrs = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_TERMINATE_INVOCATION_FEATURES,
+    physcl_device_tool_prprts = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TOOL_PROPERTIES,
+    physcl_device_shader_demote_to_helper_invctn_ftrs = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DEMOTE_TO_HELPER_INVOCATION_FEATURES,
+    physcl_device_prvte_data_ftrs = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIVATE_DATA_FEATURES,
+    device_prvte_data_create_info = VK_STRUCTURE_TYPE_DEVICE_PRIVATE_DATA_CREATE_INFO,
+    prvte_data_slot_create_info = VK_STRUCTURE_TYPE_PRIVATE_DATA_SLOT_CREATE_INFO,
+    physcl_device_pplne_crtn_cache_cntrl_ftrs = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES,
+    memory_brrr_2 = VK_STRUCTURE_TYPE_MEMORY_BARRIER_2,
+    buffer_memory_brrr_2 = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER_2,
+    img_memory_brrr_2 = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
+    dpndncy_info = VK_STRUCTURE_TYPE_DEPENDENCY_INFO,
+    submit_info_2 = VK_STRUCTURE_TYPE_SUBMIT_INFO_2,
+    smphre_submit_info = VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO,
+    cmmnd_buffer_submit_info = VK_STRUCTURE_TYPE_COMMAND_BUFFER_SUBMIT_INFO,
+    physcl_device_synchrn_2_ftrs = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES,
+    physcl_device_zero_intlze_wrkgrp_memory_ftrs = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_WORKGROUP_MEMORY_FEATURES,
+    physcl_device_img_rbstns_ftrs = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_ROBUSTNESS_FEATURES,
+    copy_buffer_info_2 = VK_STRUCTURE_TYPE_COPY_BUFFER_INFO_2,
+    copy_img_info_2 = VK_STRUCTURE_TYPE_COPY_IMAGE_INFO_2,
+    copy_buffer_to_img_info_2 = VK_STRUCTURE_TYPE_COPY_BUFFER_TO_IMAGE_INFO_2,
+    copy_img_to_buffer_info_2 = VK_STRUCTURE_TYPE_COPY_IMAGE_TO_BUFFER_INFO_2,
+    blit_img_info_2 = VK_STRUCTURE_TYPE_BLIT_IMAGE_INFO_2,
+    rslve_img_info_2 = VK_STRUCTURE_TYPE_RESOLVE_IMAGE_INFO_2,
+    buffer_copy_2 = VK_STRUCTURE_TYPE_BUFFER_COPY_2,
+    img_copy_2 = VK_STRUCTURE_TYPE_IMAGE_COPY_2,
+    img_blit_2 = VK_STRUCTURE_TYPE_IMAGE_BLIT_2,
+    buffer_img_copy_2 = VK_STRUCTURE_TYPE_BUFFER_IMAGE_COPY_2,
+    img_rslve_2 = VK_STRUCTURE_TYPE_IMAGE_RESOLVE_2,
+    physcl_device_sbgrp_size_cntrl_prprts = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_PROPERTIES,
+    pplne_shader_stage_rqrd_sbgrp_size_create_info = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_REQUIRED_SUBGROUP_SIZE_CREATE_INFO,
+    physcl_device_sbgrp_size_cntrl_ftrs = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_FEATURES,
+    physcl_device_inline_unfrm_block_ftrs = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_FEATURES,
+    physcl_device_inline_unfrm_block_prprts = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_PROPERTIES,
+    write_dscrpt_set_inline_unfrm_block = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_INLINE_UNIFORM_BLOCK,
+    dscrpt_pool_inline_unfrm_block_create_info = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_INLINE_UNIFORM_BLOCK_CREATE_INFO,
+    physcl_device_txtre_cmprssn_astc_hdr_ftrs = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_HDR_FEATURES,
+    rndrng_info = VK_STRUCTURE_TYPE_RENDERING_INFO,
+    rndrng_attchmt_info = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO,
+    pplne_rndrng_create_info = VK_STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO,
+    physcl_device_dynmc_rndrng_ftrs = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES,
+    cmmnd_buffer_inhrtn_rndrng_info = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDERING_INFO,
+    physcl_device_shader_intgr_dot_prdct_ftrs = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_FEATURES,
+    physcl_device_shader_intgr_dot_prdct_prprts = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_PROPERTIES,
+    physcl_device_texel_buffer_algnmnt_prprts = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_PROPERTIES,
+    format_prprts_3 = VK_STRUCTURE_TYPE_FORMAT_PROPERTIES_3,
+    physcl_device_mntnnc_4_ftrs = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_FEATURES,
+    physcl_device_mntnnc_4_prprts = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_PROPERTIES,
+    device_buffer_memory_rqrmnts = VK_STRUCTURE_TYPE_DEVICE_BUFFER_MEMORY_REQUIREMENTS,
+    device_img_memory_rqrmnts = VK_STRUCTURE_TYPE_DEVICE_IMAGE_MEMORY_REQUIREMENTS,
 };
 
 constexpr std::string strctr_type_str(StructureType val)
@@ -1865,6 +2227,340 @@ constexpr std::string strctr_type_str(StructureType val)
         return "loader instance create info";
     case loader_device_create_info:
         return "loader device create info";
+    case physcl_device_sbgrp_prprts:
+        return "physical device subgroup properties";
+    case bind_buffer_memory_info:
+        return "bind buffer memory info";
+    case bind_img_memory_info:
+        return "bind image memory info";
+    case physcl_device_16bit_strge_ftrs:
+        return "physical device 16bit storage features";
+    case memory_ddctd_rqrmnts:
+        return "memory dedicated requirements";
+    case memory_ddctd_allcte_info:
+        return "memory dedicated allocate info";
+    case memory_allcte_flags_info:
+        return "memory allocate flags info";
+    case device_group_render_pass_begin_info:
+        return "device group render pass begin info";
+    case device_group_cmmnd_buffer_begin_info:
+        return "device group command buffer begin info";
+    case device_group_submit_info:
+        return "device group submit info";
+    case device_group_bind_sparse_info:
+        return "device group bind sparse info";
+    case bind_buffer_memory_device_group_info:
+        return "bind buffer memory device group info";
+    case bind_img_memory_device_group_info:
+        return "bind image memory device group info";
+    case physcl_device_group_prprts:
+        return "physical device group properties";
+    case device_group_device_create_info:
+        return "device group device create info";
+    case buffer_memory_rqrmnts_info_2:
+        return "buffer memory requirements info 2";
+    case img_memory_rqrmnts_info_2:
+        return "image memory requirements info 2";
+    case img_sparse_memory_rqrmnts_info_2:
+        return "image sparse memory requirements info 2";
+    case memory_rqrmnts_2:
+        return "memory requirements 2";
+    case sparse_img_memory_rqrmnts_2:
+        return "sparse image memory requirements 2";
+    case physcl_device_ftrs_2:
+        return "physical device features 2";
+    case physcl_device_prprts_2:
+        return "physical device properties 2";
+    case format_prprts_2:
+        return "format properties 2";
+    case img_format_prprts_2:
+        return "image format properties 2";
+    case physcl_device_img_format_info_2:
+        return "physical device image format info 2";
+    case queue_family_prprts_2:
+        return "queue family properties 2";
+    case physcl_device_memory_prprts_2:
+        return "physical device memory properties 2";
+    case sparse_img_format_prprts_2:
+        return "sparse image format properties 2";
+    case physcl_device_sparse_img_format_info_2:
+        return "physical device sparse image format info 2";
+    case physcl_device_point_clppng_prprts:
+        return "physical device point clipping properties";
+    case render_pass_input_attchmt_aspect_create_info:
+        return "render pass input attachment aspect create info";
+    case img_view_usage_create_info:
+        return "image view usage create info";
+    case pplne_tsslltn_domain_origin_state_create_info:
+        return "pipeline tessellation domain origin state create info";
+    case render_pass_mltvw_create_info:
+        return "render pass multiview create info";
+    case physcl_device_mltvw_ftrs:
+        return "physical device multiview features";
+    case physcl_device_mltvw_prprts:
+        return "physical device multiview properties";
+    case physcl_device_vrble_pntrs_ftrs:
+        return "physical device variable pointers features";
+    case prtctd_submit_info:
+        return "protected submit info";
+    case physcl_device_prtctd_memory_ftrs:
+        return "physical device protected memory features";
+    case physcl_device_prtctd_memory_prprts:
+        return "physical device protected memory properties";
+    case device_queue_info_2:
+        return "device queue info 2";
+    case smplr_ycbcr_cnvrsn_create_info:
+        return "sampler ycbcr conversion create info";
+    case smplr_ycbcr_cnvrsn_info:
+        return "sampler ycbcr conversion info";
+    case bind_img_plane_memory_info:
+        return "bind image plane memory info";
+    case img_plane_memory_rqrmnts_info:
+        return "image plane memory requirements info";
+    case physcl_device_smplr_ycbcr_cnvrsn_ftrs:
+        return "physical device sampler ycbcr conversion features";
+    case smplr_ycbcr_cnvrsn_img_format_prprts:
+        return "sampler ycbcr conversion image format properties";
+    case dscrpt_update_tmplte_create_info:
+        return "descriptor update template create info";
+    case physcl_device_extrnl_img_format_info:
+        return "physical device external image format info";
+    case extrnl_img_format_prprts:
+        return "external image format properties";
+    case physcl_device_extrnl_buffer_info:
+        return "physical device external buffer info";
+    case extrnl_buffer_prprts:
+        return "external buffer properties";
+    case physcl_device_id_prprts:
+        return "physical device id properties";
+    case extrnl_memory_buffer_create_info:
+        return "external memory buffer create info";
+    case extrnl_memory_img_create_info:
+        return "external memory image create info";
+    case export_memory_allcte_info:
+        return "export memory allocate info";
+    case physcl_device_extrnl_fence_info:
+        return "physical device external fence info";
+    case extrnl_fence_prprts:
+        return "external fence properties";
+    case export_fence_create_info:
+        return "export fence create info";
+    case export_smphre_create_info:
+        return "export semaphore create info";
+    case physcl_device_extrnl_smphre_info:
+        return "physical device external semaphore info";
+    case extrnl_smphre_prprts:
+        return "external semaphore properties";
+    case physcl_device_mntnnc_3_prprts:
+        return "physical device maintenance 3 properties";
+    case dscrpt_set_layout_spprt:
+        return "descriptor set layout support";
+    case physcl_device_shader_draw_prmtrs_ftrs:
+        return "physical device shader draw parameters features";
+    case physcl_device_vulkan_1_1_ftrs:
+        return "physical device vulkan 1 1 features";
+    case physcl_device_vulkan_1_1_prprts:
+        return "physical device vulkan 1 1 properties";
+    case physcl_device_vulkan_1_2_ftrs:
+        return "physical device vulkan 1 2 features";
+    case physcl_device_vulkan_1_2_prprts:
+        return "physical device vulkan 1 2 properties";
+    case img_format_list_create_info:
+        return "image format list create info";
+    case attchmt_dscrptn_2:
+        return "attachment description 2";
+    case attchmt_rfrnce_2:
+        return "attachment reference 2";
+    case sbpss_dscrptn_2:
+        return "subpass description 2";
+    case sbpss_dpndncy_2:
+        return "subpass dependency 2";
+    case render_pass_create_info_2:
+        return "render pass create info 2";
+    case sbpss_begin_info:
+        return "subpass begin info";
+    case sbpss_end_info:
+        return "subpass end info";
+    case physcl_device_8bit_strge_ftrs:
+        return "physical device 8bit storage features";
+    case physcl_device_driver_prprts:
+        return "physical device driver properties";
+    case physcl_device_shader_atomic_int64_ftrs:
+        return "physical device shader atomic int64 features";
+    case physcl_device_shader_float16_int8_ftrs:
+        return "physical device shader float16 int8 features";
+    case physcl_device_float_cntrls_prprts:
+        return "physical device float controls properties";
+    case dscrpt_set_layout_bndng_flags_create_info:
+        return "descriptor set layout binding flags create info";
+    case physcl_device_dscrpt_indxng_ftrs:
+        return "physical device descriptor indexing features";
+    case physcl_device_dscrpt_indxng_prprts:
+        return "physical device descriptor indexing properties";
+    case dscrpt_set_vrble_dscrpt_count_allcte_info:
+        return "descriptor set variable descriptor count allocate info";
+    case dscrpt_set_vrble_dscrpt_count_layout_spprt:
+        return "descriptor set variable descriptor count layout support";
+    case physcl_device_depth_stncl_rslve_prprts:
+        return "physical device depth/stencil resolve properties";
+    case sbpss_dscrptn_depth_stncl_rslve:
+        return "subpass description depth/stencil resolve";
+    case physcl_device_scalar_block_layout_ftrs:
+        return "physical device scalar block layout features";
+    case img_stncl_usage_create_info:
+        return "image stencil usage create info";
+    case physcl_device_smplr_filter_minmax_prprts:
+        return "physical device sampler filter minmax properties";
+    case smplr_rdctn_mode_create_info:
+        return "sampler reduction mode create info";
+    case physcl_device_vulkan_memory_model_ftrs:
+        return "physical device vulkan memory model features";
+    case physcl_device_imglss_frmbff_ftrs:
+        return "physical device imageless framebuffer features";
+    case frmbff_attchms_create_info:
+        return "framebuffer attachments create info";
+    case frmbff_attchmt_img_info:
+        return "framebuffer attachment image info";
+    case render_pass_attchmt_begin_info:
+        return "render pass attachment begin info";
+    case physcl_device_unfrm_buffer_stndrd_layout_ftrs:
+        return "physical device uniform buffer standard layout features";
+    case physcl_device_shader_sbgrp_extndd_types_ftrs:
+        return "physical device shader subgroup extended types features";
+    case physcl_device_sprte_depth_stncl_lyts_ftrs:
+        return "physical device separate depth/stencil layouts features";
+    case attchmt_rfrnce_stncl_layout:
+        return "attachment reference stencil layout";
+    case attchmt_dscrptn_stncl_layout:
+        return "attachment description stencil layout";
+    case physcl_device_host_query_reset_ftrs:
+        return "physical device host query reset features";
+    case physcl_device_tmlne_smphre_ftrs:
+        return "physical device timeline semaphore features";
+    case physcl_device_tmlne_smphre_prprts:
+        return "physical device timeline semaphore properties";
+    case smphre_type_create_info:
+        return "semaphore type create info";
+    case tmlne_smphre_submit_info:
+        return "timeline semaphore submit info";
+    case smphre_wait_info:
+        return "semaphore wait info";
+    case smphre_signal_info:
+        return "semaphore signal info";
+    case physcl_device_buffer_device_addrss_ftrs:
+        return "physical device buffer device address features";
+    case buffer_device_addrss_info:
+        return "buffer device address info";
+    case buffer_opaque_cptre_addrss_create_info:
+        return "buffer opaque capture address create info";
+    case memory_opaque_cptre_addrss_allcte_info:
+        return "memory opaque capture address allocate info";
+    case device_memory_opaque_cptre_addrss_info:
+        return "device memory opaque capture address info";
+    case physcl_device_vulkan_1_3_ftrs:
+        return "physical device vulkan 1 3 features";
+    case physcl_device_vulkan_1_3_prprts:
+        return "physical device vulkan 1 3 properties";
+    case pplne_crtn_fdbck_create_info:
+        return "pipeline creation feedback create info";
+    case physcl_device_shader_trmnte_invctn_ftrs:
+        return "physical device shader terminate invocation features";
+    case physcl_device_tool_prprts:
+        return "physical device tool properties";
+    case physcl_device_shader_demote_to_helper_invctn_ftrs:
+        return "physical device shader demote to helper invocation features";
+    case physcl_device_prvte_data_ftrs:
+        return "physical device private data features";
+    case device_prvte_data_create_info:
+        return "device private data create info";
+    case prvte_data_slot_create_info:
+        return "private data slot create info";
+    case physcl_device_pplne_crtn_cache_cntrl_ftrs:
+        return "physical device pipeline creation cache control features";
+    case memory_brrr_2:
+        return "memory barrier 2";
+    case buffer_memory_brrr_2:
+        return "buffer memory barrier 2";
+    case img_memory_brrr_2:
+        return "image memory barrier 2";
+    case dpndncy_info:
+        return "dependency info";
+    case submit_info_2:
+        return "submit info 2";
+    case smphre_submit_info:
+        return "semaphore submit info";
+    case cmmnd_buffer_submit_info:
+        return "command buffer submit info";
+    case physcl_device_synchrn_2_ftrs:
+        return "physical device synchronization 2 features";
+    case physcl_device_zero_intlze_wrkgrp_memory_ftrs:
+        return "physical device zero initialize workgroup memory features";
+    case physcl_device_img_rbstns_ftrs:
+        return "physical device image robustness features";
+    case copy_buffer_info_2:
+        return "copy buffer info 2";
+    case copy_img_info_2:
+        return "copy image info 2";
+    case copy_buffer_to_img_info_2:
+        return "copy buffer to image info 2";
+    case copy_img_to_buffer_info_2:
+        return "copy image to buffer info 2";
+    case blit_img_info_2:
+        return "blit image info 2";
+    case rslve_img_info_2:
+        return "resolve image info 2";
+    case buffer_copy_2:
+        return "buffer copy 2";
+    case img_copy_2:
+        return "image copy 2";
+    case img_blit_2:
+        return "image blit 2";
+    case buffer_img_copy_2:
+        return "buffer image copy 2";
+    case img_rslve_2:
+        return "image resolve 2";
+    case physcl_device_sbgrp_size_cntrl_prprts:
+        return "physical device subgroup size control properties";
+    case pplne_shader_stage_rqrd_sbgrp_size_create_info:
+        return "pipeline shader stage required subgroup size create info";
+    case physcl_device_sbgrp_size_cntrl_ftrs:
+        return "physical device subgroup size control features";
+    case physcl_device_inline_unfrm_block_ftrs:
+        return "physical device inline uniform block features";
+    case physcl_device_inline_unfrm_block_prprts:
+        return "physical device inline uniform block properties";
+    case write_dscrpt_set_inline_unfrm_block:
+        return "write descriptor set inline uniform block";
+    case dscrpt_pool_inline_unfrm_block_create_info:
+        return "descriptor pool inline uniform block create info";
+    case physcl_device_txtre_cmprssn_astc_hdr_ftrs:
+        return "physical device texture compression astc hdr features";
+    case rndrng_info:
+        return "rendering info";
+    case rndrng_attchmt_info:
+        return "rendering attachment info";
+    case pplne_rndrng_create_info:
+        return "pipeline rendering create info";
+    case physcl_device_dynmc_rndrng_ftrs:
+        return "physical device dynamic rendering features";
+    case cmmnd_buffer_inhrtn_rndrng_info:
+        return "command buffer inheritance rendering info";
+    case physcl_device_shader_intgr_dot_prdct_ftrs:
+        return "physical device shader integer dot product features";
+    case physcl_device_shader_intgr_dot_prdct_prprts:
+        return "physical device shader integer dot product properties";
+    case physcl_device_texel_buffer_algnmnt_prprts:
+        return "physical device texel buffer alignment properties";
+    case format_prprts_3:
+        return "format properties 3";
+    case physcl_device_mntnnc_4_ftrs:
+        return "physical device maintenance 4 features";
+    case physcl_device_mntnnc_4_prprts:
+        return "physical device maintenance 4 properties";
+    case device_buffer_memory_rqrmnts:
+        return "device buffer memory requirements";
+    case device_img_memory_rqrmnts:
+        return "device image memory requirements";
     default:
         return std::to_string(static_cast<int>(val));
     }
@@ -1925,6 +2621,11 @@ enum class Result {
     error_format_not_spprtd = VK_ERROR_FORMAT_NOT_SUPPORTED,
     error_frgmntd_pool = VK_ERROR_FRAGMENTED_POOL,
     error_unknwn = VK_ERROR_UNKNOWN,
+    error_out_of_pool_memory = VK_ERROR_OUT_OF_POOL_MEMORY,
+    error_invld_extrnl_handle = VK_ERROR_INVALID_EXTERNAL_HANDLE,
+    error_frgmntn = VK_ERROR_FRAGMENTATION,
+    error_invld_opaque_cptre_addrss = VK_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS,
+    pplne_cmple_rqrd = VK_PIPELINE_COMPILE_REQUIRED,
 };
 
 constexpr std::string result_str(Result val)
@@ -1970,6 +2671,16 @@ constexpr std::string result_str(Result val)
         return "error fragmented pool";
     case error_unknwn:
         return "error unknown";
+    case error_out_of_pool_memory:
+        return "error out of pool memory";
+    case error_invld_extrnl_handle:
+        return "error invalid external handle";
+    case error_frgmntn:
+        return "error fragmentation";
+    case error_invld_opaque_cptre_addrss:
+        return "error invalid opaque capture address";
+    case pplne_cmple_rqrd:
+        return "pipeline compile required";
     default:
         return std::to_string(static_cast<int>(val));
     }
@@ -1993,6 +2704,21 @@ enum class DynamicState {
     stncl_cmpre_mask = VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK,
     stncl_write_mask = VK_DYNAMIC_STATE_STENCIL_WRITE_MASK,
     stncl_rfrnce = VK_DYNAMIC_STATE_STENCIL_REFERENCE,
+    cull_mode = VK_DYNAMIC_STATE_CULL_MODE,
+    front_face = VK_DYNAMIC_STATE_FRONT_FACE,
+    prmtve_tplgy = VK_DYNAMIC_STATE_PRIMITIVE_TOPOLOGY,
+    vwprt_with_count = VK_DYNAMIC_STATE_VIEWPORT_WITH_COUNT,
+    scssr_with_count = VK_DYNAMIC_STATE_SCISSOR_WITH_COUNT,
+    vertex_input_bndng_stride = VK_DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE,
+    depth_test_enable = VK_DYNAMIC_STATE_DEPTH_TEST_ENABLE,
+    depth_write_enable = VK_DYNAMIC_STATE_DEPTH_WRITE_ENABLE,
+    depth_cmpre_op = VK_DYNAMIC_STATE_DEPTH_COMPARE_OP,
+    depth_bounds_test_enable = VK_DYNAMIC_STATE_DEPTH_BOUNDS_TEST_ENABLE,
+    stncl_test_enable = VK_DYNAMIC_STATE_STENCIL_TEST_ENABLE,
+    stncl_op = VK_DYNAMIC_STATE_STENCIL_OP,
+    rstrzr_dscrd_enable = VK_DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE,
+    depth_bias_enable = VK_DYNAMIC_STATE_DEPTH_BIAS_ENABLE,
+    prmtve_rstrt_enable = VK_DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE,
 };
 
 constexpr std::string dynmc_state_str(DynamicState val)
@@ -2018,6 +2744,36 @@ constexpr std::string dynmc_state_str(DynamicState val)
         return "stencil write mask";
     case stncl_rfrnce:
         return "stencil reference";
+    case cull_mode:
+        return "cull mode";
+    case front_face:
+        return "front face";
+    case prmtve_tplgy:
+        return "primitive topology";
+    case vwprt_with_count:
+        return "viewport with count";
+    case scssr_with_count:
+        return "scissor with count";
+    case vertex_input_bndng_stride:
+        return "vertex input binding stride";
+    case depth_test_enable:
+        return "depth test enable";
+    case depth_write_enable:
+        return "depth write enable";
+    case depth_cmpre_op:
+        return "depth compare op";
+    case depth_bounds_test_enable:
+        return "depth bounds test enable";
+    case stncl_test_enable:
+        return "stencil test enable";
+    case stncl_op:
+        return "stencil op";
+    case rstrzr_dscrd_enable:
+        return "rasterizer discard enable";
+    case depth_bias_enable:
+        return "depth bias enable";
+    case prmtve_rstrt_enable:
+        return "primitive restart enable";
     default:
         return std::to_string(static_cast<int>(val));
     }
@@ -2082,6 +2838,9 @@ enum class ObjectType {
     dscrpt_set = VK_OBJECT_TYPE_DESCRIPTOR_SET,
     frmbff = VK_OBJECT_TYPE_FRAMEBUFFER,
     cmmnd_pool = VK_OBJECT_TYPE_COMMAND_POOL,
+    smplr_ycbcr_cnvrsn = VK_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION,
+    dscrpt_update_tmplte = VK_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE,
+    prvte_data_slot = VK_OBJECT_TYPE_PRIVATE_DATA_SLOT,
 };
 
 constexpr std::string object_type_str(ObjectType val)
@@ -2141,6 +2900,12 @@ constexpr std::string object_type_str(ObjectType val)
         return "framebuffer";
     case cmmnd_pool:
         return "command pool";
+    case smplr_ycbcr_cnvrsn:
+        return "sampler ycbcr conversion";
+    case dscrpt_update_tmplte:
+        return "descriptor update template";
+    case prvte_data_slot:
+        return "private data slot";
     default:
         return std::to_string(static_cast<int>(val));
     }
@@ -3034,6 +3799,41 @@ constexpr std::string frgmnt_shdng_rate_cmbnr_op_str(VkFragmentShadingRateCombin
 }
 
 /*!
+ * \brief Maps to VkPipelineCacheCreateFlagBits. Should be safe to static_cast between.
+ */
+enum class PipelineCacheCreateFlag {
+    extrnly_synchrd = VK_PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT,
+};
+
+constexpr std::string pplne_cache_create_flag_str(PipelineCacheCreateFlag val)
+{
+    using enum PipelineCacheCreateFlag;
+
+    switch(val) {
+    case extrnly_synchrd:
+        return "externally synchronized";
+    default:
+        return std::to_string(static_cast<int>(val));
+    }
+}
+
+constexpr std::string pplne_cache_create_flag_str(VkPipelineCacheCreateFlagBits val)
+{
+    return pplne_cache_create_flag_str(static_cast<PipelineCacheCreateFlag>(val));
+}
+
+constexpr std::vector<const char*> pplne_cache_create_flags_cstrs(VkPipelineCacheCreateFlags vals)
+{
+    std::vector<const char*> cstrs;
+
+    if (vals & VK_PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT) {
+        cstrs.push_back("externally synchronized");
+    }
+
+    return cstrs;
+}
+
+/*!
  * \brief Maps to VkQueueFlagBits. Should be safe to static_cast between.
  */
 enum class QueueFlag {
@@ -3041,6 +3841,7 @@ enum class QueueFlag {
     cmpte = VK_QUEUE_COMPUTE_BIT,
     trnsfr = VK_QUEUE_TRANSFER_BIT,
     sparse_bndng = VK_QUEUE_SPARSE_BINDING_BIT,
+    prtctd = VK_QUEUE_PROTECTED_BIT,
 };
 
 constexpr std::string queue_flag_str(QueueFlag val)
@@ -3056,6 +3857,8 @@ constexpr std::string queue_flag_str(QueueFlag val)
         return "transfer";
     case sparse_bndng:
         return "sparse binding";
+    case prtctd:
+        return "protected";
     default:
         return std::to_string(static_cast<int>(val));
     }
@@ -3084,6 +3887,10 @@ constexpr std::vector<const char*> queue_flags_cstrs(VkQueueFlags vals)
 
     if (vals & VK_QUEUE_SPARSE_BINDING_BIT) {
         cstrs.push_back("sparse binding");
+    }
+
+    if (vals & VK_QUEUE_PROTECTED_BIT) {
+        cstrs.push_back("protected");
     }
 
     return cstrs;
@@ -3146,6 +3953,41 @@ constexpr std::vector<const char*> cull_mode_flags_cstrs(VkCullModeFlags vals)
 }
 
 /*!
+ * \brief Maps to VkDeviceQueueCreateFlagBits. Should be safe to static_cast between.
+ */
+enum class DeviceQueueCreateFlag {
+    prtctd = VK_DEVICE_QUEUE_CREATE_PROTECTED_BIT,
+};
+
+constexpr std::string device_queue_create_flag_str(DeviceQueueCreateFlag val)
+{
+    using enum DeviceQueueCreateFlag;
+
+    switch(val) {
+    case prtctd:
+        return "protected";
+    default:
+        return std::to_string(static_cast<int>(val));
+    }
+}
+
+constexpr std::string device_queue_create_flag_str(VkDeviceQueueCreateFlagBits val)
+{
+    return device_queue_create_flag_str(static_cast<DeviceQueueCreateFlag>(val));
+}
+
+constexpr std::vector<const char*> device_queue_create_flags_cstrs(VkDeviceQueueCreateFlags vals)
+{
+    std::vector<const char*> cstrs;
+
+    if (vals & VK_DEVICE_QUEUE_CREATE_PROTECTED_BIT) {
+        cstrs.push_back("protected");
+    }
+
+    return cstrs;
+}
+
+/*!
  * \brief Maps to VkMemoryPropertyFlagBits. Should be safe to static_cast between.
  */
 enum class MemoryPropertyFlag {
@@ -3154,6 +3996,7 @@ enum class MemoryPropertyFlag {
     host_chrnt = VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
     host_cached = VK_MEMORY_PROPERTY_HOST_CACHED_BIT,
     lazily_allctd = VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT,
+    prtctd = VK_MEMORY_PROPERTY_PROTECTED_BIT,
 };
 
 constexpr std::string memory_prprty_flag_str(MemoryPropertyFlag val)
@@ -3171,6 +4014,8 @@ constexpr std::string memory_prprty_flag_str(MemoryPropertyFlag val)
         return "host cached";
     case lazily_allctd:
         return "lazily allocated";
+    case prtctd:
+        return "protected";
     default:
         return std::to_string(static_cast<int>(val));
     }
@@ -3205,6 +4050,10 @@ constexpr std::vector<const char*> memory_prprty_flags_cstrs(VkMemoryPropertyFla
         cstrs.push_back("lazily allocated");
     }
 
+    if (vals & VK_MEMORY_PROPERTY_PROTECTED_BIT) {
+        cstrs.push_back("protected");
+    }
+
     return cstrs;
 }
 
@@ -3213,6 +4062,7 @@ constexpr std::vector<const char*> memory_prprty_flags_cstrs(VkMemoryPropertyFla
  */
 enum class MemoryHeapFlag {
     device_local = VK_MEMORY_HEAP_DEVICE_LOCAL_BIT,
+    multi_instnc = VK_MEMORY_HEAP_MULTI_INSTANCE_BIT,
 };
 
 constexpr std::string memory_heap_flag_str(MemoryHeapFlag val)
@@ -3222,6 +4072,8 @@ constexpr std::string memory_heap_flag_str(MemoryHeapFlag val)
     switch(val) {
     case device_local:
         return "device local";
+    case multi_instnc:
+        return "multi instance";
     default:
         return std::to_string(static_cast<int>(val));
     }
@@ -3238,6 +4090,10 @@ constexpr std::vector<const char*> memory_heap_flags_cstrs(VkMemoryHeapFlags val
 
     if (vals & VK_MEMORY_HEAP_DEVICE_LOCAL_BIT) {
         cstrs.push_back("device local");
+    }
+
+    if (vals & VK_MEMORY_HEAP_MULTI_INSTANCE_BIT) {
+        cstrs.push_back("multi instance");
     }
 
     return cstrs;
@@ -3264,6 +4120,7 @@ enum class AccessFlag {
     host_write = VK_ACCESS_HOST_WRITE_BIT,
     memory_read = VK_ACCESS_MEMORY_READ_BIT,
     memory_write = VK_ACCESS_MEMORY_WRITE_BIT,
+    none = VK_ACCESS_NONE,
 };
 
 constexpr std::string access_flag_str(AccessFlag val)
@@ -3305,6 +4162,8 @@ constexpr std::string access_flag_str(AccessFlag val)
         return "memory read";
     case memory_write:
         return "memory write";
+    case none:
+        return "none";
     default:
         return std::to_string(static_cast<int>(val));
     }
@@ -3387,6 +4246,10 @@ constexpr std::vector<const char*> access_flags_cstrs(VkAccessFlags vals)
         cstrs.push_back("memory write");
     }
 
+    if (vals & VK_ACCESS_NONE) {
+        cstrs.push_back("none");
+    }
+
     return cstrs;
 }
 
@@ -3403,6 +4266,7 @@ enum class BufferUsageFlag {
     index_buffer = VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
     vertex_buffer = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
     indrct_buffer = VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT,
+    shader_device_addrss = VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT,
 };
 
 constexpr std::string buffer_usage_flag_str(BufferUsageFlag val)
@@ -3428,6 +4292,8 @@ constexpr std::string buffer_usage_flag_str(BufferUsageFlag val)
         return "vertex buffer";
     case indrct_buffer:
         return "indirect buffer";
+    case shader_device_addrss:
+        return "shader device address";
     default:
         return std::to_string(static_cast<int>(val));
     }
@@ -3478,6 +4344,10 @@ constexpr std::vector<const char*> buffer_usage_flags_cstrs(VkBufferUsageFlags v
         cstrs.push_back("indirect buffer");
     }
 
+    if (vals & VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT) {
+        cstrs.push_back("shader device address");
+    }
+
     return cstrs;
 }
 
@@ -3488,6 +4358,8 @@ enum class BufferCreateFlag {
     sparse_bndng = VK_BUFFER_CREATE_SPARSE_BINDING_BIT,
     sparse_rsdncy = VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT,
     sparse_alsd = VK_BUFFER_CREATE_SPARSE_ALIASED_BIT,
+    prtctd = VK_BUFFER_CREATE_PROTECTED_BIT,
+    device_addrss_cptre_replay = VK_BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT,
 };
 
 constexpr std::string buffer_create_flag_str(BufferCreateFlag val)
@@ -3501,6 +4373,10 @@ constexpr std::string buffer_create_flag_str(BufferCreateFlag val)
         return "sparse residency";
     case sparse_alsd:
         return "sparse aliased";
+    case prtctd:
+        return "protected";
+    case device_addrss_cptre_replay:
+        return "device address capture replay";
     default:
         return std::to_string(static_cast<int>(val));
     }
@@ -3525,6 +4401,14 @@ constexpr std::vector<const char*> buffer_create_flags_cstrs(VkBufferCreateFlags
 
     if (vals & VK_BUFFER_CREATE_SPARSE_ALIASED_BIT) {
         cstrs.push_back("sparse aliased");
+    }
+
+    if (vals & VK_BUFFER_CREATE_PROTECTED_BIT) {
+        cstrs.push_back("protected");
+    }
+
+    if (vals & VK_BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT) {
+        cstrs.push_back("device address capture replay");
     }
 
     return cstrs;
@@ -3707,6 +4591,13 @@ enum class ImageCreateFlag {
     sparse_alsd = VK_IMAGE_CREATE_SPARSE_ALIASED_BIT,
     mtble_format = VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT,
     cube_cmptbl = VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT,
+    alias = VK_IMAGE_CREATE_ALIAS_BIT,
+    split_instnc_bind_rgns = VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT,
+    twod_array_cmptbl = VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT,
+    block_texel_view_cmptbl = VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT,
+    extndd_usage = VK_IMAGE_CREATE_EXTENDED_USAGE_BIT,
+    prtctd = VK_IMAGE_CREATE_PROTECTED_BIT,
+    dsjnt = VK_IMAGE_CREATE_DISJOINT_BIT,
 };
 
 constexpr std::string img_create_flag_str(ImageCreateFlag val)
@@ -3724,6 +4615,20 @@ constexpr std::string img_create_flag_str(ImageCreateFlag val)
         return "mutable format";
     case cube_cmptbl:
         return "cube compatible";
+    case alias:
+        return "alias";
+    case split_instnc_bind_rgns:
+        return "split instance bind regions";
+    case twod_array_cmptbl:
+        return "2D array compatible";
+    case block_texel_view_cmptbl:
+        return "block texel view compatible";
+    case extndd_usage:
+        return "extended usage";
+    case prtctd:
+        return "protected";
+    case dsjnt:
+        return "disjoint";
     default:
         return std::to_string(static_cast<int>(val));
     }
@@ -3758,6 +4663,34 @@ constexpr std::vector<const char*> img_create_flags_cstrs(VkImageCreateFlags val
         cstrs.push_back("cube compatible");
     }
 
+    if (vals & VK_IMAGE_CREATE_ALIAS_BIT) {
+        cstrs.push_back("alias");
+    }
+
+    if (vals & VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT) {
+        cstrs.push_back("split instance bind regions");
+    }
+
+    if (vals & VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT) {
+        cstrs.push_back("2D array compatible");
+    }
+
+    if (vals & VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT) {
+        cstrs.push_back("block texel view compatible");
+    }
+
+    if (vals & VK_IMAGE_CREATE_EXTENDED_USAGE_BIT) {
+        cstrs.push_back("extended usage");
+    }
+
+    if (vals & VK_IMAGE_CREATE_PROTECTED_BIT) {
+        cstrs.push_back("protected");
+    }
+
+    if (vals & VK_IMAGE_CREATE_DISJOINT_BIT) {
+        cstrs.push_back("disjoint");
+    }
+
     return cstrs;
 }
 
@@ -3768,6 +4701,10 @@ enum class PipelineCreateFlag {
     dsble_optmztn = VK_PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT,
     allow_drvtvs = VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT,
     drvtve = VK_PIPELINE_CREATE_DERIVATIVE_BIT,
+    view_index_from_device_index = VK_PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT,
+    dsptch_base = VK_PIPELINE_CREATE_DISPATCH_BASE_BIT,
+    fail_on_pplne_cmple_rqrd = VK_PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT,
+    early_return_on_flre = VK_PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT,
 };
 
 constexpr std::string pplne_create_flag_str(PipelineCreateFlag val)
@@ -3781,6 +4718,14 @@ constexpr std::string pplne_create_flag_str(PipelineCreateFlag val)
         return "allow derivatives";
     case drvtve:
         return "derivative";
+    case view_index_from_device_index:
+        return "view index from device index";
+    case dsptch_base:
+        return "dispatch base";
+    case fail_on_pplne_cmple_rqrd:
+        return "fail on pipeline compile required";
+    case early_return_on_flre:
+        return "early return on failure";
     default:
         return std::to_string(static_cast<int>(val));
     }
@@ -3805,6 +4750,64 @@ constexpr std::vector<const char*> pplne_create_flags_cstrs(VkPipelineCreateFlag
 
     if (vals & VK_PIPELINE_CREATE_DERIVATIVE_BIT) {
         cstrs.push_back("derivative");
+    }
+
+    if (vals & VK_PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT) {
+        cstrs.push_back("view index from device index");
+    }
+
+    if (vals & VK_PIPELINE_CREATE_DISPATCH_BASE_BIT) {
+        cstrs.push_back("dispatch base");
+    }
+
+    if (vals & VK_PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT) {
+        cstrs.push_back("fail on pipeline compile required");
+    }
+
+    if (vals & VK_PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT) {
+        cstrs.push_back("early return on failure");
+    }
+
+    return cstrs;
+}
+
+/*!
+ * \brief Maps to VkPipelineShaderStageCreateFlagBits. Should be safe to static_cast between.
+ */
+enum class PipelineShaderStageCreateFlag {
+    allow_vryng_sbgrp_size = VK_PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT,
+    rqre_full_sbgrps = VK_PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT,
+};
+
+constexpr std::string pplne_shader_stage_create_flag_str(PipelineShaderStageCreateFlag val)
+{
+    using enum PipelineShaderStageCreateFlag;
+
+    switch(val) {
+    case allow_vryng_sbgrp_size:
+        return "allow varying subgroup size";
+    case rqre_full_sbgrps:
+        return "require full subgroups";
+    default:
+        return std::to_string(static_cast<int>(val));
+    }
+}
+
+constexpr std::string pplne_shader_stage_create_flag_str(VkPipelineShaderStageCreateFlagBits val)
+{
+    return pplne_shader_stage_create_flag_str(static_cast<PipelineShaderStageCreateFlag>(val));
+}
+
+constexpr std::vector<const char*> pplne_shader_stage_create_flags_cstrs(VkPipelineShaderStageCreateFlags vals)
+{
+    std::vector<const char*> cstrs;
+
+    if (vals & VK_PIPELINE_SHADER_STAGE_CREATE_ALLOW_VARYING_SUBGROUP_SIZE_BIT) {
+        cstrs.push_back("allow varying subgroup size");
+    }
+
+    if (vals & VK_PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT) {
+        cstrs.push_back("require full subgroups");
     }
 
     return cstrs;
@@ -3918,6 +4921,16 @@ enum class FormatFeatureFlag {
     blit_src = VK_FORMAT_FEATURE_BLIT_SRC_BIT,
     blit_dst = VK_FORMAT_FEATURE_BLIT_DST_BIT,
     smpld_img_filter_linear = VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT,
+    trnsfr_src = VK_FORMAT_FEATURE_TRANSFER_SRC_BIT,
+    trnsfr_dst = VK_FORMAT_FEATURE_TRANSFER_DST_BIT,
+    mdpnt_chroma_smpls = VK_FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT,
+    smpld_img_ycbcr_cnvrsn_linear_filter = VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT,
+    smpld_img_ycbcr_cnvrsn_sprte_rcnstrn_filter = VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT,
+    smpld_img_ycbcr_cnvrsn_chroma_rcnstrn_explct = VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT,
+    smpld_img_ycbcr_cnvrsn_chroma_rcnstrn_explct_frcble = VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT,
+    dsjnt = VK_FORMAT_FEATURE_DISJOINT_BIT,
+    cstd_chroma_smpls = VK_FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT,
+    smpld_img_filter_minmax = VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT,
 };
 
 constexpr std::string format_ftre_flag_str(FormatFeatureFlag val)
@@ -3951,6 +4964,26 @@ constexpr std::string format_ftre_flag_str(FormatFeatureFlag val)
         return "blit dst";
     case smpld_img_filter_linear:
         return "sampled image filter linear";
+    case trnsfr_src:
+        return "transfer src";
+    case trnsfr_dst:
+        return "transfer dst";
+    case mdpnt_chroma_smpls:
+        return "midpoint chroma samples";
+    case smpld_img_ycbcr_cnvrsn_linear_filter:
+        return "sampled image ycbcr conversion linear filter";
+    case smpld_img_ycbcr_cnvrsn_sprte_rcnstrn_filter:
+        return "sampled image ycbcr conversion separate reconstruction filter";
+    case smpld_img_ycbcr_cnvrsn_chroma_rcnstrn_explct:
+        return "sampled image ycbcr conversion chroma reconstruction explicit";
+    case smpld_img_ycbcr_cnvrsn_chroma_rcnstrn_explct_frcble:
+        return "sampled image ycbcr conversion chroma reconstruction explicit forceable";
+    case dsjnt:
+        return "disjoint";
+    case cstd_chroma_smpls:
+        return "cosited chroma samples";
+    case smpld_img_filter_minmax:
+        return "sampled image filter minmax";
     default:
         return std::to_string(static_cast<int>(val));
     }
@@ -4015,6 +5048,46 @@ constexpr std::vector<const char*> format_ftre_flags_cstrs(VkFormatFeatureFlags 
 
     if (vals & VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT) {
         cstrs.push_back("sampled image filter linear");
+    }
+
+    if (vals & VK_FORMAT_FEATURE_TRANSFER_SRC_BIT) {
+        cstrs.push_back("transfer src");
+    }
+
+    if (vals & VK_FORMAT_FEATURE_TRANSFER_DST_BIT) {
+        cstrs.push_back("transfer dst");
+    }
+
+    if (vals & VK_FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT) {
+        cstrs.push_back("midpoint chroma samples");
+    }
+
+    if (vals & VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT) {
+        cstrs.push_back("sampled image ycbcr conversion linear filter");
+    }
+
+    if (vals & VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT) {
+        cstrs.push_back("sampled image ycbcr conversion separate reconstruction filter");
+    }
+
+    if (vals & VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT) {
+        cstrs.push_back("sampled image ycbcr conversion chroma reconstruction explicit");
+    }
+
+    if (vals & VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT) {
+        cstrs.push_back("sampled image ycbcr conversion chroma reconstruction explicit forceable");
+    }
+
+    if (vals & VK_FORMAT_FEATURE_DISJOINT_BIT) {
+        cstrs.push_back("disjoint");
+    }
+
+    if (vals & VK_FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT) {
+        cstrs.push_back("cosited chroma samples");
+    }
+
+    if (vals & VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT) {
+        cstrs.push_back("sampled image filter minmax");
     }
 
     return cstrs;
@@ -4217,6 +5290,10 @@ enum class ImageAspectFlag {
     depth = VK_IMAGE_ASPECT_DEPTH_BIT,
     stncl = VK_IMAGE_ASPECT_STENCIL_BIT,
     mtdta = VK_IMAGE_ASPECT_METADATA_BIT,
+    plane_0 = VK_IMAGE_ASPECT_PLANE_0_BIT,
+    plane_1 = VK_IMAGE_ASPECT_PLANE_1_BIT,
+    plane_2 = VK_IMAGE_ASPECT_PLANE_2_BIT,
+    none = VK_IMAGE_ASPECT_NONE,
 };
 
 constexpr std::string img_aspect_flag_str(ImageAspectFlag val)
@@ -4232,6 +5309,14 @@ constexpr std::string img_aspect_flag_str(ImageAspectFlag val)
         return "stencil";
     case mtdta:
         return "metadata";
+    case plane_0:
+        return "plane 0";
+    case plane_1:
+        return "plane 1";
+    case plane_2:
+        return "plane 2";
+    case none:
+        return "none";
     default:
         return std::to_string(static_cast<int>(val));
     }
@@ -4260,6 +5345,22 @@ constexpr std::vector<const char*> img_aspect_flags_cstrs(VkImageAspectFlags val
 
     if (vals & VK_IMAGE_ASPECT_METADATA_BIT) {
         cstrs.push_back("metadata");
+    }
+
+    if (vals & VK_IMAGE_ASPECT_PLANE_0_BIT) {
+        cstrs.push_back("plane 0");
+    }
+
+    if (vals & VK_IMAGE_ASPECT_PLANE_1_BIT) {
+        cstrs.push_back("plane 1");
+    }
+
+    if (vals & VK_IMAGE_ASPECT_PLANE_2_BIT) {
+        cstrs.push_back("plane 2");
+    }
+
+    if (vals & VK_IMAGE_ASPECT_NONE) {
+        cstrs.push_back("none");
     }
 
     return cstrs;
@@ -4370,6 +5471,7 @@ enum class PipelineStageFlag {
     host = VK_PIPELINE_STAGE_HOST_BIT,
     all_grphcs = VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT,
     all_cmmnds = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
+    none = VK_PIPELINE_STAGE_NONE,
 };
 
 constexpr std::string pplne_stage_flag_str(PipelineStageFlag val)
@@ -4411,6 +5513,8 @@ constexpr std::string pplne_stage_flag_str(PipelineStageFlag val)
         return "all graphics";
     case all_cmmnds:
         return "all commands";
+    case none:
+        return "none";
     default:
         return std::to_string(static_cast<int>(val));
     }
@@ -4493,6 +5597,10 @@ constexpr std::vector<const char*> pplne_stage_flags_cstrs(VkPipelineStageFlags 
         cstrs.push_back("all commands");
     }
 
+    if (vals & VK_PIPELINE_STAGE_NONE) {
+        cstrs.push_back("none");
+    }
+
     return cstrs;
 }
 
@@ -4502,6 +5610,7 @@ constexpr std::vector<const char*> pplne_stage_flags_cstrs(VkPipelineStageFlags 
 enum class CommandPoolCreateFlag {
     trnsnt = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT,
     reset_cmmnd_buffer = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT,
+    prtctd = VK_COMMAND_POOL_CREATE_PROTECTED_BIT,
 };
 
 constexpr std::string cmmnd_pool_create_flag_str(CommandPoolCreateFlag val)
@@ -4513,6 +5622,8 @@ constexpr std::string cmmnd_pool_create_flag_str(CommandPoolCreateFlag val)
         return "transient";
     case reset_cmmnd_buffer:
         return "reset command buffer";
+    case prtctd:
+        return "protected";
     default:
         return std::to_string(static_cast<int>(val));
     }
@@ -4533,6 +5644,10 @@ constexpr std::vector<const char*> cmmnd_pool_create_flags_cstrs(VkCommandPoolCr
 
     if (vals & VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT) {
         cstrs.push_back("reset command buffer");
+    }
+
+    if (vals & VK_COMMAND_POOL_CREATE_PROTECTED_BIT) {
+        cstrs.push_back("protected");
     }
 
     return cstrs;
@@ -4774,6 +5889,7 @@ constexpr std::vector<const char*> stncl_face_flags_cstrs(VkStencilFaceFlags val
  */
 enum class DescriptorPoolCreateFlag {
     free_dscrpt_set = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT,
+    update_after_bind = VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT,
 };
 
 constexpr std::string dscrpt_pool_create_flag_str(DescriptorPoolCreateFlag val)
@@ -4783,6 +5899,8 @@ constexpr std::string dscrpt_pool_create_flag_str(DescriptorPoolCreateFlag val)
     switch(val) {
     case free_dscrpt_set:
         return "free descriptor set";
+    case update_after_bind:
+        return "update after bind";
     default:
         return std::to_string(static_cast<int>(val));
     }
@@ -4801,6 +5919,10 @@ constexpr std::vector<const char*> dscrpt_pool_create_flags_cstrs(VkDescriptorPo
         cstrs.push_back("free descriptor set");
     }
 
+    if (vals & VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT) {
+        cstrs.push_back("update after bind");
+    }
+
     return cstrs;
 }
 
@@ -4809,6 +5931,8 @@ constexpr std::vector<const char*> dscrpt_pool_create_flags_cstrs(VkDescriptorPo
  */
 enum class DependencyFlag {
     by_region = VK_DEPENDENCY_BY_REGION_BIT,
+    device_group = VK_DEPENDENCY_DEVICE_GROUP_BIT,
+    view_local = VK_DEPENDENCY_VIEW_LOCAL_BIT,
 };
 
 constexpr std::string dpndncy_flag_str(DependencyFlag val)
@@ -4818,6 +5942,10 @@ constexpr std::string dpndncy_flag_str(DependencyFlag val)
     switch(val) {
     case by_region:
         return "by region";
+    case device_group:
+        return "device group";
+    case view_local:
+        return "view local";
     default:
         return std::to_string(static_cast<int>(val));
     }
@@ -4834,6 +5962,14 @@ constexpr std::vector<const char*> dpndncy_flags_cstrs(VkDependencyFlags vals)
 
     if (vals & VK_DEPENDENCY_BY_REGION_BIT) {
         cstrs.push_back("by region");
+    }
+
+    if (vals & VK_DEPENDENCY_DEVICE_GROUP_BIT) {
+        cstrs.push_back("device group");
+    }
+
+    if (vals & VK_DEPENDENCY_VIEW_LOCAL_BIT) {
+        cstrs.push_back("view local");
     }
 
     return cstrs;
@@ -5156,6 +6292,41 @@ constexpr std::vector<const char*> sbgrp_ftre_flags_cstrs(VkSubgroupFeatureFlags
 
     if (vals & VK_SUBGROUP_FEATURE_QUAD_BIT) {
         cstrs.push_back("quad");
+    }
+
+    return cstrs;
+}
+
+/*!
+ * \brief Maps to VkDescriptorSetLayoutCreateFlagBits. Should be safe to static_cast between.
+ */
+enum class DescriptorSetLayoutCreateFlag {
+    update_after_bind_pool = VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT,
+};
+
+constexpr std::string dscrpt_set_layout_create_flag_str(DescriptorSetLayoutCreateFlag val)
+{
+    using enum DescriptorSetLayoutCreateFlag;
+
+    switch(val) {
+    case update_after_bind_pool:
+        return "update after bind pool";
+    default:
+        return std::to_string(static_cast<int>(val));
+    }
+}
+
+constexpr std::string dscrpt_set_layout_create_flag_str(VkDescriptorSetLayoutCreateFlagBits val)
+{
+    return dscrpt_set_layout_create_flag_str(static_cast<DescriptorSetLayoutCreateFlag>(val));
+}
+
+constexpr std::vector<const char*> dscrpt_set_layout_create_flags_cstrs(VkDescriptorSetLayoutCreateFlags vals)
+{
+    std::vector<const char*> cstrs;
+
+    if (vals & VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT) {
+        cstrs.push_back("update after bind pool");
     }
 
     return cstrs;
@@ -5621,6 +6792,8 @@ constexpr std::vector<const char*> peer_memory_ftre_flags_cstrs(VkPeerMemoryFeat
  */
 enum class MemoryAllocateFlag {
     device_mask = VK_MEMORY_ALLOCATE_DEVICE_MASK_BIT,
+    device_addrss = VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT,
+    device_addrss_cptre_replay = VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT,
 };
 
 constexpr std::string memory_allcte_flag_str(MemoryAllocateFlag val)
@@ -5630,6 +6803,10 @@ constexpr std::string memory_allcte_flag_str(MemoryAllocateFlag val)
     switch(val) {
     case device_mask:
         return "device mask";
+    case device_addrss:
+        return "device address";
+    case device_addrss_cptre_replay:
+        return "device address capture replay";
     default:
         return std::to_string(static_cast<int>(val));
     }
@@ -5646,6 +6823,14 @@ constexpr std::vector<const char*> memory_allcte_flags_cstrs(VkMemoryAllocateFla
 
     if (vals & VK_MEMORY_ALLOCATE_DEVICE_MASK_BIT) {
         cstrs.push_back("device mask");
+    }
+
+    if (vals & VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT) {
+        cstrs.push_back("device address");
+    }
+
+    if (vals & VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT) {
+        cstrs.push_back("device address capture replay");
     }
 
     return cstrs;
@@ -6023,6 +7208,41 @@ constexpr std::vector<const char*> acclrtn_strctr_create_flags_cstrs(VkAccelerat
 }
 
 /*!
+ * \brief Maps to VkFramebufferCreateFlagBits. Should be safe to static_cast between.
+ */
+enum class FramebufferCreateFlag {
+    imglss = VK_FRAMEBUFFER_CREATE_IMAGELESS_BIT,
+};
+
+constexpr std::string frmbff_create_flag_str(FramebufferCreateFlag val)
+{
+    using enum FramebufferCreateFlag;
+
+    switch(val) {
+    case imglss:
+        return "imageless";
+    default:
+        return std::to_string(static_cast<int>(val));
+    }
+}
+
+constexpr std::string frmbff_create_flag_str(VkFramebufferCreateFlagBits val)
+{
+    return frmbff_create_flag_str(static_cast<FramebufferCreateFlag>(val));
+}
+
+constexpr std::vector<const char*> frmbff_create_flags_cstrs(VkFramebufferCreateFlags vals)
+{
+    std::vector<const char*> cstrs;
+
+    if (vals & VK_FRAMEBUFFER_CREATE_IMAGELESS_BIT) {
+        cstrs.push_back("imageless");
+    }
+
+    return cstrs;
+}
+
+/*!
  * \brief Maps to VkPipelineCreationFeedbackFlagBits. Should be safe to static_cast between.
  */
 enum class PipelineCreationFeedbackFlag {
@@ -6206,6 +7426,41 @@ constexpr std::vector<const char*> submit_flags_cstrs(VkSubmitFlags vals)
 
     if (vals & VK_SUBMIT_PROTECTED_BIT) {
         cstrs.push_back("protected");
+    }
+
+    return cstrs;
+}
+
+/*!
+ * \brief Maps to VkEventCreateFlagBits. Should be safe to static_cast between.
+ */
+enum class EventCreateFlag {
+    device_only = VK_EVENT_CREATE_DEVICE_ONLY_BIT,
+};
+
+constexpr std::string event_create_flag_str(EventCreateFlag val)
+{
+    using enum EventCreateFlag;
+
+    switch(val) {
+    case device_only:
+        return "device only";
+    default:
+        return std::to_string(static_cast<int>(val));
+    }
+}
+
+constexpr std::string event_create_flag_str(VkEventCreateFlagBits val)
+{
+    return event_create_flag_str(static_cast<EventCreateFlag>(val));
+}
+
+constexpr std::vector<const char*> event_create_flags_cstrs(VkEventCreateFlags vals)
+{
+    std::vector<const char*> cstrs;
+
+    if (vals & VK_EVENT_CREATE_DEVICE_ONLY_BIT) {
+        cstrs.push_back("device only");
     }
 
     return cstrs;
