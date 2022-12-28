@@ -24,6 +24,8 @@
 #include "log.hpp"
 
 #include "sdl.hpp"
+#include "descriptor_set_layout_binding.hpp"
+#include "descriptor_set_layout.hpp"
 
 #include <stdexcept>
 #include <array>
@@ -231,7 +233,16 @@ Vulkan::Vulkan(std::vector<const char*> exts,
           std::make_shared<Device>(phys_devs.default_device(), inst)
       },
       swch{phys_devs.default_device(), logi_dev, surf, sdl}
-{}
+{
+    DescriptorSetLayoutBinding swapimg ({
+        .binding_ndx   = 1,
+        .type          = vk::DescriptorType::strge_img,
+        .count         = 1,
+        .shader_stages = flgs(vk::ShaderStageFlag::cmpte),
+    });
+
+    DescriptorSetLayout layt {logi_dev, {swapimg}};
+}
 
 void Vulkan::add_shader(BinFile f)
 {

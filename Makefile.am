@@ -22,5 +22,6 @@ crypt_underworld_SOURCES = \
 	src/image_format.cpp \
 	src/bin_file.cpp \
 	src/shader_module.cpp \
-	src/descriptor_binding.cpp \
+	src/descriptor_set_layout_binding.cpp \
+	src/descriptor_set_layout.cpp \
 	src/engine.cpp

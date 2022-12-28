@@ -23,9 +23,12 @@ require 'securerandom'
 
 class String
   ##
-  # Like IO::puts, but appends the results to the string.
+  # Like IO::puts, but appends the results to the string. There is one
+  # difference from IO::puts: it does nothing if applied to an empty string.
   def puts(str)
-    if str[-1] == "\n"
+    if str.empty?
+      ''
+    elsif str[-1] == "\n"
       self << str
     else
       self << str + "\n"
@@ -348,7 +351,7 @@ end
 class CPPBitflagsCstrsConvDefn < CPPMembersDefn
   def opening
     <<~END
-    constexpr std::vector<const char*> #{name.cstrs_fn_name}(#{name.gsub('Bits', 's')} vals)
+    constexpr std::vector<const char*> #{name.cstrs_fn_name}(#{name.vk_flags} vals)
     {
         std::vector<const char*> cstrs;
 
@@ -358,7 +361,7 @@ class CPPBitflagsCstrsConvDefn < CPPMembersDefn
   def cases
     out = ""
     val_names.each do |new_name|
-      unless new_name.bad?
+      unless new_name.no_cstrs?
         out.puts "    if (vals & #{new_name.old_name}) {"
         out.puts "        cstrs.push_back(\"#{new_name.loggable}\");"
         out.puts "    }\n\n"
@@ -370,6 +373,52 @@ class CPPBitflagsCstrsConvDefn < CPPMembersDefn
   def closer
     <<~END
         return cstrs;
+    }
+
+    END
+  end
+end
+
+##
+# A `using` declaration aliasing our Flags type as the Vk*Flags type
+class CPPBitflagsFlagsAlias < CPPMembersDefn
+  def flags_alias
+    if name.empty?
+      ""
+    else
+      "using #{name.our_flags} = #{name.vk_flags};\n\n"
+    end
+  end
+end
+
+##
+# An overloaded C++ function +v+, in the +cu+ (not +cu::vk+) namespace, that
+# converts an Enum (not Bitmask) value to the equivalent Vulkan type. (C++ class
+# enums don't allow implicit conversions to other types, so this is "very easy
+# explicit conversion," for interfacing with Vulkan easily.)
+class CPPEnumToVulkanTypeFn < CPPMembersDefn
+  def fn
+    <<~END
+    constexpr #{name.vk_name} v(vk::#{name.our_name} t)
+    {
+        return static_cast<#{name.vk_name}>(t);
+    }
+
+    END
+  end
+end
+
+##
+# An overloaded C++ function +fk+, in the +cu+ (not +cu::vk+) namespace, that
+# converts a lone bitflag (not enum) value to the equivalent Flags type.
+# (C++ class enums don't allow implicit conversions to other types, so this is
+# "very easy explicit conversion," for interfacing with Vulkan easily.)
+class CPPLoneFlagToFlags < CPPMembersDefn
+  def fn
+    <<~END
+    constexpr vk::#{name.our_flags} flgs(vk::#{name.our_name} t)
+    {
+        return static_cast<vk::#{name.our_flags}>(t);
     }
 
     END
@@ -389,6 +438,8 @@ class EnumClassName
     @name = name
   end
 
+  alias_method :vk_name, :name
+
   ##
   # The identifier without `KHR` or other similar suffixes.
   def no_suffix
@@ -401,6 +452,8 @@ class EnumClassName
   def no_vk
     no_suffix.sub('Vk', '')
   end
+
+  alias_method :our_name, :no_vk
 
   ##
   # The opening part of the all-caps-with-underscores names of values of the
@@ -477,8 +530,18 @@ class BitmaskName < EnumClassName
     super + 'Flag'
   end
 
+  alias_method :our_name, :no_vk
+
   def str_fn_name
     super("_flag")
+  end
+
+  def vk_flags
+    name.gsub('Bits', 's')
+  end
+
+  def our_flags
+    no_vk + 's'
   end
 end
 
@@ -581,6 +644,10 @@ class BitmaskValName < EnumClassValName
     super
       .sub(/_bit$/, '')
   end
+
+  def no_cstrs?
+    (/_ALL($|[^A-Z])/ =~ old_name) || bad?
+  end
 end
 
 ##
@@ -605,6 +672,9 @@ class EnumClass
     [:defn,           CPPEnumClassDefn],
     [:string_conv_fn, CPPEnumStringConvDefn],
     [:cstrs_fn,       CPPBitflagsCstrsConvDefn],
+    [:flags_alias,    CPPBitflagsFlagsAlias],
+    [:enum_to_vk,     CPPEnumToVulkanTypeFn],
+    [:flag_to_flags,  CPPLoneFlagToFlags],
   ].each do |meth_name, defn_class|
     define_method(meth_name) do
       defn_class.new(name, val_names).to_s
@@ -703,7 +773,7 @@ end
 # Our enum class corresponding to a Vulkan bitmask.
 class Bitmask < EnumClass
   def source
-    super(cstrs_fn)
+    super(flags_alias + cstrs_fn)
   end
 end
 
@@ -752,9 +822,12 @@ class VulkanUtilHeader
 
   END
 
-  POSTAMBLE = <<~END.rstrip
-
+  POSTAMBLE_VK = <<~END
   } // namespace vk
+
+  END
+
+  POSTAMBLE_CU = <<~END.rstrip
   } // namespace cu
 
   #endif
@@ -818,19 +891,32 @@ class VulkanUtilHeader
 
     @out.puts PREAMBLE
 
-    enum_class_types = [Enum, Bitmask]
+    enum_class_types_w_names = [Enum, Bitmask].map do |klass|
+      [
+        klass,
+        get_vk_names(klass.specifier).map {|name| klass.new(name, @vk_xml)}
+      ]
+    end.to_h
 
-    enum_class_types.each do |enum_class_type|
-      get_vk_names(enum_class_type.specifier).each do |name|
-        source = enum_class_type.new(name, @vk_xml).source
-
-        unless source.empty?
-          @out.puts source
-        end
+    enum_class_types_w_names.each_pair do |enum_class_type, vk_ids|
+      vk_ids.each do |name|
+        @out.puts name.source
       end
     end
 
-    @out.puts POSTAMBLE
+    @out.puts POSTAMBLE_VK
+
+    enum_class_types_w_names[Enum].each do |enum|
+      @out.puts enum.enum_to_vk
+    end
+
+    enum_class_types_w_names[Bitmask].each do |bitmask|
+      unless bitmask.empty?
+        @out.puts bitmask.flag_to_flags
+      end
+    end
+
+    @out.puts POSTAMBLE_CU
 
     @out
   end

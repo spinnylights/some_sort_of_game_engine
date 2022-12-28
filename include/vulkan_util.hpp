@@ -3822,6 +3822,8 @@ constexpr std::string pplne_cache_create_flag_str(VkPipelineCacheCreateFlagBits 
     return pplne_cache_create_flag_str(static_cast<PipelineCacheCreateFlag>(val));
 }
 
+using PipelineCacheCreateFlags = VkPipelineCacheCreateFlags;
+
 constexpr std::vector<const char*> pplne_cache_create_flags_cstrs(VkPipelineCacheCreateFlags vals)
 {
     std::vector<const char*> cstrs;
@@ -3868,6 +3870,8 @@ constexpr std::string queue_flag_str(VkQueueFlagBits val)
 {
     return queue_flag_str(static_cast<QueueFlag>(val));
 }
+
+using QueueFlags = VkQueueFlags;
 
 constexpr std::vector<const char*> queue_flags_cstrs(VkQueueFlags vals)
 {
@@ -3929,6 +3933,8 @@ constexpr std::string cull_mode_flag_str(VkCullModeFlagBits val)
     return cull_mode_flag_str(static_cast<CullModeFlag>(val));
 }
 
+using CullModeFlags = VkCullModeFlags;
+
 constexpr std::vector<const char*> cull_mode_flags_cstrs(VkCullModeFlags vals)
 {
     std::vector<const char*> cstrs;
@@ -3975,6 +3981,8 @@ constexpr std::string device_queue_create_flag_str(VkDeviceQueueCreateFlagBits v
 {
     return device_queue_create_flag_str(static_cast<DeviceQueueCreateFlag>(val));
 }
+
+using DeviceQueueCreateFlags = VkDeviceQueueCreateFlags;
 
 constexpr std::vector<const char*> device_queue_create_flags_cstrs(VkDeviceQueueCreateFlags vals)
 {
@@ -4025,6 +4033,8 @@ constexpr std::string memory_prprty_flag_str(VkMemoryPropertyFlagBits val)
 {
     return memory_prprty_flag_str(static_cast<MemoryPropertyFlag>(val));
 }
+
+using MemoryPropertyFlags = VkMemoryPropertyFlags;
 
 constexpr std::vector<const char*> memory_prprty_flags_cstrs(VkMemoryPropertyFlags vals)
 {
@@ -4083,6 +4093,8 @@ constexpr std::string memory_heap_flag_str(VkMemoryHeapFlagBits val)
 {
     return memory_heap_flag_str(static_cast<MemoryHeapFlag>(val));
 }
+
+using MemoryHeapFlags = VkMemoryHeapFlags;
 
 constexpr std::vector<const char*> memory_heap_flags_cstrs(VkMemoryHeapFlags vals)
 {
@@ -4173,6 +4185,8 @@ constexpr std::string access_flag_str(VkAccessFlagBits val)
 {
     return access_flag_str(static_cast<AccessFlag>(val));
 }
+
+using AccessFlags = VkAccessFlags;
 
 constexpr std::vector<const char*> access_flags_cstrs(VkAccessFlags vals)
 {
@@ -4304,6 +4318,8 @@ constexpr std::string buffer_usage_flag_str(VkBufferUsageFlagBits val)
     return buffer_usage_flag_str(static_cast<BufferUsageFlag>(val));
 }
 
+using BufferUsageFlags = VkBufferUsageFlags;
+
 constexpr std::vector<const char*> buffer_usage_flags_cstrs(VkBufferUsageFlags vals)
 {
     std::vector<const char*> cstrs;
@@ -4387,6 +4403,8 @@ constexpr std::string buffer_create_flag_str(VkBufferCreateFlagBits val)
     return buffer_create_flag_str(static_cast<BufferCreateFlag>(val));
 }
 
+using BufferCreateFlags = VkBufferCreateFlags;
+
 constexpr std::vector<const char*> buffer_create_flags_cstrs(VkBufferCreateFlags vals)
 {
     std::vector<const char*> cstrs;
@@ -4459,6 +4477,8 @@ constexpr std::string shader_stage_flag_str(VkShaderStageFlagBits val)
     return shader_stage_flag_str(static_cast<ShaderStageFlag>(val));
 }
 
+using ShaderStageFlags = VkShaderStageFlags;
+
 constexpr std::vector<const char*> shader_stage_flags_cstrs(VkShaderStageFlags vals)
 {
     std::vector<const char*> cstrs;
@@ -4485,14 +4505,6 @@ constexpr std::vector<const char*> shader_stage_flags_cstrs(VkShaderStageFlags v
 
     if (vals & VK_SHADER_STAGE_COMPUTE_BIT) {
         cstrs.push_back("compute");
-    }
-
-    if (vals & VK_SHADER_STAGE_ALL_GRAPHICS) {
-        cstrs.push_back("all graphics");
-    }
-
-    if (vals & VK_SHADER_STAGE_ALL) {
-        cstrs.push_back("all");
     }
 
     return cstrs;
@@ -4542,6 +4554,8 @@ constexpr std::string img_usage_flag_str(VkImageUsageFlagBits val)
 {
     return img_usage_flag_str(static_cast<ImageUsageFlag>(val));
 }
+
+using ImageUsageFlags = VkImageUsageFlags;
 
 constexpr std::vector<const char*> img_usage_flags_cstrs(VkImageUsageFlags vals)
 {
@@ -4638,6 +4652,8 @@ constexpr std::string img_create_flag_str(VkImageCreateFlagBits val)
 {
     return img_create_flag_str(static_cast<ImageCreateFlag>(val));
 }
+
+using ImageCreateFlags = VkImageCreateFlags;
 
 constexpr std::vector<const char*> img_create_flags_cstrs(VkImageCreateFlags vals)
 {
@@ -4736,6 +4752,8 @@ constexpr std::string pplne_create_flag_str(VkPipelineCreateFlagBits val)
     return pplne_create_flag_str(static_cast<PipelineCreateFlag>(val));
 }
 
+using PipelineCreateFlags = VkPipelineCreateFlags;
+
 constexpr std::vector<const char*> pplne_create_flags_cstrs(VkPipelineCreateFlags vals)
 {
     std::vector<const char*> cstrs;
@@ -4798,6 +4816,8 @@ constexpr std::string pplne_shader_stage_create_flag_str(VkPipelineShaderStageCr
     return pplne_shader_stage_create_flag_str(static_cast<PipelineShaderStageCreateFlag>(val));
 }
 
+using PipelineShaderStageCreateFlags = VkPipelineShaderStageCreateFlags;
+
 constexpr std::vector<const char*> pplne_shader_stage_create_flags_cstrs(VkPipelineShaderStageCreateFlags vals)
 {
     std::vector<const char*> cstrs;
@@ -4846,6 +4866,8 @@ constexpr std::string color_cmpnnt_flag_str(VkColorComponentFlagBits val)
     return color_cmpnnt_flag_str(static_cast<ColorComponentFlag>(val));
 }
 
+using ColorComponentFlags = VkColorComponentFlags;
+
 constexpr std::vector<const char*> color_cmpnnt_flags_cstrs(VkColorComponentFlags vals)
 {
     std::vector<const char*> cstrs;
@@ -4892,6 +4914,8 @@ constexpr std::string fence_create_flag_str(VkFenceCreateFlagBits val)
 {
     return fence_create_flag_str(static_cast<FenceCreateFlag>(val));
 }
+
+using FenceCreateFlags = VkFenceCreateFlags;
 
 constexpr std::vector<const char*> fence_create_flags_cstrs(VkFenceCreateFlags vals)
 {
@@ -4993,6 +5017,8 @@ constexpr std::string format_ftre_flag_str(VkFormatFeatureFlagBits val)
 {
     return format_ftre_flag_str(static_cast<FormatFeatureFlag>(val));
 }
+
+using FormatFeatureFlags = VkFormatFeatureFlags;
 
 constexpr std::vector<const char*> format_ftre_flags_cstrs(VkFormatFeatureFlags vals)
 {
@@ -5117,6 +5143,8 @@ constexpr std::string query_cntrl_flag_str(VkQueryControlFlagBits val)
     return query_cntrl_flag_str(static_cast<QueryControlFlag>(val));
 }
 
+using QueryControlFlags = VkQueryControlFlags;
+
 constexpr std::vector<const char*> query_cntrl_flags_cstrs(VkQueryControlFlags vals)
 {
     std::vector<const char*> cstrs;
@@ -5157,6 +5185,8 @@ constexpr std::string cmmnd_buffer_usage_flag_str(VkCommandBufferUsageFlagBits v
 {
     return cmmnd_buffer_usage_flag_str(static_cast<CommandBufferUsageFlag>(val));
 }
+
+using CommandBufferUsageFlags = VkCommandBufferUsageFlags;
 
 constexpr std::vector<const char*> cmmnd_buffer_usage_flags_cstrs(VkCommandBufferUsageFlags vals)
 {
@@ -5230,6 +5260,8 @@ constexpr std::string query_pplne_sttstc_flag_str(VkQueryPipelineStatisticFlagBi
 {
     return query_pplne_sttstc_flag_str(static_cast<QueryPipelineStatisticFlag>(val));
 }
+
+using QueryPipelineStatisticFlags = VkQueryPipelineStatisticFlags;
 
 constexpr std::vector<const char*> query_pplne_sttstc_flags_cstrs(VkQueryPipelineStatisticFlags vals)
 {
@@ -5327,6 +5359,8 @@ constexpr std::string img_aspect_flag_str(VkImageAspectFlagBits val)
     return img_aspect_flag_str(static_cast<ImageAspectFlag>(val));
 }
 
+using ImageAspectFlags = VkImageAspectFlags;
+
 constexpr std::vector<const char*> img_aspect_flags_cstrs(VkImageAspectFlags vals)
 {
     std::vector<const char*> cstrs;
@@ -5396,6 +5430,8 @@ constexpr std::string sparse_img_format_flag_str(VkSparseImageFormatFlagBits val
     return sparse_img_format_flag_str(static_cast<SparseImageFormatFlag>(val));
 }
 
+using SparseImageFormatFlags = VkSparseImageFormatFlags;
+
 constexpr std::vector<const char*> sparse_img_format_flags_cstrs(VkSparseImageFormatFlags vals)
 {
     std::vector<const char*> cstrs;
@@ -5438,6 +5474,8 @@ constexpr std::string sparse_memory_bind_flag_str(VkSparseMemoryBindFlagBits val
 {
     return sparse_memory_bind_flag_str(static_cast<SparseMemoryBindFlag>(val));
 }
+
+using SparseMemoryBindFlags = VkSparseMemoryBindFlags;
 
 constexpr std::vector<const char*> sparse_memory_bind_flags_cstrs(VkSparseMemoryBindFlags vals)
 {
@@ -5525,6 +5563,8 @@ constexpr std::string pplne_stage_flag_str(VkPipelineStageFlagBits val)
     return pplne_stage_flag_str(static_cast<PipelineStageFlag>(val));
 }
 
+using PipelineStageFlags = VkPipelineStageFlags;
+
 constexpr std::vector<const char*> pplne_stage_flags_cstrs(VkPipelineStageFlags vals)
 {
     std::vector<const char*> cstrs;
@@ -5589,14 +5629,6 @@ constexpr std::vector<const char*> pplne_stage_flags_cstrs(VkPipelineStageFlags 
         cstrs.push_back("host");
     }
 
-    if (vals & VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT) {
-        cstrs.push_back("all graphics");
-    }
-
-    if (vals & VK_PIPELINE_STAGE_ALL_COMMANDS_BIT) {
-        cstrs.push_back("all commands");
-    }
-
     if (vals & VK_PIPELINE_STAGE_NONE) {
         cstrs.push_back("none");
     }
@@ -5633,6 +5665,8 @@ constexpr std::string cmmnd_pool_create_flag_str(VkCommandPoolCreateFlagBits val
 {
     return cmmnd_pool_create_flag_str(static_cast<CommandPoolCreateFlag>(val));
 }
+
+using CommandPoolCreateFlags = VkCommandPoolCreateFlags;
 
 constexpr std::vector<const char*> cmmnd_pool_create_flags_cstrs(VkCommandPoolCreateFlags vals)
 {
@@ -5677,6 +5711,8 @@ constexpr std::string cmmnd_pool_reset_flag_str(VkCommandPoolResetFlagBits val)
     return cmmnd_pool_reset_flag_str(static_cast<CommandPoolResetFlag>(val));
 }
 
+using CommandPoolResetFlags = VkCommandPoolResetFlags;
+
 constexpr std::vector<const char*> cmmnd_pool_reset_flags_cstrs(VkCommandPoolResetFlags vals)
 {
     std::vector<const char*> cstrs;
@@ -5711,6 +5747,8 @@ constexpr std::string cmmnd_buffer_reset_flag_str(VkCommandBufferResetFlagBits v
 {
     return cmmnd_buffer_reset_flag_str(static_cast<CommandBufferResetFlag>(val));
 }
+
+using CommandBufferResetFlags = VkCommandBufferResetFlags;
 
 constexpr std::vector<const char*> cmmnd_buffer_reset_flags_cstrs(VkCommandBufferResetFlags vals)
 {
@@ -5764,6 +5802,8 @@ constexpr std::string sample_count_flag_str(VkSampleCountFlagBits val)
 {
     return sample_count_flag_str(static_cast<SampleCountFlag>(val));
 }
+
+using SampleCountFlags = VkSampleCountFlags;
 
 constexpr std::vector<const char*> sample_count_flags_cstrs(VkSampleCountFlags vals)
 {
@@ -5824,6 +5864,8 @@ constexpr std::string attchmt_dscrptn_flag_str(VkAttachmentDescriptionFlagBits v
     return attchmt_dscrptn_flag_str(static_cast<AttachmentDescriptionFlag>(val));
 }
 
+using AttachmentDescriptionFlags = VkAttachmentDescriptionFlags;
+
 constexpr std::vector<const char*> attchmt_dscrptn_flags_cstrs(VkAttachmentDescriptionFlags vals)
 {
     std::vector<const char*> cstrs;
@@ -5864,6 +5906,8 @@ constexpr std::string stncl_face_flag_str(VkStencilFaceFlagBits val)
 {
     return stncl_face_flag_str(static_cast<StencilFaceFlag>(val));
 }
+
+using StencilFaceFlags = VkStencilFaceFlags;
 
 constexpr std::vector<const char*> stncl_face_flags_cstrs(VkStencilFaceFlags vals)
 {
@@ -5911,6 +5955,8 @@ constexpr std::string dscrpt_pool_create_flag_str(VkDescriptorPoolCreateFlagBits
     return dscrpt_pool_create_flag_str(static_cast<DescriptorPoolCreateFlag>(val));
 }
 
+using DescriptorPoolCreateFlags = VkDescriptorPoolCreateFlags;
+
 constexpr std::vector<const char*> dscrpt_pool_create_flags_cstrs(VkDescriptorPoolCreateFlags vals)
 {
     std::vector<const char*> cstrs;
@@ -5956,6 +6002,8 @@ constexpr std::string dpndncy_flag_str(VkDependencyFlagBits val)
     return dpndncy_flag_str(static_cast<DependencyFlag>(val));
 }
 
+using DependencyFlags = VkDependencyFlags;
+
 constexpr std::vector<const char*> dpndncy_flags_cstrs(VkDependencyFlags vals)
 {
     std::vector<const char*> cstrs;
@@ -5998,6 +6046,8 @@ constexpr std::string smphre_wait_flag_str(VkSemaphoreWaitFlagBits val)
 {
     return smphre_wait_flag_str(static_cast<SemaphoreWaitFlag>(val));
 }
+
+using SemaphoreWaitFlags = VkSemaphoreWaitFlags;
 
 constexpr std::vector<const char*> smphre_wait_flags_cstrs(VkSemaphoreWaitFlags vals)
 {
@@ -6042,6 +6092,8 @@ constexpr std::string dsply_plane_alpha_flag_str(VkDisplayPlaneAlphaFlagBitsKHR 
 {
     return dsply_plane_alpha_flag_str(static_cast<DisplayPlaneAlphaFlag>(val));
 }
+
+using DisplayPlaneAlphaFlags = VkDisplayPlaneAlphaFlagsKHR;
 
 constexpr std::vector<const char*> dsply_plane_alpha_flags_cstrs(VkDisplayPlaneAlphaFlagsKHR vals)
 {
@@ -6098,6 +6150,8 @@ constexpr std::string cmpste_alpha_flag_str(VkCompositeAlphaFlagBitsKHR val)
 {
     return cmpste_alpha_flag_str(static_cast<CompositeAlphaFlag>(val));
 }
+
+using CompositeAlphaFlags = VkCompositeAlphaFlagsKHR;
 
 constexpr std::vector<const char*> cmpste_alpha_flags_cstrs(VkCompositeAlphaFlagsKHR vals)
 {
@@ -6169,6 +6223,8 @@ constexpr std::string srfce_trnsfr_flag_str(VkSurfaceTransformFlagBitsKHR val)
 {
     return srfce_trnsfr_flag_str(static_cast<SurfaceTransformFlag>(val));
 }
+
+using SurfaceTransformFlags = VkSurfaceTransformFlagsKHR;
 
 constexpr std::vector<const char*> srfce_trnsfr_flags_cstrs(VkSurfaceTransformFlagsKHR vals)
 {
@@ -6258,6 +6314,8 @@ constexpr std::string sbgrp_ftre_flag_str(VkSubgroupFeatureFlagBits val)
     return sbgrp_ftre_flag_str(static_cast<SubgroupFeatureFlag>(val));
 }
 
+using SubgroupFeatureFlags = VkSubgroupFeatureFlags;
+
 constexpr std::vector<const char*> sbgrp_ftre_flags_cstrs(VkSubgroupFeatureFlags vals)
 {
     std::vector<const char*> cstrs;
@@ -6321,6 +6379,8 @@ constexpr std::string dscrpt_set_layout_create_flag_str(VkDescriptorSetLayoutCre
     return dscrpt_set_layout_create_flag_str(static_cast<DescriptorSetLayoutCreateFlag>(val));
 }
 
+using DescriptorSetLayoutCreateFlags = VkDescriptorSetLayoutCreateFlags;
+
 constexpr std::vector<const char*> dscrpt_set_layout_create_flags_cstrs(VkDescriptorSetLayoutCreateFlags vals)
 {
     std::vector<const char*> cstrs;
@@ -6373,6 +6433,8 @@ constexpr std::string extrnl_memory_handle_type_flag_str(VkExternalMemoryHandleT
 {
     return extrnl_memory_handle_type_flag_str(static_cast<ExternalMemoryHandleTypeFlag>(val));
 }
+
+using ExternalMemoryHandleTypeFlags = VkExternalMemoryHandleTypeFlags;
 
 constexpr std::vector<const char*> extrnl_memory_handle_type_flags_cstrs(VkExternalMemoryHandleTypeFlags vals)
 {
@@ -6439,6 +6501,8 @@ constexpr std::string extrnl_memory_ftre_flag_str(VkExternalMemoryFeatureFlagBit
     return extrnl_memory_ftre_flag_str(static_cast<ExternalMemoryFeatureFlag>(val));
 }
 
+using ExternalMemoryFeatureFlags = VkExternalMemoryFeatureFlags;
+
 constexpr std::vector<const char*> extrnl_memory_ftre_flags_cstrs(VkExternalMemoryFeatureFlags vals)
 {
     std::vector<const char*> cstrs;
@@ -6494,6 +6558,8 @@ constexpr std::string extrnl_smphre_handle_type_flag_str(VkExternalSemaphoreHand
     return extrnl_smphre_handle_type_flag_str(static_cast<ExternalSemaphoreHandleTypeFlag>(val));
 }
 
+using ExternalSemaphoreHandleTypeFlags = VkExternalSemaphoreHandleTypeFlags;
+
 constexpr std::vector<const char*> extrnl_smphre_handle_type_flags_cstrs(VkExternalSemaphoreHandleTypeFlags vals)
 {
     std::vector<const char*> cstrs;
@@ -6548,6 +6614,8 @@ constexpr std::string extrnl_smphre_ftre_flag_str(VkExternalSemaphoreFeatureFlag
     return extrnl_smphre_ftre_flag_str(static_cast<ExternalSemaphoreFeatureFlag>(val));
 }
 
+using ExternalSemaphoreFeatureFlags = VkExternalSemaphoreFeatureFlags;
+
 constexpr std::vector<const char*> extrnl_smphre_ftre_flags_cstrs(VkExternalSemaphoreFeatureFlags vals)
 {
     std::vector<const char*> cstrs;
@@ -6586,6 +6654,8 @@ constexpr std::string smphre_import_flag_str(VkSemaphoreImportFlagBits val)
 {
     return smphre_import_flag_str(static_cast<SemaphoreImportFlag>(val));
 }
+
+using SemaphoreImportFlags = VkSemaphoreImportFlags;
 
 constexpr std::vector<const char*> smphre_import_flags_cstrs(VkSemaphoreImportFlags vals)
 {
@@ -6630,6 +6700,8 @@ constexpr std::string extrnl_fence_handle_type_flag_str(VkExternalFenceHandleTyp
 {
     return extrnl_fence_handle_type_flag_str(static_cast<ExternalFenceHandleTypeFlag>(val));
 }
+
+using ExternalFenceHandleTypeFlags = VkExternalFenceHandleTypeFlags;
 
 constexpr std::vector<const char*> extrnl_fence_handle_type_flags_cstrs(VkExternalFenceHandleTypeFlags vals)
 {
@@ -6681,6 +6753,8 @@ constexpr std::string extrnl_fence_ftre_flag_str(VkExternalFenceFeatureFlagBits 
     return extrnl_fence_ftre_flag_str(static_cast<ExternalFenceFeatureFlag>(val));
 }
 
+using ExternalFenceFeatureFlags = VkExternalFenceFeatureFlags;
+
 constexpr std::vector<const char*> extrnl_fence_ftre_flags_cstrs(VkExternalFenceFeatureFlags vals)
 {
     std::vector<const char*> cstrs;
@@ -6719,6 +6793,8 @@ constexpr std::string fence_import_flag_str(VkFenceImportFlagBits val)
 {
     return fence_import_flag_str(static_cast<FenceImportFlag>(val));
 }
+
+using FenceImportFlags = VkFenceImportFlags;
 
 constexpr std::vector<const char*> fence_import_flags_cstrs(VkFenceImportFlags vals)
 {
@@ -6763,6 +6839,8 @@ constexpr std::string peer_memory_ftre_flag_str(VkPeerMemoryFeatureFlagBits val)
 {
     return peer_memory_ftre_flag_str(static_cast<PeerMemoryFeatureFlag>(val));
 }
+
+using PeerMemoryFeatureFlags = VkPeerMemoryFeatureFlags;
 
 constexpr std::vector<const char*> peer_memory_ftre_flags_cstrs(VkPeerMemoryFeatureFlags vals)
 {
@@ -6817,6 +6895,8 @@ constexpr std::string memory_allcte_flag_str(VkMemoryAllocateFlagBits val)
     return memory_allcte_flag_str(static_cast<MemoryAllocateFlag>(val));
 }
 
+using MemoryAllocateFlags = VkMemoryAllocateFlags;
+
 constexpr std::vector<const char*> memory_allcte_flags_cstrs(VkMemoryAllocateFlags vals)
 {
     std::vector<const char*> cstrs;
@@ -6868,6 +6948,8 @@ constexpr std::string device_group_prsnt_mode_flag_str(VkDeviceGroupPresentModeF
 {
     return device_group_prsnt_mode_flag_str(static_cast<DeviceGroupPresentModeFlag>(val));
 }
+
+using DeviceGroupPresentModeFlags = VkDeviceGroupPresentModeFlagsKHR;
 
 constexpr std::vector<const char*> device_group_prsnt_mode_flags_cstrs(VkDeviceGroupPresentModeFlagsKHR vals)
 {
@@ -6924,6 +7006,8 @@ constexpr std::string dscrpt_bndng_flag_str(VkDescriptorBindingFlagBits val)
 {
     return dscrpt_bndng_flag_str(static_cast<DescriptorBindingFlag>(val));
 }
+
+using DescriptorBindingFlags = VkDescriptorBindingFlags;
 
 constexpr std::vector<const char*> dscrpt_bndng_flags_cstrs(VkDescriptorBindingFlags vals)
 {
@@ -6983,6 +7067,8 @@ constexpr std::string rslve_mode_flag_str(VkResolveModeFlagBits val)
 {
     return rslve_mode_flag_str(static_cast<ResolveModeFlag>(val));
 }
+
+using ResolveModeFlags = VkResolveModeFlags;
 
 constexpr std::vector<const char*> rslve_mode_flags_cstrs(VkResolveModeFlags vals)
 {
@@ -7044,6 +7130,8 @@ constexpr std::string gmtry_instnc_flag_str(VkGeometryInstanceFlagBitsKHR val)
     return gmtry_instnc_flag_str(static_cast<GeometryInstanceFlag>(val));
 }
 
+using GeometryInstanceFlags = VkGeometryInstanceFlagsKHR;
+
 constexpr std::vector<const char*> gmtry_instnc_flags_cstrs(VkGeometryInstanceFlagsKHR vals)
 {
     std::vector<const char*> cstrs;
@@ -7093,6 +7181,8 @@ constexpr std::string gmtry_flag_str(VkGeometryFlagBitsKHR val)
 {
     return gmtry_flag_str(static_cast<GeometryFlag>(val));
 }
+
+using GeometryFlags = VkGeometryFlagsKHR;
 
 constexpr std::vector<const char*> gmtry_flags_cstrs(VkGeometryFlagsKHR vals)
 {
@@ -7145,6 +7235,8 @@ constexpr std::string build_acclrtn_strctr_flag_str(VkBuildAccelerationStructure
     return build_acclrtn_strctr_flag_str(static_cast<BuildAccelerationStructureFlag>(val));
 }
 
+using BuildAccelerationStructureFlags = VkBuildAccelerationStructureFlagsKHR;
+
 constexpr std::vector<const char*> build_acclrtn_strctr_flags_cstrs(VkBuildAccelerationStructureFlagsKHR vals)
 {
     std::vector<const char*> cstrs;
@@ -7196,6 +7288,8 @@ constexpr std::string acclrtn_strctr_create_flag_str(VkAccelerationStructureCrea
     return acclrtn_strctr_create_flag_str(static_cast<AccelerationStructureCreateFlag>(val));
 }
 
+using AccelerationStructureCreateFlags = VkAccelerationStructureCreateFlagsKHR;
+
 constexpr std::vector<const char*> acclrtn_strctr_create_flags_cstrs(VkAccelerationStructureCreateFlagsKHR vals)
 {
     std::vector<const char*> cstrs;
@@ -7230,6 +7324,8 @@ constexpr std::string frmbff_create_flag_str(VkFramebufferCreateFlagBits val)
 {
     return frmbff_create_flag_str(static_cast<FramebufferCreateFlag>(val));
 }
+
+using FramebufferCreateFlags = VkFramebufferCreateFlags;
 
 constexpr std::vector<const char*> frmbff_create_flags_cstrs(VkFramebufferCreateFlags vals)
 {
@@ -7271,6 +7367,8 @@ constexpr std::string pplne_crtn_fdbck_flag_str(VkPipelineCreationFeedbackFlagBi
 {
     return pplne_crtn_fdbck_flag_str(static_cast<PipelineCreationFeedbackFlag>(val));
 }
+
+using PipelineCreationFeedbackFlags = VkPipelineCreationFeedbackFlags;
 
 constexpr std::vector<const char*> pplne_crtn_fdbck_flags_cstrs(VkPipelineCreationFeedbackFlags vals)
 {
@@ -7317,6 +7415,8 @@ constexpr std::string prfrmn_cntr_dscrptn_flag_str(VkPerformanceCounterDescripti
 {
     return prfrmn_cntr_dscrptn_flag_str(static_cast<PerformanceCounterDescriptionFlag>(val));
 }
+
+using PerformanceCounterDescriptionFlags = VkPerformanceCounterDescriptionFlagsKHR;
 
 constexpr std::vector<const char*> prfrmn_cntr_dscrptn_flags_cstrs(VkPerformanceCounterDescriptionFlagsKHR vals)
 {
@@ -7369,6 +7469,8 @@ constexpr std::string tool_prpse_flag_str(VkToolPurposeFlagBits val)
     return tool_prpse_flag_str(static_cast<ToolPurposeFlag>(val));
 }
 
+using ToolPurposeFlags = VkToolPurposeFlags;
+
 constexpr std::vector<const char*> tool_prpse_flags_cstrs(VkToolPurposeFlags vals)
 {
     std::vector<const char*> cstrs;
@@ -7420,6 +7522,8 @@ constexpr std::string submit_flag_str(VkSubmitFlagBits val)
     return submit_flag_str(static_cast<SubmitFlag>(val));
 }
 
+using SubmitFlags = VkSubmitFlags;
+
 constexpr std::vector<const char*> submit_flags_cstrs(VkSubmitFlags vals)
 {
     std::vector<const char*> cstrs;
@@ -7454,6 +7558,8 @@ constexpr std::string event_create_flag_str(VkEventCreateFlagBits val)
 {
     return event_create_flag_str(static_cast<EventCreateFlag>(val));
 }
+
+using EventCreateFlags = VkEventCreateFlags;
 
 constexpr std::vector<const char*> event_create_flags_cstrs(VkEventCreateFlags vals)
 {
@@ -7496,6 +7602,8 @@ constexpr std::string rndrng_flag_str(VkRenderingFlagBits val)
     return rndrng_flag_str(static_cast<RenderingFlag>(val));
 }
 
+using RenderingFlags = VkRenderingFlags;
+
 constexpr std::vector<const char*> rndrng_flags_cstrs(VkRenderingFlags vals)
 {
     std::vector<const char*> cstrs;
@@ -7515,8 +7623,633 @@ constexpr std::vector<const char*> rndrng_flags_cstrs(VkRenderingFlags vals)
     return cstrs;
 }
 
-
 } // namespace vk
+
+constexpr VkImageLayout v(vk::ImageLayout t)
+{
+    return static_cast<VkImageLayout>(t);
+}
+
+constexpr VkAttachmentLoadOp v(vk::AttachmentLoadOp t)
+{
+    return static_cast<VkAttachmentLoadOp>(t);
+}
+
+constexpr VkAttachmentStoreOp v(vk::AttachmentStoreOp t)
+{
+    return static_cast<VkAttachmentStoreOp>(t);
+}
+
+constexpr VkImageType v(vk::ImageType t)
+{
+    return static_cast<VkImageType>(t);
+}
+
+constexpr VkImageTiling v(vk::ImageTiling t)
+{
+    return static_cast<VkImageTiling>(t);
+}
+
+constexpr VkImageViewType v(vk::ImageViewType t)
+{
+    return static_cast<VkImageViewType>(t);
+}
+
+constexpr VkCommandBufferLevel v(vk::CommandBufferLevel t)
+{
+    return static_cast<VkCommandBufferLevel>(t);
+}
+
+constexpr VkComponentSwizzle v(vk::ComponentSwizzle t)
+{
+    return static_cast<VkComponentSwizzle>(t);
+}
+
+constexpr VkDescriptorType v(vk::DescriptorType t)
+{
+    return static_cast<VkDescriptorType>(t);
+}
+
+constexpr VkQueryType v(vk::QueryType t)
+{
+    return static_cast<VkQueryType>(t);
+}
+
+constexpr VkBorderColor v(vk::BorderColor t)
+{
+    return static_cast<VkBorderColor>(t);
+}
+
+constexpr VkPipelineBindPoint v(vk::PipelineBindPoint t)
+{
+    return static_cast<VkPipelineBindPoint>(t);
+}
+
+constexpr VkPipelineCacheHeaderVersion v(vk::PipelineCacheHeaderVersion t)
+{
+    return static_cast<VkPipelineCacheHeaderVersion>(t);
+}
+
+constexpr VkPrimitiveTopology v(vk::PrimitiveTopology t)
+{
+    return static_cast<VkPrimitiveTopology>(t);
+}
+
+constexpr VkSharingMode v(vk::SharingMode t)
+{
+    return static_cast<VkSharingMode>(t);
+}
+
+constexpr VkIndexType v(vk::IndexType t)
+{
+    return static_cast<VkIndexType>(t);
+}
+
+constexpr VkFilter v(vk::Filter t)
+{
+    return static_cast<VkFilter>(t);
+}
+
+constexpr VkSamplerMipmapMode v(vk::SamplerMipmapMode t)
+{
+    return static_cast<VkSamplerMipmapMode>(t);
+}
+
+constexpr VkSamplerAddressMode v(vk::SamplerAddressMode t)
+{
+    return static_cast<VkSamplerAddressMode>(t);
+}
+
+constexpr VkCompareOp v(vk::CompareOp t)
+{
+    return static_cast<VkCompareOp>(t);
+}
+
+constexpr VkPolygonMode v(vk::PolygonMode t)
+{
+    return static_cast<VkPolygonMode>(t);
+}
+
+constexpr VkFrontFace v(vk::FrontFace t)
+{
+    return static_cast<VkFrontFace>(t);
+}
+
+constexpr VkBlendFactor v(vk::BlendFactor t)
+{
+    return static_cast<VkBlendFactor>(t);
+}
+
+constexpr VkBlendOp v(vk::BlendOp t)
+{
+    return static_cast<VkBlendOp>(t);
+}
+
+constexpr VkStencilOp v(vk::StencilOp t)
+{
+    return static_cast<VkStencilOp>(t);
+}
+
+constexpr VkLogicOp v(vk::LogicOp t)
+{
+    return static_cast<VkLogicOp>(t);
+}
+
+constexpr VkInternalAllocationType v(vk::InternalAllocationType t)
+{
+    return static_cast<VkInternalAllocationType>(t);
+}
+
+constexpr VkSystemAllocationScope v(vk::SystemAllocationScope t)
+{
+    return static_cast<VkSystemAllocationScope>(t);
+}
+
+constexpr VkPhysicalDeviceType v(vk::PhysicalDeviceType t)
+{
+    return static_cast<VkPhysicalDeviceType>(t);
+}
+
+constexpr VkVertexInputRate v(vk::VertexInputRate t)
+{
+    return static_cast<VkVertexInputRate>(t);
+}
+
+constexpr VkFormat v(vk::Format t)
+{
+    return static_cast<VkFormat>(t);
+}
+
+constexpr VkStructureType v(vk::StructureType t)
+{
+    return static_cast<VkStructureType>(t);
+}
+
+constexpr VkSubpassContents v(vk::SubpassContents t)
+{
+    return static_cast<VkSubpassContents>(t);
+}
+
+constexpr VkResult v(vk::Result t)
+{
+    return static_cast<VkResult>(t);
+}
+
+constexpr VkDynamicState v(vk::DynamicState t)
+{
+    return static_cast<VkDynamicState>(t);
+}
+
+constexpr VkDescriptorUpdateTemplateType v(vk::DescriptorUpdateTemplateType t)
+{
+    return static_cast<VkDescriptorUpdateTemplateType>(t);
+}
+
+constexpr VkObjectType v(vk::ObjectType t)
+{
+    return static_cast<VkObjectType>(t);
+}
+
+constexpr VkSemaphoreType v(vk::SemaphoreType t)
+{
+    return static_cast<VkSemaphoreType>(t);
+}
+
+constexpr VkPresentModeKHR v(vk::PresentMode t)
+{
+    return static_cast<VkPresentModeKHR>(t);
+}
+
+constexpr VkColorSpaceKHR v(vk::ColorSpace t)
+{
+    return static_cast<VkColorSpaceKHR>(t);
+}
+
+constexpr VkPointClippingBehavior v(vk::PointClippingBehavior t)
+{
+    return static_cast<VkPointClippingBehavior>(t);
+}
+
+constexpr VkSamplerReductionMode v(vk::SamplerReductionMode t)
+{
+    return static_cast<VkSamplerReductionMode>(t);
+}
+
+constexpr VkTessellationDomainOrigin v(vk::TessellationDomainOrigin t)
+{
+    return static_cast<VkTessellationDomainOrigin>(t);
+}
+
+constexpr VkSamplerYcbcrModelConversion v(vk::SamplerYcbcrModelConversion t)
+{
+    return static_cast<VkSamplerYcbcrModelConversion>(t);
+}
+
+constexpr VkSamplerYcbcrRange v(vk::SamplerYcbcrRange t)
+{
+    return static_cast<VkSamplerYcbcrRange>(t);
+}
+
+constexpr VkChromaLocation v(vk::ChromaLocation t)
+{
+    return static_cast<VkChromaLocation>(t);
+}
+
+constexpr VkQueueGlobalPriorityKHR v(vk::QueueGlobalPriority t)
+{
+    return static_cast<VkQueueGlobalPriorityKHR>(t);
+}
+
+constexpr VkVendorId v(vk::VendorId t)
+{
+    return static_cast<VkVendorId>(t);
+}
+
+constexpr VkDriverId v(vk::DriverId t)
+{
+    return static_cast<VkDriverId>(t);
+}
+
+constexpr VkCopyAccelerationStructureModeKHR v(vk::CopyAccelerationStructureMode t)
+{
+    return static_cast<VkCopyAccelerationStructureModeKHR>(t);
+}
+
+constexpr VkBuildAccelerationStructureModeKHR v(vk::BuildAccelerationStructureMode t)
+{
+    return static_cast<VkBuildAccelerationStructureModeKHR>(t);
+}
+
+constexpr VkAccelerationStructureTypeKHR v(vk::AccelerationStructureType t)
+{
+    return static_cast<VkAccelerationStructureTypeKHR>(t);
+}
+
+constexpr VkGeometryTypeKHR v(vk::GeometryType t)
+{
+    return static_cast<VkGeometryTypeKHR>(t);
+}
+
+constexpr VkAccelerationStructureBuildTypeKHR v(vk::AccelerationStructureBuildType t)
+{
+    return static_cast<VkAccelerationStructureBuildTypeKHR>(t);
+}
+
+constexpr VkRayTracingShaderGroupTypeKHR v(vk::RayTracingShaderGroupType t)
+{
+    return static_cast<VkRayTracingShaderGroupTypeKHR>(t);
+}
+
+constexpr VkAccelerationStructureCompatibilityKHR v(vk::AccelerationStructureCompatibility t)
+{
+    return static_cast<VkAccelerationStructureCompatibilityKHR>(t);
+}
+
+constexpr VkShaderGroupShaderKHR v(vk::ShaderGroupShader t)
+{
+    return static_cast<VkShaderGroupShaderKHR>(t);
+}
+
+constexpr VkPerformanceCounterScopeKHR v(vk::PerformanceCounterScope t)
+{
+    return static_cast<VkPerformanceCounterScopeKHR>(t);
+}
+
+constexpr VkPerformanceCounterUnitKHR v(vk::PerformanceCounterUnit t)
+{
+    return static_cast<VkPerformanceCounterUnitKHR>(t);
+}
+
+constexpr VkPerformanceCounterStorageKHR v(vk::PerformanceCounterStorage t)
+{
+    return static_cast<VkPerformanceCounterStorageKHR>(t);
+}
+
+constexpr VkShaderFloatControlsIndependence v(vk::ShaderFloatControlsIndependence t)
+{
+    return static_cast<VkShaderFloatControlsIndependence>(t);
+}
+
+constexpr VkPipelineExecutableStatisticFormatKHR v(vk::PipelineExecutableStatisticFormat t)
+{
+    return static_cast<VkPipelineExecutableStatisticFormatKHR>(t);
+}
+
+constexpr VkFragmentShadingRateCombinerOpKHR v(vk::FragmentShadingRateCombinerOp t)
+{
+    return static_cast<VkFragmentShadingRateCombinerOpKHR>(t);
+}
+
+constexpr vk::PipelineCacheCreateFlags flgs(vk::PipelineCacheCreateFlag t)
+{
+    return static_cast<vk::PipelineCacheCreateFlags>(t);
+}
+
+constexpr vk::QueueFlags flgs(vk::QueueFlag t)
+{
+    return static_cast<vk::QueueFlags>(t);
+}
+
+constexpr vk::CullModeFlags flgs(vk::CullModeFlag t)
+{
+    return static_cast<vk::CullModeFlags>(t);
+}
+
+constexpr vk::DeviceQueueCreateFlags flgs(vk::DeviceQueueCreateFlag t)
+{
+    return static_cast<vk::DeviceQueueCreateFlags>(t);
+}
+
+constexpr vk::MemoryPropertyFlags flgs(vk::MemoryPropertyFlag t)
+{
+    return static_cast<vk::MemoryPropertyFlags>(t);
+}
+
+constexpr vk::MemoryHeapFlags flgs(vk::MemoryHeapFlag t)
+{
+    return static_cast<vk::MemoryHeapFlags>(t);
+}
+
+constexpr vk::AccessFlags flgs(vk::AccessFlag t)
+{
+    return static_cast<vk::AccessFlags>(t);
+}
+
+constexpr vk::BufferUsageFlags flgs(vk::BufferUsageFlag t)
+{
+    return static_cast<vk::BufferUsageFlags>(t);
+}
+
+constexpr vk::BufferCreateFlags flgs(vk::BufferCreateFlag t)
+{
+    return static_cast<vk::BufferCreateFlags>(t);
+}
+
+constexpr vk::ShaderStageFlags flgs(vk::ShaderStageFlag t)
+{
+    return static_cast<vk::ShaderStageFlags>(t);
+}
+
+constexpr vk::ImageUsageFlags flgs(vk::ImageUsageFlag t)
+{
+    return static_cast<vk::ImageUsageFlags>(t);
+}
+
+constexpr vk::ImageCreateFlags flgs(vk::ImageCreateFlag t)
+{
+    return static_cast<vk::ImageCreateFlags>(t);
+}
+
+constexpr vk::PipelineCreateFlags flgs(vk::PipelineCreateFlag t)
+{
+    return static_cast<vk::PipelineCreateFlags>(t);
+}
+
+constexpr vk::PipelineShaderStageCreateFlags flgs(vk::PipelineShaderStageCreateFlag t)
+{
+    return static_cast<vk::PipelineShaderStageCreateFlags>(t);
+}
+
+constexpr vk::ColorComponentFlags flgs(vk::ColorComponentFlag t)
+{
+    return static_cast<vk::ColorComponentFlags>(t);
+}
+
+constexpr vk::FenceCreateFlags flgs(vk::FenceCreateFlag t)
+{
+    return static_cast<vk::FenceCreateFlags>(t);
+}
+
+constexpr vk::FormatFeatureFlags flgs(vk::FormatFeatureFlag t)
+{
+    return static_cast<vk::FormatFeatureFlags>(t);
+}
+
+constexpr vk::QueryControlFlags flgs(vk::QueryControlFlag t)
+{
+    return static_cast<vk::QueryControlFlags>(t);
+}
+
+constexpr vk::CommandBufferUsageFlags flgs(vk::CommandBufferUsageFlag t)
+{
+    return static_cast<vk::CommandBufferUsageFlags>(t);
+}
+
+constexpr vk::QueryPipelineStatisticFlags flgs(vk::QueryPipelineStatisticFlag t)
+{
+    return static_cast<vk::QueryPipelineStatisticFlags>(t);
+}
+
+constexpr vk::ImageAspectFlags flgs(vk::ImageAspectFlag t)
+{
+    return static_cast<vk::ImageAspectFlags>(t);
+}
+
+constexpr vk::SparseImageFormatFlags flgs(vk::SparseImageFormatFlag t)
+{
+    return static_cast<vk::SparseImageFormatFlags>(t);
+}
+
+constexpr vk::SparseMemoryBindFlags flgs(vk::SparseMemoryBindFlag t)
+{
+    return static_cast<vk::SparseMemoryBindFlags>(t);
+}
+
+constexpr vk::PipelineStageFlags flgs(vk::PipelineStageFlag t)
+{
+    return static_cast<vk::PipelineStageFlags>(t);
+}
+
+constexpr vk::CommandPoolCreateFlags flgs(vk::CommandPoolCreateFlag t)
+{
+    return static_cast<vk::CommandPoolCreateFlags>(t);
+}
+
+constexpr vk::CommandPoolResetFlags flgs(vk::CommandPoolResetFlag t)
+{
+    return static_cast<vk::CommandPoolResetFlags>(t);
+}
+
+constexpr vk::CommandBufferResetFlags flgs(vk::CommandBufferResetFlag t)
+{
+    return static_cast<vk::CommandBufferResetFlags>(t);
+}
+
+constexpr vk::SampleCountFlags flgs(vk::SampleCountFlag t)
+{
+    return static_cast<vk::SampleCountFlags>(t);
+}
+
+constexpr vk::AttachmentDescriptionFlags flgs(vk::AttachmentDescriptionFlag t)
+{
+    return static_cast<vk::AttachmentDescriptionFlags>(t);
+}
+
+constexpr vk::StencilFaceFlags flgs(vk::StencilFaceFlag t)
+{
+    return static_cast<vk::StencilFaceFlags>(t);
+}
+
+constexpr vk::DescriptorPoolCreateFlags flgs(vk::DescriptorPoolCreateFlag t)
+{
+    return static_cast<vk::DescriptorPoolCreateFlags>(t);
+}
+
+constexpr vk::DependencyFlags flgs(vk::DependencyFlag t)
+{
+    return static_cast<vk::DependencyFlags>(t);
+}
+
+constexpr vk::SemaphoreWaitFlags flgs(vk::SemaphoreWaitFlag t)
+{
+    return static_cast<vk::SemaphoreWaitFlags>(t);
+}
+
+constexpr vk::DisplayPlaneAlphaFlags flgs(vk::DisplayPlaneAlphaFlag t)
+{
+    return static_cast<vk::DisplayPlaneAlphaFlags>(t);
+}
+
+constexpr vk::CompositeAlphaFlags flgs(vk::CompositeAlphaFlag t)
+{
+    return static_cast<vk::CompositeAlphaFlags>(t);
+}
+
+constexpr vk::SurfaceTransformFlags flgs(vk::SurfaceTransformFlag t)
+{
+    return static_cast<vk::SurfaceTransformFlags>(t);
+}
+
+constexpr vk::SubgroupFeatureFlags flgs(vk::SubgroupFeatureFlag t)
+{
+    return static_cast<vk::SubgroupFeatureFlags>(t);
+}
+
+constexpr vk::DescriptorSetLayoutCreateFlags flgs(vk::DescriptorSetLayoutCreateFlag t)
+{
+    return static_cast<vk::DescriptorSetLayoutCreateFlags>(t);
+}
+
+constexpr vk::ExternalMemoryHandleTypeFlags flgs(vk::ExternalMemoryHandleTypeFlag t)
+{
+    return static_cast<vk::ExternalMemoryHandleTypeFlags>(t);
+}
+
+constexpr vk::ExternalMemoryFeatureFlags flgs(vk::ExternalMemoryFeatureFlag t)
+{
+    return static_cast<vk::ExternalMemoryFeatureFlags>(t);
+}
+
+constexpr vk::ExternalSemaphoreHandleTypeFlags flgs(vk::ExternalSemaphoreHandleTypeFlag t)
+{
+    return static_cast<vk::ExternalSemaphoreHandleTypeFlags>(t);
+}
+
+constexpr vk::ExternalSemaphoreFeatureFlags flgs(vk::ExternalSemaphoreFeatureFlag t)
+{
+    return static_cast<vk::ExternalSemaphoreFeatureFlags>(t);
+}
+
+constexpr vk::SemaphoreImportFlags flgs(vk::SemaphoreImportFlag t)
+{
+    return static_cast<vk::SemaphoreImportFlags>(t);
+}
+
+constexpr vk::ExternalFenceHandleTypeFlags flgs(vk::ExternalFenceHandleTypeFlag t)
+{
+    return static_cast<vk::ExternalFenceHandleTypeFlags>(t);
+}
+
+constexpr vk::ExternalFenceFeatureFlags flgs(vk::ExternalFenceFeatureFlag t)
+{
+    return static_cast<vk::ExternalFenceFeatureFlags>(t);
+}
+
+constexpr vk::FenceImportFlags flgs(vk::FenceImportFlag t)
+{
+    return static_cast<vk::FenceImportFlags>(t);
+}
+
+constexpr vk::PeerMemoryFeatureFlags flgs(vk::PeerMemoryFeatureFlag t)
+{
+    return static_cast<vk::PeerMemoryFeatureFlags>(t);
+}
+
+constexpr vk::MemoryAllocateFlags flgs(vk::MemoryAllocateFlag t)
+{
+    return static_cast<vk::MemoryAllocateFlags>(t);
+}
+
+constexpr vk::DeviceGroupPresentModeFlags flgs(vk::DeviceGroupPresentModeFlag t)
+{
+    return static_cast<vk::DeviceGroupPresentModeFlags>(t);
+}
+
+constexpr vk::DescriptorBindingFlags flgs(vk::DescriptorBindingFlag t)
+{
+    return static_cast<vk::DescriptorBindingFlags>(t);
+}
+
+constexpr vk::ResolveModeFlags flgs(vk::ResolveModeFlag t)
+{
+    return static_cast<vk::ResolveModeFlags>(t);
+}
+
+constexpr vk::GeometryInstanceFlags flgs(vk::GeometryInstanceFlag t)
+{
+    return static_cast<vk::GeometryInstanceFlags>(t);
+}
+
+constexpr vk::GeometryFlags flgs(vk::GeometryFlag t)
+{
+    return static_cast<vk::GeometryFlags>(t);
+}
+
+constexpr vk::BuildAccelerationStructureFlags flgs(vk::BuildAccelerationStructureFlag t)
+{
+    return static_cast<vk::BuildAccelerationStructureFlags>(t);
+}
+
+constexpr vk::AccelerationStructureCreateFlags flgs(vk::AccelerationStructureCreateFlag t)
+{
+    return static_cast<vk::AccelerationStructureCreateFlags>(t);
+}
+
+constexpr vk::FramebufferCreateFlags flgs(vk::FramebufferCreateFlag t)
+{
+    return static_cast<vk::FramebufferCreateFlags>(t);
+}
+
+constexpr vk::PipelineCreationFeedbackFlags flgs(vk::PipelineCreationFeedbackFlag t)
+{
+    return static_cast<vk::PipelineCreationFeedbackFlags>(t);
+}
+
+constexpr vk::PerformanceCounterDescriptionFlags flgs(vk::PerformanceCounterDescriptionFlag t)
+{
+    return static_cast<vk::PerformanceCounterDescriptionFlags>(t);
+}
+
+constexpr vk::ToolPurposeFlags flgs(vk::ToolPurposeFlag t)
+{
+    return static_cast<vk::ToolPurposeFlags>(t);
+}
+
+constexpr vk::SubmitFlags flgs(vk::SubmitFlag t)
+{
+    return static_cast<vk::SubmitFlags>(t);
+}
+
+constexpr vk::EventCreateFlags flgs(vk::EventCreateFlag t)
+{
+    return static_cast<vk::EventCreateFlags>(t);
+}
+
+constexpr vk::RenderingFlags flgs(vk::RenderingFlag t)
+{
+    return static_cast<vk::RenderingFlags>(t);
+}
+
 } // namespace cu
 
 #endif
