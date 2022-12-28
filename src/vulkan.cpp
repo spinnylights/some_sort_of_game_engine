@@ -26,6 +26,7 @@
 #include "sdl.hpp"
 #include "descriptor_set_layout_binding.hpp"
 #include "descriptor_set_layout.hpp"
+#include "pipeline_layout.hpp"
 
 #include <stdexcept>
 #include <array>
@@ -241,7 +242,13 @@ Vulkan::Vulkan(std::vector<const char*> exts,
         .shader_stages = flgs(vk::ShaderStageFlag::cmpte),
     });
 
-    DescriptorSetLayout layt {logi_dev, {swapimg}};
+    std::vector<DescriptorSetLayoutBinding> bndgs = {swapimg};
+
+    auto d_layt = std::make_shared<DescriptorSetLayout>(logi_dev,
+                                                        "swapchain image",
+                                                        bndgs);
+
+    PipelineLayout p_layt {logi_dev, {d_layt}};
 }
 
 void Vulkan::add_shader(BinFile f)

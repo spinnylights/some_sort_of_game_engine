@@ -38,7 +38,7 @@ public:
     /*!
      * The underlying Vulkan struct.
      */
-    constexpr VkDescriptorSetLayoutBinding inner() { return innr; }
+    constexpr VkDescriptorSetLayoutBinding inner() const { return innr; }
 
     void log_attrs(unsigned indent = 1) const;
 
