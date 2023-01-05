@@ -7940,6 +7940,316 @@ constexpr VkFragmentShadingRateCombinerOpKHR v(vk::FragmentShadingRateCombinerOp
     return static_cast<VkFragmentShadingRateCombinerOpKHR>(t);
 }
 
+constexpr VkPipelineCacheCreateFlagBits v(vk::PipelineCacheCreateFlag t)
+{
+    return static_cast<VkPipelineCacheCreateFlagBits>(t);
+}
+
+constexpr VkQueueFlagBits v(vk::QueueFlag t)
+{
+    return static_cast<VkQueueFlagBits>(t);
+}
+
+constexpr VkCullModeFlagBits v(vk::CullModeFlag t)
+{
+    return static_cast<VkCullModeFlagBits>(t);
+}
+
+constexpr VkDeviceQueueCreateFlagBits v(vk::DeviceQueueCreateFlag t)
+{
+    return static_cast<VkDeviceQueueCreateFlagBits>(t);
+}
+
+constexpr VkMemoryPropertyFlagBits v(vk::MemoryPropertyFlag t)
+{
+    return static_cast<VkMemoryPropertyFlagBits>(t);
+}
+
+constexpr VkMemoryHeapFlagBits v(vk::MemoryHeapFlag t)
+{
+    return static_cast<VkMemoryHeapFlagBits>(t);
+}
+
+constexpr VkAccessFlagBits v(vk::AccessFlag t)
+{
+    return static_cast<VkAccessFlagBits>(t);
+}
+
+constexpr VkBufferUsageFlagBits v(vk::BufferUsageFlag t)
+{
+    return static_cast<VkBufferUsageFlagBits>(t);
+}
+
+constexpr VkBufferCreateFlagBits v(vk::BufferCreateFlag t)
+{
+    return static_cast<VkBufferCreateFlagBits>(t);
+}
+
+constexpr VkShaderStageFlagBits v(vk::ShaderStageFlag t)
+{
+    return static_cast<VkShaderStageFlagBits>(t);
+}
+
+constexpr VkImageUsageFlagBits v(vk::ImageUsageFlag t)
+{
+    return static_cast<VkImageUsageFlagBits>(t);
+}
+
+constexpr VkImageCreateFlagBits v(vk::ImageCreateFlag t)
+{
+    return static_cast<VkImageCreateFlagBits>(t);
+}
+
+constexpr VkPipelineCreateFlagBits v(vk::PipelineCreateFlag t)
+{
+    return static_cast<VkPipelineCreateFlagBits>(t);
+}
+
+constexpr VkPipelineShaderStageCreateFlagBits v(vk::PipelineShaderStageCreateFlag t)
+{
+    return static_cast<VkPipelineShaderStageCreateFlagBits>(t);
+}
+
+constexpr VkColorComponentFlagBits v(vk::ColorComponentFlag t)
+{
+    return static_cast<VkColorComponentFlagBits>(t);
+}
+
+constexpr VkFenceCreateFlagBits v(vk::FenceCreateFlag t)
+{
+    return static_cast<VkFenceCreateFlagBits>(t);
+}
+
+constexpr VkFormatFeatureFlagBits v(vk::FormatFeatureFlag t)
+{
+    return static_cast<VkFormatFeatureFlagBits>(t);
+}
+
+constexpr VkQueryControlFlagBits v(vk::QueryControlFlag t)
+{
+    return static_cast<VkQueryControlFlagBits>(t);
+}
+
+constexpr VkCommandBufferUsageFlagBits v(vk::CommandBufferUsageFlag t)
+{
+    return static_cast<VkCommandBufferUsageFlagBits>(t);
+}
+
+constexpr VkQueryPipelineStatisticFlagBits v(vk::QueryPipelineStatisticFlag t)
+{
+    return static_cast<VkQueryPipelineStatisticFlagBits>(t);
+}
+
+constexpr VkImageAspectFlagBits v(vk::ImageAspectFlag t)
+{
+    return static_cast<VkImageAspectFlagBits>(t);
+}
+
+constexpr VkSparseImageFormatFlagBits v(vk::SparseImageFormatFlag t)
+{
+    return static_cast<VkSparseImageFormatFlagBits>(t);
+}
+
+constexpr VkSparseMemoryBindFlagBits v(vk::SparseMemoryBindFlag t)
+{
+    return static_cast<VkSparseMemoryBindFlagBits>(t);
+}
+
+constexpr VkPipelineStageFlagBits v(vk::PipelineStageFlag t)
+{
+    return static_cast<VkPipelineStageFlagBits>(t);
+}
+
+constexpr VkCommandPoolCreateFlagBits v(vk::CommandPoolCreateFlag t)
+{
+    return static_cast<VkCommandPoolCreateFlagBits>(t);
+}
+
+constexpr VkCommandPoolResetFlagBits v(vk::CommandPoolResetFlag t)
+{
+    return static_cast<VkCommandPoolResetFlagBits>(t);
+}
+
+constexpr VkCommandBufferResetFlagBits v(vk::CommandBufferResetFlag t)
+{
+    return static_cast<VkCommandBufferResetFlagBits>(t);
+}
+
+constexpr VkSampleCountFlagBits v(vk::SampleCountFlag t)
+{
+    return static_cast<VkSampleCountFlagBits>(t);
+}
+
+constexpr VkAttachmentDescriptionFlagBits v(vk::AttachmentDescriptionFlag t)
+{
+    return static_cast<VkAttachmentDescriptionFlagBits>(t);
+}
+
+constexpr VkStencilFaceFlagBits v(vk::StencilFaceFlag t)
+{
+    return static_cast<VkStencilFaceFlagBits>(t);
+}
+
+constexpr VkDescriptorPoolCreateFlagBits v(vk::DescriptorPoolCreateFlag t)
+{
+    return static_cast<VkDescriptorPoolCreateFlagBits>(t);
+}
+
+constexpr VkDependencyFlagBits v(vk::DependencyFlag t)
+{
+    return static_cast<VkDependencyFlagBits>(t);
+}
+
+constexpr VkSemaphoreWaitFlagBits v(vk::SemaphoreWaitFlag t)
+{
+    return static_cast<VkSemaphoreWaitFlagBits>(t);
+}
+
+constexpr VkDisplayPlaneAlphaFlagBitsKHR v(vk::DisplayPlaneAlphaFlag t)
+{
+    return static_cast<VkDisplayPlaneAlphaFlagBitsKHR>(t);
+}
+
+constexpr VkCompositeAlphaFlagBitsKHR v(vk::CompositeAlphaFlag t)
+{
+    return static_cast<VkCompositeAlphaFlagBitsKHR>(t);
+}
+
+constexpr VkSurfaceTransformFlagBitsKHR v(vk::SurfaceTransformFlag t)
+{
+    return static_cast<VkSurfaceTransformFlagBitsKHR>(t);
+}
+
+constexpr VkSubgroupFeatureFlagBits v(vk::SubgroupFeatureFlag t)
+{
+    return static_cast<VkSubgroupFeatureFlagBits>(t);
+}
+
+constexpr VkDescriptorSetLayoutCreateFlagBits v(vk::DescriptorSetLayoutCreateFlag t)
+{
+    return static_cast<VkDescriptorSetLayoutCreateFlagBits>(t);
+}
+
+constexpr VkExternalMemoryHandleTypeFlagBits v(vk::ExternalMemoryHandleTypeFlag t)
+{
+    return static_cast<VkExternalMemoryHandleTypeFlagBits>(t);
+}
+
+constexpr VkExternalMemoryFeatureFlagBits v(vk::ExternalMemoryFeatureFlag t)
+{
+    return static_cast<VkExternalMemoryFeatureFlagBits>(t);
+}
+
+constexpr VkExternalSemaphoreHandleTypeFlagBits v(vk::ExternalSemaphoreHandleTypeFlag t)
+{
+    return static_cast<VkExternalSemaphoreHandleTypeFlagBits>(t);
+}
+
+constexpr VkExternalSemaphoreFeatureFlagBits v(vk::ExternalSemaphoreFeatureFlag t)
+{
+    return static_cast<VkExternalSemaphoreFeatureFlagBits>(t);
+}
+
+constexpr VkSemaphoreImportFlagBits v(vk::SemaphoreImportFlag t)
+{
+    return static_cast<VkSemaphoreImportFlagBits>(t);
+}
+
+constexpr VkExternalFenceHandleTypeFlagBits v(vk::ExternalFenceHandleTypeFlag t)
+{
+    return static_cast<VkExternalFenceHandleTypeFlagBits>(t);
+}
+
+constexpr VkExternalFenceFeatureFlagBits v(vk::ExternalFenceFeatureFlag t)
+{
+    return static_cast<VkExternalFenceFeatureFlagBits>(t);
+}
+
+constexpr VkFenceImportFlagBits v(vk::FenceImportFlag t)
+{
+    return static_cast<VkFenceImportFlagBits>(t);
+}
+
+constexpr VkPeerMemoryFeatureFlagBits v(vk::PeerMemoryFeatureFlag t)
+{
+    return static_cast<VkPeerMemoryFeatureFlagBits>(t);
+}
+
+constexpr VkMemoryAllocateFlagBits v(vk::MemoryAllocateFlag t)
+{
+    return static_cast<VkMemoryAllocateFlagBits>(t);
+}
+
+constexpr VkDeviceGroupPresentModeFlagBitsKHR v(vk::DeviceGroupPresentModeFlag t)
+{
+    return static_cast<VkDeviceGroupPresentModeFlagBitsKHR>(t);
+}
+
+constexpr VkDescriptorBindingFlagBits v(vk::DescriptorBindingFlag t)
+{
+    return static_cast<VkDescriptorBindingFlagBits>(t);
+}
+
+constexpr VkResolveModeFlagBits v(vk::ResolveModeFlag t)
+{
+    return static_cast<VkResolveModeFlagBits>(t);
+}
+
+constexpr VkGeometryInstanceFlagBitsKHR v(vk::GeometryInstanceFlag t)
+{
+    return static_cast<VkGeometryInstanceFlagBitsKHR>(t);
+}
+
+constexpr VkGeometryFlagBitsKHR v(vk::GeometryFlag t)
+{
+    return static_cast<VkGeometryFlagBitsKHR>(t);
+}
+
+constexpr VkBuildAccelerationStructureFlagBitsKHR v(vk::BuildAccelerationStructureFlag t)
+{
+    return static_cast<VkBuildAccelerationStructureFlagBitsKHR>(t);
+}
+
+constexpr VkAccelerationStructureCreateFlagBitsKHR v(vk::AccelerationStructureCreateFlag t)
+{
+    return static_cast<VkAccelerationStructureCreateFlagBitsKHR>(t);
+}
+
+constexpr VkFramebufferCreateFlagBits v(vk::FramebufferCreateFlag t)
+{
+    return static_cast<VkFramebufferCreateFlagBits>(t);
+}
+
+constexpr VkPipelineCreationFeedbackFlagBits v(vk::PipelineCreationFeedbackFlag t)
+{
+    return static_cast<VkPipelineCreationFeedbackFlagBits>(t);
+}
+
+constexpr VkPerformanceCounterDescriptionFlagBitsKHR v(vk::PerformanceCounterDescriptionFlag t)
+{
+    return static_cast<VkPerformanceCounterDescriptionFlagBitsKHR>(t);
+}
+
+constexpr VkToolPurposeFlagBits v(vk::ToolPurposeFlag t)
+{
+    return static_cast<VkToolPurposeFlagBits>(t);
+}
+
+constexpr VkSubmitFlagBits v(vk::SubmitFlag t)
+{
+    return static_cast<VkSubmitFlagBits>(t);
+}
+
+constexpr VkEventCreateFlagBits v(vk::EventCreateFlag t)
+{
+    return static_cast<VkEventCreateFlagBits>(t);
+}
+
+constexpr VkRenderingFlagBits v(vk::RenderingFlag t)
+{
+    return static_cast<VkRenderingFlagBits>(t);
+}
+
 constexpr vk::PipelineCacheCreateFlags flgs(vk::PipelineCacheCreateFlag t)
 {
     return static_cast<vk::PipelineCacheCreateFlags>(t);

@@ -393,9 +393,9 @@ end
 
 ##
 # An overloaded C++ function +v+, in the +cu+ (not +cu::vk+) namespace, that
-# converts an Enum (not Bitmask) value to the equivalent Vulkan type. (C++ class
-# enums don't allow implicit conversions to other types, so this is "very easy
-# explicit conversion," for interfacing with Vulkan easily.)
+# converts a value of one of our enum classes to its equivalent Vulkan type.
+# (C++ class enums don't allow implicit conversions to other types, so this is
+# "very easy explicit conversion," for interfacing with Vulkan easily.)
 class CPPEnumToVulkanTypeFn < CPPMembersDefn
   def fn
     <<~END
@@ -906,8 +906,12 @@ class VulkanUtilHeader
 
     @out.puts POSTAMBLE_VK
 
-    enum_class_types_w_names[Enum].each do |enum|
-      @out.puts enum.enum_to_vk
+    enum_class_types_w_names.each_pair do |enum_class_type, vk_ids|
+      vk_ids.each do |type|
+        unless type.empty?
+          @out.puts type.enum_to_vk
+        end
+      end
     end
 
     enum_class_types_w_names[Bitmask].each do |bitmask|
