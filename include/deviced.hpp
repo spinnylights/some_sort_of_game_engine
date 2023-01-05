@@ -53,21 +53,23 @@ public:
      * \param dscr  A short description of the Vulkan object, e.g. "compute
      * pipeline"
      *
-     * \param create_fn_suff The suffix attached to the Vulkan constructor, e.g.
+     * \param crte_fn_suff The suffix attached to the Vulkan constructor, e.g.
      * "Swapchain" for `vkCreateSwapchain` or "ComputePipelines" for
      * `vkCreateComputePipelines`.
      *
      * \param dest_fn_suff The suffix attached to the Vulkan destructor, e.g.
      * "Pipeline" for `vkDestroyPipeline`. You can leave it blank if the
-     * dest_fn_suff should be the same as the create_fn_suff, as with
+     * dest_fn_suff should be the same as the crte_fn_suff, as with
      * "Swapchain" (`vkCreateSwapchain` and `vkDestroySwapchain`).
      */
     Deviced(Device::ptr l_dev,
             std::string dscr,
-            std::string create_fn_suff,
+            std::string crte_fn_suff,
             std::string dest_fn_suff = "")
         : dev {l_dev},
           descr {dscr},
+          create_fn_suff {crte_fn_suff},
+          destroy_fn_suff {dest_fn_suff.empty() ? create_fn_suff : dest_fn_suff},
           create {
               reinterpret_cast<Fc>(
                   dev->get_proc_addr(("vkCreate" + create_fn_suff).c_str())
@@ -75,10 +77,7 @@ public:
           },
           destroy {
               reinterpret_cast<Fd>(
-                  dev->get_proc_addr(("vkDestroy" +
-                                      (dest_fn_suff.empty() ? create_fn_suff
-                                                              : dest_fn_suff))
-                                     .c_str())
+                  dev->get_proc_addr(("vkDestroy" + destroy_fn_suff).c_str())
               )
           }
     {}
@@ -98,11 +97,19 @@ public:
         log.brk();
     }
 
+    std::string descrptn() const { return descr; };
+    std::string create_fn_suffix() const { return create_fn_suff; };
+    std::string destroy_fn_suffix() const { return destroy_fn_suff; };
+
+    Inner inner() const { return nner; }
+
 protected:
     Device::ptr dev;
 
 private:
     std::string descr;
+    std::string create_fn_suff;
+    std::string destroy_fn_suff;;
 
 protected:
     Fc create;
