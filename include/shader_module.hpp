@@ -34,13 +34,15 @@ namespace cu {
  */
 class ShaderModule {
 public:
+    using ptr = std::shared_ptr<ShaderModule>;
+
     /*!
      * \brief (constructor)
      *
      * \param l_dev The current Device.
      * \param file  The compiled (SPIR-V) shader.
      */
-    ShaderModule(Device::ptr l_dev, BinFile file);
+    ShaderModule(Device::ptr l_dev, std::string name, BinFile file);
 
     ShaderModule(const ShaderModule&) = delete;
     ShaderModule& operator=(const ShaderModule&) = delete;
@@ -50,8 +52,12 @@ public:
 
     ~ShaderModule() noexcept;
 
+    constexpr VkShaderModule inner() { return nner; }
+
+    constexpr std::string name() const { return nme; }
+
 public:
-    VkShaderModule inner;
+    VkShaderModule nner;
 
 public:
     bool free_inner = false;
@@ -65,6 +71,9 @@ public:
 public:
     PFN_vkCreateShaderModule create_shmodul;
     PFN_vkDestroyShaderModule destroy_shmodul;
+
+private:
+    std::string nme;
 };
 
 } // namespace cu

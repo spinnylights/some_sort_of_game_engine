@@ -27,7 +27,7 @@
 
 namespace cu {
 
-ShaderModule::ShaderModule(Device::ptr l_dev, BinFile file)
+ShaderModule::ShaderModule(Device::ptr l_dev, std::string name, BinFile file)
     : dev {l_dev},
       f {file},
       create_shmodul {
@@ -39,7 +39,8 @@ ShaderModule::ShaderModule(Device::ptr l_dev, BinFile file)
           reinterpret_cast<PFN_vkDestroyShaderModule>(
               dev->get_proc_addr("vkDestroyShaderModule")
           )
-      }
+      },
+      nme {name}
 {
     VkShaderModuleCreateInfo create_info {
         .sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
@@ -49,7 +50,7 @@ ShaderModule::ShaderModule(Device::ptr l_dev, BinFile file)
         .pCode    = file.u32()
     };
 
-    Vulkan::vk_try(create_shmodul(dev->inner(), &create_info, nullptr, &inner),
+    Vulkan::vk_try(create_shmodul(dev->inner(), &create_info, nullptr, &nner),
                    "create shader module");
     log.indent();
     log.enter("path: ", std::string(file.path()));
@@ -60,14 +61,14 @@ ShaderModule::ShaderModule(Device::ptr l_dev, BinFile file)
 }
 
 ShaderModule::ShaderModule(ShaderModule&& s)
-    : inner {s.inner},
+    : nner {s.nner},
       free_inner {true},
       dev {s.dev},
       f {std::move(s.f)},
       create_shmodul {s.create_shmodul},
       destroy_shmodul {s.destroy_shmodul}
 {
-    s.inner = nullptr;
+    s.nner = nullptr;
     s.free_inner = false;
     s.dev = nullptr;
     s.create_shmodul = nullptr;
@@ -87,7 +88,7 @@ ShaderModule::~ShaderModule() noexcept
         log.attempt("Vulkan",
                     "destroying shader module from " + std::string(f.path()));
 
-        destroy_shmodul(dev->inner(), inner, NULL);
+        destroy_shmodul(dev->inner(), nner, NULL);
 
         log.finish();
         log.brk();

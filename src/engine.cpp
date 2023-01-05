@@ -61,9 +61,11 @@ void Engine::mode(Mode new_mode)
     log.brk();
 }
 
-void Engine::add_shader(BinFile f)
+void Engine::add_shader(std::string name, BinFile f)
 {
-    vulk.add_shader(f);
+    vulk.add_shader(name, f);
+}
+
 }
 
 } // namespace cu

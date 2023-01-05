@@ -25,6 +25,7 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <unordered_map>
 
 #include "instance.hpp"
 #include "debug_msgr.hpp"
@@ -90,7 +91,7 @@ public:
     /*!
      * \brief Add a new compiled (SPIR-V) shader.
      */
-    void add_shader(BinFile compiled_shader);
+    void add_shader(std::string name, BinFile compiled_shader);
 
 private:
     Instance::ptr inst;
@@ -101,7 +102,7 @@ private:
     Swapchain swch;
 
 private:
-    std::vector<ShaderModule> shdrs;
+    std::unordered_map<std::string, ShaderModule::ptr> shdrs;
 };
 
 } // namespace cu

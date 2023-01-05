@@ -251,13 +251,21 @@ Vulkan::Vulkan(std::vector<const char*> exts,
     PipelineLayout p_layt {logi_dev, {d_layt}};
 }
 
-void Vulkan::add_shader(BinFile f)
+void Vulkan::add_shader(std::string name, BinFile f)
 {
-    log.enter("Vulkan: adding shader", std::string(f.path()));
+    log.enter("Vulkan",  "adding shader " + name);
     log.indent();
-    log.enter("at", shdrs.size());
+    log.enter("path", std::string(f.path()));
     log.brk();
-    shdrs.push_back({logi_dev, f});
+
+    bool ok = shdrs.insert({name, std::make_shared<ShaderModule>(logi_dev,
+                                                                 name,
+                                                                 f)})
+                   .second;
+
+    if (!ok) {
+        throw std::runtime_error("failed to add shader " + name);
+    }
 }
 
 } // namespace cu
