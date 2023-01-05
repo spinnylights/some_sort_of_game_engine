@@ -26,4 +26,5 @@ crypt_underworld_SOURCES = \
 	src/descriptor_set_layout.cpp \
 	src/pipeline_layout.cpp \
 	src/compute_pipeline.cpp \
+	src/descriptor_pool.cpp \
 	src/engine.cpp

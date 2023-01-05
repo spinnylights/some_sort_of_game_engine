@@ -28,6 +28,7 @@
 #include "descriptor_set_layout.hpp"
 #include "pipeline_layout.hpp"
 #include "compute_pipeline.hpp"
+#include "descriptor_pool.hpp"
 
 #include <stdexcept>
 #include <array>
@@ -265,6 +266,8 @@ void Vulkan::minicomp_setup()
     }
 
     ComputePipeline pipel {logi_dev, minicomp_shdr, p_layt};
+
+    DescriptorPool descpool {logi_dev, d_layts};
 }
 
 void Vulkan::add_shader(std::string name, BinFile f)
