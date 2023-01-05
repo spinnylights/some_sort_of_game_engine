@@ -166,6 +166,19 @@ private:
 
     void populate_mem_props(const VkPhysicalDeviceMemoryProperties&
                                 props);
+
+private:
+    PFN_vkGetPhysicalDeviceFeatures2 get_phys_dev_ftrs;
+
+public:
+    VkPhysicalDeviceMaintenance4Features maintenance4  = {
+        .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_FEATURES
+    };
+
+public:
+    VkPhysicalDeviceFeatures2 features = {
+        .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2,
+    };
 };
 
 } // namespace cu

@@ -103,9 +103,13 @@ Device::Device(PhysDevice& phys_dev, Instance::ptr inst)
         }
     }
 
+    VkPhysicalDeviceFeatures2 dev_ftrs = phys_dev.features;
+    VkPhysicalDeviceMaintenance4Features maint4_ftrs = phys_dev.maintenance4;
+    dev_ftrs.pNext = &maint4_ftrs;
+
     VkDeviceCreateInfo dev_info = {
         .sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
-        .pNext = NULL,
+        .pNext = &dev_ftrs,
         .flags = 0,
         .queueCreateInfoCount = static_cast<uint32_t>(queue_infos.size()),
         .pQueueCreateInfos = queue_infos.data(),

@@ -95,10 +95,21 @@ PhysDevice::PhysDevice(VkPhysicalDevice                     device,
       vk_vend_id        {device_props.vendorID},
       vk_vend_dev_id    {device_props.deviceID},
       mem               {calc_total_mem(vk_memory_props)},
-      extensions        {extensions_supported}
+      extensions        {extensions_supported},
+      get_phys_dev_ftrs {
+          reinterpret_cast<PFN_vkGetPhysicalDeviceFeatures2>(
+              inst->get_proc_addr("vkGetPhysicalDeviceFeatures2")
+          )
+      }
 {
     get_queue_fams(vk_queue_props, surf, inst);
     populate_mem_props(vk_memory_props);
+    features.pNext = &maintenance4;
+    get_phys_dev_ftrs(dev, &features);
+
+    if (!maintenance4.maintenance4) {
+        throw std::runtime_error("gpu does not support maintenance4");
+    }
 }
 
 PhysDevice::VkVersionNumber PhysDevice::vk_ver_spprtd() const
