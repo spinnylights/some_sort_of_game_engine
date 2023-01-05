@@ -36,6 +36,7 @@ class DescriptorSetLayout : public Deviced<PFN_vkCreateDescriptorSetLayout,
                                            VkDescriptorSetLayout> {
 public:
     using ptr = std::shared_ptr<DescriptorSetLayout>;
+    using binding_col = std::vector<VkDescriptorSetLayoutBinding>;
 
     DescriptorSetLayout(Device::ptr l_dev,
                         std::string name,
@@ -46,9 +47,11 @@ public:
     void log_attrs(unsigned indent = 1) const;
 
     constexpr std::string name() const { return nme; }
+    const binding_col& bindings() const { return innerbs; }
 
 private:
     std::string nme;
+    std::vector<VkDescriptorSetLayoutBinding> innerbs;
 
 private:
     VkDescriptorSetLayoutCreateInfo inf;

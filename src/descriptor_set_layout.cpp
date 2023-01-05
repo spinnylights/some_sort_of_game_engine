@@ -32,13 +32,13 @@ DescriptorSetLayout::DescriptorSetLayout(Device::ptr l_dev,
                                          std::string name,
                                  const std::vector<DescriptorSetLayoutBinding>& bndgs)
     : Deviced(l_dev, "descriptor set layout '" + name + "'", "DescriptorSetLayout"),
-      nme {name}
+      nme {name},
+      innerbs(bndgs.size())
 {
     if (bndgs.size() > UINT32_MAX) {
         throw std::runtime_error("layout binding vector is too large");
     }
 
-    std::vector<VkDescriptorSetLayoutBinding> innerbs(bndgs.size());
     std::transform(bndgs.cbegin(), bndgs.cend(),
                    innerbs.begin(),
                    [](const DescriptorSetLayoutBinding& b) { return b.inner(); });
