@@ -87,6 +87,14 @@ public:
     void mode(Mode new_mode);
 
     /*!
+     * \brief Puts the engine in minicomp mode.
+     *
+     * \param comp_spv_path The path to the compiled (SPIR-V) compute shader to
+     *                      use.
+     */
+    void minicomp_mode(std::filesystem::path comp_spv_path);
+
+    /*!
      * \brief Add a new compiled (SPIR-V) shader.
      */
     void add_shader(std::string name, BinFile compiled_shader);

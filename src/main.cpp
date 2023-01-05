@@ -20,14 +20,8 @@
  */
 
 #include "engine.hpp"
-
 #include "log.hpp"
-
 #include "cli.hpp"
-
-#include "bin_file.hpp"
-
-#include "shader_module.hpp"
 
 #include <string>
 #include <iostream>
@@ -52,10 +46,7 @@ int main(int argc, char** argv)
     cu::Engine e {cli.debug()};
 
     if (cli.minicomp()) {
-        e.mode(cu::Engine::minicomp);
-        cu::BinFile compshdr {cli.comp_path()};
-
-        e.add_shader(compshdr);
+        e.minicomp_mode(cli.comp_path());
     }
 
     return 0;

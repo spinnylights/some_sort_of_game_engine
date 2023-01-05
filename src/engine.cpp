@@ -66,6 +66,11 @@ void Engine::add_shader(std::string name, BinFile f)
     vulk.add_shader(name, f);
 }
 
+void Engine::minicomp_mode(std::filesystem::path comp_spv_path)
+{
+    mode(minicomp);
+    add_shader(mode_str(), {comp_spv_path});
+    vulk.minicomp_setup();
 }
 
 } // namespace cu

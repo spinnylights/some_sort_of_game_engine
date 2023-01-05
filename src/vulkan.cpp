@@ -27,6 +27,7 @@
 #include "descriptor_set_layout_binding.hpp"
 #include "descriptor_set_layout.hpp"
 #include "pipeline_layout.hpp"
+#include "compute_pipeline.hpp"
 
 #include <stdexcept>
 #include <array>
@@ -234,9 +235,12 @@ Vulkan::Vulkan(std::vector<const char*> exts,
           std::make_shared<Device>(phys_devs.default_device(), inst)
       },
       swch{phys_devs.default_device(), logi_dev, surf, sdl}
+{}
+
+void Vulkan::minicomp_setup()
 {
     DescriptorSetLayoutBinding swapimg ({
-        .binding_ndx   = 1,
+        .binding_ndx   = 0,
         .type          = vk::DescriptorType::strge_img,
         .count         = 1,
         .shader_stages = flgs(vk::ShaderStageFlag::cmpte),
@@ -248,7 +252,19 @@ Vulkan::Vulkan(std::vector<const char*> exts,
                                                         "swapchain image",
                                                         bndgs);
 
-    PipelineLayout p_layt {logi_dev, {d_layt}};
+    std::vector<DescriptorSetLayout::ptr> d_layts = {d_layt};
+
+    auto p_layt = std::make_shared<PipelineLayout>(logi_dev, d_layts);
+
+    ShaderModule::ptr minicomp_shdr;
+
+    if (auto search = shdrs.find("minicomp"); search != shdrs.end()) {
+        minicomp_shdr = search->second;
+    } else {
+        throw std::runtime_error("failed to find shader 'minicomp'");
+    }
+
+    ComputePipeline pipel {logi_dev, minicomp_shdr, p_layt};
 }
 
 void Vulkan::add_shader(std::string name, BinFile f)

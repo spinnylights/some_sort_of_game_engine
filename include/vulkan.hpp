@@ -93,6 +93,9 @@ public:
      */
     void add_shader(std::string name, BinFile compiled_shader);
 
+    // TODO: replace with something more general-purpose
+    void minicomp_setup();
+
 private:
     Instance::ptr inst;
     DebugMsgr dbg_msgr;
