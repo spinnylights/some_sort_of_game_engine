@@ -7,18 +7,8 @@ namespace cu {
 
 PipelineLayout::PipelineLayout(Device::ptr l_dev,
                        std::vector<DescriptorSetLayout::ptr> dscrpt_set_layouts)
-    : dev{l_dev},
+    : Deviced(l_dev, "pipeline layout", "PipelineLayout"),
       dscr_layts{dscrpt_set_layouts},
-      create_pipelayt{
-          reinterpret_cast<PFN_vkCreatePipelineLayout>(
-              dev->get_proc_addr("vkCreatePipelineLayout")
-          )
-      },
-      destroy_pipelayt{
-          reinterpret_cast<PFN_vkDestroyPipelineLayout>(
-              dev->get_proc_addr("vkDestroyPipelineLayout")
-          )
-      },
       flgs {0}
 {
     if (dscrpt_set_layouts.size() > UINT32_MAX) {
@@ -39,18 +29,10 @@ PipelineLayout::PipelineLayout(Device::ptr l_dev,
         // TODO: push constants
     };
 
-    Vulkan::vk_try(create_pipelayt(dev->inner(), &inf, NULL, &nner),
-                   "create pipeline layout");
+    Vulkan::vk_try(create(dev->inner(), &inf, NULL, &nner),
+                   "create " + descrptn());
 
     log_attrs();
-}
-
-PipelineLayout::~PipelineLayout() noexcept
-{
-    log.attempt("Vulkan", "destroying pipeline layout");
-    destroy_pipelayt(dev->inner(), nner, NULL);
-    log.finish();
-    log.brk();
 }
 
 void PipelineLayout::log_attrs(unsigned indent) const

@@ -27,11 +27,13 @@
 #include <vector>
 
 #include "descriptor_set_layout_binding.hpp"
-#include "device.hpp"
+#include "deviced.hpp"
 
 namespace cu {
 
-class DescriptorSetLayout {
+class DescriptorSetLayout : public Deviced<PFN_vkCreateDescriptorSetLayout,
+                                           PFN_vkDestroyDescriptorSetLayout,
+                                           VkDescriptorSetLayout> {
 public:
     using ptr = std::shared_ptr<DescriptorSetLayout>;
 
@@ -39,26 +41,14 @@ public:
                         std::string name,
                         const std::vector<DescriptorSetLayoutBinding>& bndgs);
 
-    ~DescriptorSetLayout() noexcept;
-
-    constexpr VkDescriptorSetLayout inner() { return nner; }
+    ~DescriptorSetLayout() noexcept { Deviced::dstrct(); }
 
     void log_attrs(unsigned indent = 1) const;
 
     constexpr std::string name() const { return nme; }
 
 private:
-    VkDescriptorSetLayout nner;
-
-private:
-    Device::ptr dev;
-
-private:
     std::string nme;
-
-private:
-    PFN_vkCreateDescriptorSetLayout create_desc_set_layout;
-    PFN_vkDestroyDescriptorSetLayout destroy_desc_set_layout;
 
 private:
     VkDescriptorSetLayoutCreateInfo inf;

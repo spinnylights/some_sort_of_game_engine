@@ -24,14 +24,16 @@
 
 #include "vulkan_util.hpp"
 #include "descriptor_set_layout.hpp"
-#include "device.hpp"
+#include "deviced.hpp"
 
 #include <vector>
 #include <algorithm>
 
 namespace cu {
 
-class PipelineLayout {
+class PipelineLayout : public Deviced<PFN_vkCreatePipelineLayout,
+                                      PFN_vkDestroyPipelineLayout,
+                                      VkPipelineLayout> {
 public:
     using ptr = std::shared_ptr<PipelineLayout>;
 
@@ -43,24 +45,12 @@ public:
     PipelineLayout(Device::ptr l_dev,
                    std::vector<DescriptorSetLayout::ptr> dscrpt_set_layouts);
 
-    ~PipelineLayout() noexcept;
-
-    VkPipelineLayout inner() { return nner; }
+    ~PipelineLayout() noexcept { dstrct(); }
 
     void log_attrs(unsigned indent = 1) const;
 
 private:
-    Device::ptr dev;
-
-private:
     std::vector<DescriptorSetLayout::ptr> dscr_layts;
-
-private:
-    VkPipelineLayout nner;
-
-private:
-    PFN_vkCreatePipelineLayout  create_pipelayt;
-    PFN_vkDestroyPipelineLayout destroy_pipelayt;
 
 private:
     VkPipelineLayoutCreateFlags flgs;

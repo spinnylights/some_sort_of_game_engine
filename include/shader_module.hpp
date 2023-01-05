@@ -25,14 +25,16 @@
 #include <vulkan/vulkan.hpp>
 
 #include "bin_file.hpp"
-#include "device.hpp"
+#include "deviced.hpp"
 
 namespace cu {
 
 /*!
  * \brief A VkShaderModule wrapper.
  */
-class ShaderModule {
+class ShaderModule : public Deviced<PFN_vkCreateShaderModule,
+                                    PFN_vkDestroyShaderModule,
+                                    VkShaderModule> {
 public:
     using ptr = std::shared_ptr<ShaderModule>;
 
@@ -52,25 +54,13 @@ public:
 
     ~ShaderModule() noexcept;
 
-    constexpr VkShaderModule inner() { return nner; }
-
     constexpr std::string name() const { return nme; }
-
-public:
-    VkShaderModule nner;
 
 public:
     bool free_inner = false;
 
 public:
-    Device::ptr dev;
-
-public:
     BinFile f;
-
-public:
-    PFN_vkCreateShaderModule create_shmodul;
-    PFN_vkDestroyShaderModule destroy_shmodul;
 
 private:
     std::string nme;

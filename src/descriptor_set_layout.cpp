@@ -31,18 +31,8 @@ namespace cu {
 DescriptorSetLayout::DescriptorSetLayout(Device::ptr l_dev,
                                          std::string name,
                                  const std::vector<DescriptorSetLayoutBinding>& bndgs)
-    : dev {l_dev},
-      nme {name},
-      create_desc_set_layout {
-          reinterpret_cast<PFN_vkCreateDescriptorSetLayout>(
-              l_dev->get_proc_addr("vkCreateDescriptorSetLayout")
-          )
-      },
-      destroy_desc_set_layout {
-          reinterpret_cast<PFN_vkDestroyDescriptorSetLayout>(
-              l_dev->get_proc_addr("vkDestroyDescriptorSetLayout")
-          )
-      }
+    : Deviced(l_dev, "descriptor set layout '" + name + "'", "DescriptorSetLayout"),
+      nme {name}
 {
     if (bndgs.size() > UINT32_MAX) {
         throw std::runtime_error("layout binding vector is too large");
@@ -61,10 +51,7 @@ DescriptorSetLayout::DescriptorSetLayout(Device::ptr l_dev,
         .pBindings    = innerbs.data(),
     };
 
-    Vulkan::vk_try(create_desc_set_layout(dev->inner(),
-                                          &inf,
-                                          NULL,
-                                          &nner),
+    Vulkan::vk_try(create(dev->inner(), &inf, NULL, &nner),
                    "creating descriptor set layout");
 
     log.indent();
@@ -77,14 +64,6 @@ DescriptorSetLayout::DescriptorSetLayout(Device::ptr l_dev,
         constexpr auto indent_bndg_log = 2;
         b.log_attrs(indent_bndg_log);
     }
-}
-
-DescriptorSetLayout::~DescriptorSetLayout() noexcept
-{
-    log.attempt("Vulkan", "destroying descriptor set layout '" + name() + "'");
-    destroy_desc_set_layout(dev->inner(), nner, NULL);
-    log.finish();
-    log.brk();
 }
 
 } // namespace cu

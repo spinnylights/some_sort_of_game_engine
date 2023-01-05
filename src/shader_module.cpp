@@ -28,18 +28,10 @@
 namespace cu {
 
 ShaderModule::ShaderModule(Device::ptr l_dev, std::string name, BinFile file)
-    : dev {l_dev},
+    : Deviced(l_dev,
+              "shader module from " + std::string(file.path()),
+              "ShaderModule"),
       f {file},
-      create_shmodul {
-          reinterpret_cast<PFN_vkCreateShaderModule>(
-              dev->get_proc_addr("vkCreateShaderModule")
-          )
-      },
-      destroy_shmodul {
-          reinterpret_cast<PFN_vkDestroyShaderModule>(
-              dev->get_proc_addr("vkDestroyShaderModule")
-          )
-      },
       nme {name}
 {
     VkShaderModuleCreateInfo create_info {
@@ -50,8 +42,8 @@ ShaderModule::ShaderModule(Device::ptr l_dev, std::string name, BinFile file)
         .pCode    = file.u32()
     };
 
-    Vulkan::vk_try(create_shmodul(dev->inner(), &create_info, nullptr, &nner),
-                   "create shader module");
+    Vulkan::vk_try(create(dev->inner(), &create_info, nullptr, &nner),
+                   "create " + descrptn());
     log.indent();
     log.enter("path: ", std::string(file.path()));
     log.enter("filesize: ", file.size());
@@ -61,18 +53,15 @@ ShaderModule::ShaderModule(Device::ptr l_dev, std::string name, BinFile file)
 }
 
 ShaderModule::ShaderModule(ShaderModule&& s)
-    : nner {s.nner},
+    : Deviced(s.dev, s.descrptn(), s.create_fn_suffix(), s.destroy_fn_suffix()),
       free_inner {true},
-      dev {s.dev},
-      f {std::move(s.f)},
-      create_shmodul {s.create_shmodul},
-      destroy_shmodul {s.destroy_shmodul}
+      f {std::move(s.f)}
 {
     s.nner = nullptr;
     s.free_inner = false;
     s.dev = nullptr;
-    s.create_shmodul = nullptr;
-    s.destroy_shmodul = nullptr;
+    s.create = nullptr;
+    s.destroy = nullptr;
 }
 
 ShaderModule& ShaderModule::operator=(ShaderModule&& s)
@@ -85,13 +74,7 @@ ShaderModule& ShaderModule::operator=(ShaderModule&& s)
 ShaderModule::~ShaderModule() noexcept
 {
     if (free_inner) {
-        log.attempt("Vulkan",
-                    "destroying shader module from " + std::string(f.path()));
-
-        destroy_shmodul(dev->inner(), nner, NULL);
-
-        log.finish();
-        log.brk();
+        dstrct();
     }
 }
 
