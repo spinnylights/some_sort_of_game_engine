@@ -84,13 +84,13 @@ public:
     {}
 
     /*!
-     * \brief (destructor)
+     * \brief A destructor you can use.
      *
      * Assumes the Vulkan destructor can be called as `destroy(dev->inner(),
      * vk_handle, NULL)`. If logging is enabled, sends a message to the log
      * about the destruction using descr.
      */
-    virtual ~Deviced() noexcept
+    void dstrct() noexcept
     {
         log.attempt("Vulkan", "destroying " + descr);
         destroy(dev->inner(), nner, NULL);
