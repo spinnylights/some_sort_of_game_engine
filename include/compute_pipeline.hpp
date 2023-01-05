@@ -40,6 +40,8 @@ public:
                     PipelineLayout::ptr pipel_layt,
                     vk::PipelineCreateFlags flags = 0);
 
+    ~ComputePipeline() noexcept { dstrct(); }
+
 private:
     ShaderModule::ptr   shdr;
     PipelineLayout::ptr pipelt;
