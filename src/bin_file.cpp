@@ -38,6 +38,9 @@ BinFile::BinFile(fs::path fpath)
         is.seekg(0);
         is.read(reinterpret_cast<char*>(dta.data()), bytesize);
         is.close();
+    } else {
+        throw std::runtime_error("failed to open file at "
+                                 + std::string(fpath));
     }
 }
 
