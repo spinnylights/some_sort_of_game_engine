@@ -33,6 +33,8 @@ namespace cu {
 
 class PipelineLayout {
 public:
+    using ptr = std::shared_ptr<PipelineLayout>;
+
     struct Args {
         std::vector<DescriptorSetLayout::ptr> dscrpt_set_layouts;
         // TODO: push constants
@@ -42,6 +44,10 @@ public:
                    std::vector<DescriptorSetLayout::ptr> dscrpt_set_layouts);
 
     ~PipelineLayout() noexcept;
+
+    VkPipelineLayout inner() { return nner; }
+
+    void log_attrs(unsigned indent = 1) const;
 
 private:
     Device::ptr dev;
@@ -55,6 +61,9 @@ private:
 private:
     PFN_vkCreatePipelineLayout  create_pipelayt;
     PFN_vkDestroyPipelineLayout destroy_pipelayt;
+
+private:
+    VkPipelineLayoutCreateFlags flgs;
 };
 
 } // namespace cu

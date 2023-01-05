@@ -18,7 +18,8 @@ PipelineLayout::PipelineLayout(Device::ptr l_dev,
           reinterpret_cast<PFN_vkDestroyPipelineLayout>(
               dev->get_proc_addr("vkDestroyPipelineLayout")
           )
-      }
+      },
+      flgs {0}
 {
     if (dscrpt_set_layouts.size() > UINT32_MAX) {
         throw std::runtime_error("too many descriptor set layouts");
@@ -32,8 +33,8 @@ PipelineLayout::PipelineLayout(Device::ptr l_dev,
     VkPipelineLayoutCreateInfo inf = {
         .sType          = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
         .pNext          = NULL,
-        .flags          = 0,
-        .setLayoutCount = static_cast<uint32_t>(dscrpt_set_layouts.size()),
+        .flags          = flgs,
+        .setLayoutCount = static_cast<uint32_t>(inners.size()),
         .pSetLayouts    = inners.data(),
         // TODO: push constants
     };
@@ -41,14 +42,7 @@ PipelineLayout::PipelineLayout(Device::ptr l_dev,
     Vulkan::vk_try(create_pipelayt(dev->inner(), &inf, NULL, &nner),
                    "create pipeline layout");
 
-    log.indent();
-    log.enter("flags", inf.flags);
-    log.enter("descriptor set layouts", inf.setLayoutCount);
-    log.indent(2);
-    for (const auto& l : dscr_layts) {
-        log.enter(l->name());
-    }
-    log.brk();
+    log_attrs();
 }
 
 PipelineLayout::~PipelineLayout() noexcept
@@ -56,6 +50,21 @@ PipelineLayout::~PipelineLayout() noexcept
     log.attempt("Vulkan", "destroying pipeline layout");
     destroy_pipelayt(dev->inner(), nner, NULL);
     log.finish();
+    log.brk();
+}
+
+void PipelineLayout::log_attrs(unsigned indent) const
+{
+    log.indent(indent);
+    auto flgs_cstrs = vk::pplne_create_flags_cstrs(flgs);
+    if (!flgs_cstrs.empty()) {
+        log.enter("flags", flgs_cstrs);
+    }
+    log.enter("descriptor set layouts:");
+    log.indent(indent + 1);
+    for (std::size_t i = 0; i < dscr_layts.size(); ++i) {
+        log.enter(std::to_string(i) + " " + dscr_layts.at(i)->name());
+    }
     log.brk();
 }
 
