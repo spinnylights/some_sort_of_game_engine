@@ -30,6 +30,11 @@ CommandBuffer::CommandBuffer(Device::ptr l_dev, CommandPool::ptr cmd_pool)
           reinterpret_cast<PFN_vkAllocateCommandBuffers>(
               l_dev->get_proc_addr("vkAllocateCommandBuffers")
           )
+      },
+      vk_begin {
+          reinterpret_cast<PFN_vkBeginCommandBuffer>(
+              l_dev->get_proc_addr("vkBeginCommandBuffer")
+          )
       }
 {
     VkCommandBufferAllocateInfo inf {
@@ -42,6 +47,24 @@ CommandBuffer::CommandBuffer(Device::ptr l_dev, CommandPool::ptr cmd_pool)
 
     Vulkan::vk_try(alloc(l_dev->inner(), &inf, &nner),
                    "allocating command buffer from " + pool->descrptn());
+    log.brk();
+}
+
+void CommandBuffer::begin()
+{
+    VkCommandBufferBeginInfo inf = {
+        .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
+        .pNext = NULL,
+        .flags = v(vk::CommandBufferUsageFlag::one_time_submit),
+        .pInheritanceInfo = NULL,
+    };
+
+    Vulkan::vk_try(vk_begin(nner, &inf),
+                   "beginning command buffer from " + pool->descrptn());
+    if (inf.flags) {
+        log.indent();
+        log.enter("flags", vk::cmmnd_buffer_usage_flags_cstrs(inf.flags));
+    }
     log.brk();
 }
 

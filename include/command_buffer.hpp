@@ -32,6 +32,8 @@ class CommandBuffer {
 public:
     CommandBuffer(Device::ptr l_dev, CommandPool::ptr cmd_pool);
 
+    void begin();
+
 private:
     VkCommandBuffer nner;
 
@@ -40,6 +42,7 @@ private:
 
 private:
     PFN_vkAllocateCommandBuffers alloc;
+    PFN_vkBeginCommandBuffer     vk_begin;
 };
 
 } // namespace cu

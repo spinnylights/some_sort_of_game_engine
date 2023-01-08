@@ -274,6 +274,8 @@ void Vulkan::minicomp_setup()
     auto cmd_pool = std::make_shared<CommandPool>(logi_dev, Device::compute);
 
     CommandBuffer cmd_buff {logi_dev, cmd_pool};
+
+    cmd_buff.begin();
 }
 
 void Vulkan::add_shader(std::string name, BinFile f)
