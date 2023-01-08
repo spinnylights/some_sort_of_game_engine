@@ -28,4 +28,5 @@ crypt_underworld_SOURCES = \
 	src/compute_pipeline.cpp \
 	src/descriptor_pool.cpp \
 	src/command_pool.cpp \
+	src/command_buffer.cpp \
 	src/engine.cpp

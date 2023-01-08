@@ -30,6 +30,7 @@
 #include "compute_pipeline.hpp"
 #include "descriptor_pool.hpp"
 #include "command_pool.hpp"
+#include "command_buffer.hpp"
 
 #include <stdexcept>
 #include <array>
@@ -270,7 +271,9 @@ void Vulkan::minicomp_setup()
 
     DescriptorPool descpool {logi_dev, d_layts};
 
-    CommandPool cmd_pool {logi_dev, Device::compute};
+    auto cmd_pool = std::make_shared<CommandPool>(logi_dev, Device::compute);
+
+    CommandBuffer cmd_buff {logi_dev, cmd_pool};
 }
 
 void Vulkan::add_shader(std::string name, BinFile f)
