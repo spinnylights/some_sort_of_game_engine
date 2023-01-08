@@ -95,15 +95,15 @@ private:
     VkDevice dev;
 
 private:
-    using queue_map_t =
-        std::unordered_map<QueueFlavor, std::tuple<uint32_t,VkQueue>>;
-    queue_map_t queue_map;
-
-private:
     PFN_vkCreateDevice create_dev;
     PFN_vkGetDeviceQueue get_dev_queue;
     PFN_vkGetDeviceProcAddr get_dev_proc_addr;
     PFN_vkDestroyDevice destroy_dev;
+
+private:
+    using queue_map_t =
+        std::unordered_map<QueueFlavor, std::tuple<uint32_t,VkQueue>>;
+    queue_map_t queue_map;
 };
 
 } // namespace cu
