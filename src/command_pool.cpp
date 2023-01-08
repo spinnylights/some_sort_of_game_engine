@@ -34,12 +34,16 @@ CommandPool::CommandPool(Device::ptr l_dev, Device::QueueFlavor qflav)
     VkCommandPoolCreateInfo inf = {
         .sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
         .pNext = NULL,
-        .flags = 0,
+        .flags = v(vk::CommandPoolCreateFlag::trnsnt),
         .queueFamilyIndex = l_dev->queue_ndx(flv),
     };
 
     Vulkan::vk_try(create(l_dev->inner(), &inf, NULL, &nner),
                    "creating " + descrptn());
+    if (inf.flags) {
+        log.indent();
+        log.enter("flags", vk::cmmnd_pool_create_flags_cstrs(inf.flags));
+    }
     log.brk();
 }
 
