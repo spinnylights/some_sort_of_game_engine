@@ -22,6 +22,14 @@ public:
 
     DescriptorSetLayoutBinding(DescriptorSetLayoutBindingArgs args);
 
+    DescriptorSetLayoutBinding(const DescriptorSetLayoutBinding&) = default;
+    DescriptorSetLayoutBinding&
+        operator=(const DescriptorSetLayoutBinding&) = default;
+
+    DescriptorSetLayoutBinding(DescriptorSetLayoutBinding&&) = default;
+    DescriptorSetLayoutBinding&
+        operator=(DescriptorSetLayoutBinding&&) = default;
+
     /*!
      * The binding number.
      */
