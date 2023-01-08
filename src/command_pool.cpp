@@ -27,13 +27,15 @@ namespace cu {
 CommandPool::CommandPool(Device::ptr l_dev, Device::QueueFlavor qflav)
     : Deviced(l_dev,
               "command pool (" + l_dev->qflav_str(qflav) + ")",
-              "CommandPool")
+              "CommandPool"),
+      flv {qflav}
+
 {
     VkCommandPoolCreateInfo inf = {
         .sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
         .pNext = NULL,
         .flags = 0,
-        .queueFamilyIndex = l_dev->queue_ndx(qflav),
+        .queueFamilyIndex = l_dev->queue_ndx(flv),
     };
 
     Vulkan::vk_try(create(l_dev->inner(), &inf, NULL, &nner),

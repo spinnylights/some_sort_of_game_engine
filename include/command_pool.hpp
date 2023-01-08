@@ -50,6 +50,11 @@ public:
     CommandPool& operator=(const CommandPool&) = delete;
 
     ~CommandPool() noexcept { Deviced::dstrct(); };
+
+    Device::QueueFlavor flav() const { return flv; }
+
+private:
+    Device::QueueFlavor flv;
 };
 
 } // namespace 
