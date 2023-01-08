@@ -89,6 +89,8 @@ public:
         }
     }
 
+    uint32_t queue_ndx(QueueFlavor f) const;
+
 private:
     VkDevice dev;
 

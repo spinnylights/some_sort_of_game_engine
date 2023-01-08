@@ -176,4 +176,9 @@ PFN_vkVoidFunction Device::get_proc_addr(const char* name)
     return fn;
 }
 
+uint32_t Device::queue_ndx(QueueFlavor f) const
+{
+    return std::get<uint32_t>(queue_map.at(f));
+}
+
 } // namespace cu
