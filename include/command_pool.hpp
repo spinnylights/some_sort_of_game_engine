@@ -32,9 +32,9 @@ namespace cu {
  * <a href="https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkCommandPool.html">command pool</a>
  * wrapper.
  */
-class CommandPool : Deviced<PFN_vkCreateCommandPool,
-                            PFN_vkDestroyCommandPool,
-                            VkCommandPool> {
+class CommandPool : public Deviced<PFN_vkCreateCommandPool,
+                                   PFN_vkDestroyCommandPool,
+                                   VkCommandPool> {
 public:
     CommandPool(Device::ptr l_dev, Device::QueueFlavor q_flav);
 
