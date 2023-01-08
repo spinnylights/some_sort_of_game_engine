@@ -36,6 +36,11 @@ class CommandPool : public Deviced<PFN_vkCreateCommandPool,
                                    PFN_vkDestroyCommandPool,
                                    VkCommandPool> {
 public:
+    /*!
+     * \brief A pointer to the CommandPool.
+     */
+    using ptr = std::shared_ptr<CommandPool>;
+
     CommandPool(Device::ptr l_dev, Device::QueueFlavor q_flav);
 
     CommandPool(CommandPool&&) = delete;
