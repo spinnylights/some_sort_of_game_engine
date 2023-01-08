@@ -72,7 +72,9 @@ public:
 private:
     VkDevice dev;
     VkQueue graphics;
+    VkQueue compute;
     VkQueue present;
+    VkQueue transfer;
 
     PFN_vkCreateDevice create_dev;
     PFN_vkGetDeviceQueue get_dev_queue;

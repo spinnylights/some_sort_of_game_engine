@@ -100,7 +100,7 @@ void QueueFamily::log_info() const
             {"transfer", transfer()},
             {"sparse binding", sparse_binding()},
             {"protected memory", protected_memory()},
-            {"present supported", present_supported()},
+            {"present supported", present()},
             {"queue count", queue_count()},
         }
     });

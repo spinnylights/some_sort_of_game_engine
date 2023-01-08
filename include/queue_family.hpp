@@ -103,7 +103,7 @@ public:
      * \brief Whether the queue family supports presentation to
      * the Surface in use.
      */
-    bool     present_supported() const { return pres_support; }
+    bool     present() const { return pres_support; }
 
     /*!
      * \brief The number of queues within the queue family.

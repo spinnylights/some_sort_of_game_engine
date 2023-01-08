@@ -170,7 +170,7 @@ void PhysDevices::populate_devs(Instance::ptr inst, Surface& surf)
                 supports_graphics = true;
             }
 
-            if (fam.present_supported()) {
+            if (fam.present()) {
                 supports_present = true;
             }
         }

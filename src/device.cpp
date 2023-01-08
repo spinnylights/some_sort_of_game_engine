@@ -29,6 +29,7 @@
 #include <functional>
 #include <algorithm>
 #include <set>
+#include <unordered_map>
 
 namespace cu {
 
@@ -63,19 +64,29 @@ Device::Device(PhysDevice& phys_dev, Instance::ptr inst)
      }
 
 {
-    uint32_t graphics_ndx = pick_queue_ndx(phys_dev,
-                                           [](QueueFamily& q) {
-                                               return q.graphics();
-                                           });
+    using queue_map =
+        std::unordered_map<std::string, std::tuple<VkQueue*,uint32_t>>;
 
-    uint32_t present_ndx = pick_queue_ndx(phys_dev,
-                                           [](QueueFamily& q) {
-                                               return q.present_supported();
-                                           });
+#define GET_QUEUE_DAT(name) \
+    {\
+        #name,\
+        {\
+            &name,\
+            pick_queue_ndx(phys_dev, [](QueueFamily& q) { return q.name(); })\
+        }\
+    }
+
+    queue_map to_queues = {
+        GET_QUEUE_DAT(graphics),
+        GET_QUEUE_DAT(compute),
+        GET_QUEUE_DAT(present),
+        GET_QUEUE_DAT(transfer),
+    };
 
     std::set<uint32_t> indices_to_create;
-    indices_to_create.insert(graphics_ndx);
-    indices_to_create.insert(present_ndx);
+    for (const auto& [_, t] : to_queues) {
+        indices_to_create.insert(std::get<uint32_t>(t));
+    }
 
     std::vector<VkDeviceQueueCreateInfo> queue_infos;
     const float queue_priority = 1.0;
@@ -135,12 +146,14 @@ Device::Device(PhysDevice& phys_dev, Instance::ptr inst)
        )
     };
 
-    get_dev_queue(dev, graphics_ndx, 0, &graphics);
-    get_dev_queue(dev, present_ndx, 0, &present);
+    for (const auto& [_, t] : to_queues) {
+        get_dev_queue(dev, std::get<uint32_t>(t), 0, std::get<VkQueue*>(t));
+    }
 
     log.indent();
-    log.enter("graphics queue index", graphics_ndx);
-    log.enter("present queue index", present_ndx);
+    for (const auto& [name, t] : to_queues) {
+        log.enter(name + " queue index", std::get<uint32_t>(t));
+    }
     log.brk();
 }
 
