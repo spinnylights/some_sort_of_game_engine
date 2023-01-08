@@ -31,9 +31,9 @@
 
 namespace cu {
 
-class ComputePipeline : private Deviced<PFN_vkCreateComputePipelines,
-                                        PFN_vkDestroyPipeline,
-                                        VkPipeline> {
+class ComputePipeline : public Deviced<PFN_vkCreateComputePipelines,
+                                       PFN_vkDestroyPipeline,
+                                       VkPipeline> {
 public:
     ComputePipeline(Device::ptr l_dev,
                     ShaderModule::ptr shader,
