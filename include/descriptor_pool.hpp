@@ -38,6 +38,12 @@ public:
                    std::vector<DescriptorSetLayout::ptr> layts);
 
     ~DescriptorPool() noexcept { Deviced::dstrct(); };
+
+private:
+    std::vector<VkDescriptorSet> desc_sets;
+
+private:
+    PFN_vkAllocateDescriptorSets alloc_desc_sets;
 };
 
 } // namespace cu 

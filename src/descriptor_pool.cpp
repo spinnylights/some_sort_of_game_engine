@@ -24,24 +24,55 @@
 
 #include "descriptor_pool.hpp"
 #include "vulkan.hpp"
+#include "descriptor_set_layout.hpp"
 
 #include <vector>
 #include <algorithm>
 #include <unordered_map>
+#include <functional>
 
 namespace cu {
+struct fold_left_fn
+{
+    template<
+        std::input_iterator I, std::sentinel_for<I> S, class T, typename F
+    >
+    constexpr auto operator()( I first, S last, T init, F f ) const
+    {
+        using U = std::decay_t<std::invoke_result_t<F&, T, std::iter_reference_t<I>>>;
+        if (first == last)
+            return U(std::move(init));
+        U accum = std::invoke(f, std::move(init), *first);
+        for (++first; first != last; ++first)
+            accum = std::invoke(f, std::move(accum), *first);
+        return std::move(accum);
+    }
+    template<
+        std::ranges::input_range R, class T, typename F >
+    constexpr auto operator()( R&& r, T init, F f ) const
+    {
+        return (*this)(std::ranges::begin(r), std::ranges::end(r), std::move(init), std::ref(f));
+    }
+};
 
+inline constexpr fold_left_fn fold_left;
 
 DescriptorPool::DescriptorPool(Device::ptr l_dev,
                                std::vector<DescriptorSetLayout::ptr>
                                    layts)
-    : Deviced(l_dev, "descriptor pool", "DescriptorPool")
+    : Deviced(l_dev, "descriptor pool", "DescriptorPool"),
+      desc_sets(layts.size()),
+      alloc_desc_sets {
+          reinterpret_cast<PFN_vkAllocateDescriptorSets>(
+              dev->get_proc_addr("vkAllocateDescriptorSets")
+          )
+      }
 {
     uint32_t max_descs = layts.size();
 
     std::unordered_map<VkDescriptorType, uint32_t> dt_allocs;
     for (auto l : layts) {
-        for (auto b : l->bindings()) {
+        for (auto b : l->innerbindings()) {
             if (dt_allocs.contains(b.descriptorType)) {
                 dt_allocs[b.descriptorType] += b.descriptorCount;
             } else {
@@ -89,6 +120,29 @@ DescriptorPool::DescriptorPool(Device::ptr l_dev,
         log.enter("count", s.descriptorCount);
     }
     log.brk();
+
+    std::vector<VkDescriptorSetLayout> layts_hs(layts.size());
+    std::transform(layts.begin(), layts.end(), layts_hs.begin(),
+                   [](auto a){ return a->inner(); });
+
+    VkDescriptorSetAllocateInfo ds_alloc_inf {
+        .sType              = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO,
+        .pNext              = NULL,
+        .descriptorPool     = nner,
+        .descriptorSetCount = max_descs,
+        .pSetLayouts        = layts_hs.data(),
+    };
+
+    Vulkan::vk_try(alloc_desc_sets(l_dev->inner(),
+                                   &ds_alloc_inf,
+                                   desc_sets.data()),
+                   "allocating descriptor sets from pool");
+
+    for (std::size_t i = 0; i < layts.size(); ++i) {
+        log.indent(1);
+        log.enter("set " + std::to_string(i) + ":");
+        layts.at(i)->log_attrs(2);
+    }
 }
 
 } // namespace cu
