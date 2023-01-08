@@ -55,16 +55,22 @@ DescriptorSetLayout::DescriptorSetLayout(Device::ptr l_dev,
     Vulkan::vk_try(create(dev->inner(), &inf, NULL, &nner),
                    "creating descriptor set layout");
 
-    log.indent();
+    log_attrs();
+}
+
+void DescriptorSetLayout::log_attrs(unsigned indent) const
+{
+    log.indent(indent);
     log.enter("name", "'" + nme + "'");
     log.enter("flags",
               vk::dscrpt_set_layout_create_flags_cstrs(inf.flags));
     log.enter("# of bindings", innerbs.size());
     log.enter("descriptors:");
-    for (const auto& b : bndgs) {
-        constexpr auto indent_bndg_log = 2;
+    for (const auto& b : innerbs) {
+        auto indent_bndg_log = indent + 1;
         b.log_attrs(indent_bndg_log);
     }
+
 }
 
 } // namespace cu
