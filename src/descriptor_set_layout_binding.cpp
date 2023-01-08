@@ -4,9 +4,10 @@
 
 namespace cu {
 
-DescriptorSetLayoutBinding::DescriptorSetLayoutBinding(DescriptorSetLayoutBindingArgs args)
+DescriptorSetLayoutBinding::
+    DescriptorSetLayoutBinding(DescriptorSetLayoutBindingArgs args)
 {
-    innr = {
+    nner = {
         .binding         = args.binding_ndx,
         .descriptorType  = v(args.type),
         .descriptorCount = args.count,
@@ -20,10 +21,10 @@ DescriptorSetLayoutBinding::DescriptorSetLayoutBinding(DescriptorSetLayoutBindin
 void DescriptorSetLayoutBinding::log_attrs(unsigned indent) const
 {
     log.indent(indent);
-    log.enter("binding", innr.binding);
-    log.enter("type", vk::dscrpt_type_str(innr.descriptorType));
-    log.enter("count", innr.descriptorCount);
-    log.enter("shader stages", vk::shader_stage_flags_cstrs(innr.stageFlags));
+    log.enter("binding", nner.binding);
+    log.enter("type", vk::dscrpt_type_str(nner.descriptorType));
+    log.enter("count", nner.descriptorCount);
+    log.enter("shader stages", vk::shader_stage_flags_cstrs(nner.stageFlags));
     log.brk();
 }
 

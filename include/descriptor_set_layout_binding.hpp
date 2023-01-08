@@ -27,23 +27,23 @@ public:
      */
     constexpr uint32_t binding_ndx()
     {
-        return innr.binding;
+        return nner.binding;
     }
 
     /*!
      * Sets the binding number.
      */
-    void binding_ndx(uint32_t new_ndx) { innr.binding = new_ndx; }
+    void binding_ndx(uint32_t new_ndx) { nner.binding = new_ndx; }
 
     /*!
      * The underlying Vulkan struct.
      */
-    constexpr VkDescriptorSetLayoutBinding inner() const { return innr; }
+    constexpr VkDescriptorSetLayoutBinding inner() const { return nner; }
 
     void log_attrs(unsigned indent = 1) const;
 
 private:
-    VkDescriptorSetLayoutBinding innr;
+    VkDescriptorSetLayoutBinding nner;
 };
 
 } // namespace cu
