@@ -35,6 +35,11 @@ CommandBuffer::CommandBuffer(Device::ptr l_dev, CommandPool::ptr cmd_pool)
           reinterpret_cast<PFN_vkBeginCommandBuffer>(
               l_dev->get_proc_addr("vkBeginCommandBuffer")
           )
+      },
+      vk_bind_pipel {
+          reinterpret_cast<PFN_vkCmdBindPipeline>(
+              l_dev->get_proc_addr("vkCmdBindPipeline")
+          )
       }
 {
     VkCommandBufferAllocateInfo inf {
@@ -65,6 +70,14 @@ void CommandBuffer::begin()
         log.indent();
         log.enter("flags", vk::cmmnd_buffer_usage_flags_cstrs(inf.flags));
     }
+    log.brk();
+}
+
+void CommandBuffer::bind_pipel(ComputePipeline& p)
+{
+    vk_bind_pipel(nner, VK_PIPELINE_BIND_POINT_COMPUTE, p.inner());
+    log.enter("Vulkan", "binding compute pipeline to command buffer from "
+              + pool->descrptn());
     log.brk();
 }
 

@@ -276,6 +276,7 @@ void Vulkan::minicomp_setup()
     CommandBuffer cmd_buff {logi_dev, cmd_pool};
 
     cmd_buff.begin();
+    cmd_buff.bind_pipel(pipel);
 }
 
 void Vulkan::add_shader(std::string name, BinFile f)

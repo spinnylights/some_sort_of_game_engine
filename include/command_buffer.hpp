@@ -25,6 +25,7 @@
 #include "vulkan_util.hpp"
 #include "device.hpp"
 #include "command_pool.hpp"
+#include "compute_pipeline.hpp"
 
 namespace cu {
 
@@ -33,6 +34,8 @@ public:
     CommandBuffer(Device::ptr l_dev, CommandPool::ptr cmd_pool);
 
     void begin();
+
+    void bind_pipel(ComputePipeline&);
 
 private:
     VkCommandBuffer nner;
@@ -43,6 +46,7 @@ private:
 private:
     PFN_vkAllocateCommandBuffers alloc;
     PFN_vkBeginCommandBuffer     vk_begin;
+    PFN_vkCmdBindPipeline        vk_bind_pipel;
 };
 
 } // namespace cu
