@@ -33,14 +33,15 @@ DescriptorSetLayout::DescriptorSetLayout(Device::ptr l_dev,
                                  const std::vector<DescriptorSetLayoutBinding>& bndgs)
     : Deviced(l_dev, "descriptor set layout '" + name + "'", "DescriptorSetLayout"),
       nme {name},
-      innerbs(bndgs.size())
+      innerbs {bndgs}
 {
     if (bndgs.size() > UINT32_MAX) {
         throw std::runtime_error("layout binding vector is too large");
     }
 
-    std::transform(bndgs.cbegin(), bndgs.cend(),
-                   innerbs.begin(),
+    std::vector<VkDescriptorSetLayoutBinding> inbndgs(innerbs.size());
+    std::transform(innerbs.cbegin(), innerbs.cend(),
+                   inbndgs.begin(),
                    [](const DescriptorSetLayoutBinding& b) { return b.inner(); });
 
     inf = {
@@ -48,7 +49,7 @@ DescriptorSetLayout::DescriptorSetLayout(Device::ptr l_dev,
         .pNext        = NULL,
         .flags        = 0,
         .bindingCount = static_cast<uint32_t>(innerbs.size()),
-        .pBindings    = innerbs.data(),
+        .pBindings    = inbndgs.data(),
     };
 
     Vulkan::vk_try(create(dev->inner(), &inf, NULL, &nner),
