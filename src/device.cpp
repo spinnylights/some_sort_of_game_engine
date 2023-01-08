@@ -29,7 +29,6 @@
 #include <functional>
 #include <algorithm>
 #include <set>
-#include <unordered_map>
 
 namespace cu {
 
@@ -51,40 +50,36 @@ uint32_t pick_queue_ndx(PhysDevice& phys_dev,
     return ndx;
 }
 
-Device::Device(PhysDevice& phys_dev, Instance::ptr inst)
-    :create_dev {
-        reinterpret_cast<PFN_vkCreateDevice>(
-            inst->get_proc_addr("vkCreateDevice")
-        )
-     },
-     get_dev_proc_addr {
-         reinterpret_cast<PFN_vkGetDeviceProcAddr>(
-             inst->get_proc_addr("vkGetDeviceProcAddr")
-         )
-     }
-
-{
-    using queue_map =
-        std::unordered_map<std::string, std::tuple<VkQueue*,uint32_t>>;
-
 #define GET_QUEUE_DAT(name) \
     {\
-        #name,\
+        name,\
         {\
-            &name,\
-            pick_queue_ndx(phys_dev, [](QueueFamily& q) { return q.name(); })\
+            pick_queue_ndx(phys_dev, [](QueueFamily& q) { return q.name(); }),\
+            {}\
         }\
     }
 
-    queue_map to_queues = {
+Device::Device(PhysDevice& phys_dev, Instance::ptr inst)
+    : queue_map {
         GET_QUEUE_DAT(graphics),
         GET_QUEUE_DAT(compute),
         GET_QUEUE_DAT(present),
         GET_QUEUE_DAT(transfer),
-    };
+    },
+      create_dev {
+         reinterpret_cast<PFN_vkCreateDevice>(
+             inst->get_proc_addr("vkCreateDevice")
+         )
+      },
+      get_dev_proc_addr {
+          reinterpret_cast<PFN_vkGetDeviceProcAddr>(
+              inst->get_proc_addr("vkGetDeviceProcAddr")
+          )
+      }
 
+{
     std::set<uint32_t> indices_to_create;
-    for (const auto& [_, t] : to_queues) {
+    for (const auto& [_, t] : queue_map) {
         indices_to_create.insert(std::get<uint32_t>(t));
     }
 
@@ -146,13 +141,16 @@ Device::Device(PhysDevice& phys_dev, Instance::ptr inst)
        )
     };
 
-    for (const auto& [_, t] : to_queues) {
-        get_dev_queue(dev, std::get<uint32_t>(t), 0, std::get<VkQueue*>(t));
+    for (const auto& [_, t] : queue_map) {
+        get_dev_queue(dev,
+                      std::get<uint32_t>(t),
+                      0,
+                      const_cast<VkQueue*>(&std::get<VkQueue>(t)));
     }
 
     log.indent();
-    for (const auto& [name, t] : to_queues) {
-        log.enter(name + " queue index", std::get<uint32_t>(t));
+    for (const auto& [flavor, t] : queue_map) {
+        log.enter(qflav_str(flavor) + " queue index", std::get<uint32_t>(t));
     }
     log.brk();
 }

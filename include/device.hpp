@@ -28,6 +28,8 @@
 
 #include <vulkan/vulkan.h>
 
+#include <unordered_map>
+
 namespace cu {
 
 /*!
@@ -69,13 +71,33 @@ public:
      */
     PFN_vkVoidFunction get_proc_addr(const char* name);
 
+    enum QueueFlavor { graphics, compute, present, transfer };
+
+    static constexpr std::string qflav_str(QueueFlavor f)
+    {
+        switch(f) {
+        case(graphics):
+            return "graphics";
+        case(compute):
+            return "compute";
+        case(present):
+            return "present";
+        case(transfer):
+            return "transfer";
+        default:
+            return "";
+        }
+    }
+
 private:
     VkDevice dev;
-    VkQueue graphics;
-    VkQueue compute;
-    VkQueue present;
-    VkQueue transfer;
 
+private:
+    using queue_map_t =
+        std::unordered_map<QueueFlavor, std::tuple<uint32_t,VkQueue>>;
+    queue_map_t queue_map;
+
+private:
     PFN_vkCreateDevice create_dev;
     PFN_vkGetDeviceQueue get_dev_queue;
     PFN_vkGetDeviceProcAddr get_dev_proc_addr;
