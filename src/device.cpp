@@ -110,6 +110,9 @@ Device::Device(PhysDevice& phys_dev, Instance::ptr inst)
 
     VkPhysicalDeviceFeatures2 dev_ftrs = phys_dev.features;
     VkPhysicalDeviceMaintenance4Features maint4_ftrs = phys_dev.maintenance4;
+    VkPhysicalDeviceTimelineSemaphoreFeatures timel_sem_ftrs
+        = phys_dev.timel_sem;
+    maint4_ftrs.pNext = &timel_sem_ftrs;
     dev_ftrs.pNext = &maint4_ftrs;
 
     VkDeviceCreateInfo dev_info = {

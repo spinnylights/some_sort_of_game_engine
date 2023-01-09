@@ -43,6 +43,18 @@ class Surface;
  *
  */
 struct PhysDevice {
+    struct PhysDeviceProps {
+        VkPhysicalDeviceTimelineSemaphoreProperties timel_props {
+            .sType =
+                VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TIMELINE_SEMAPHORE_PROPERTIES,
+        };
+
+        VkPhysicalDeviceProperties2 props {
+            .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2,
+            .pNext = &timel_props,
+        };
+    };
+
     /*!
      * \brief (constructor) PhysicalDevices is a factory for this
      * class; you may find it more convenient to use.
@@ -50,7 +62,7 @@ struct PhysDevice {
     PhysDevice(VkPhysicalDevice                     device,
                Surface&                             surf,
                Instance::ptr                        inst,
-               VkPhysicalDeviceProperties           device_props,
+               PhysDeviceProps                      device_props,
                VkPhysicalDeviceMemoryProperties     vk_memory_props,
                std::vector<VkQueueFamilyProperties> vk_queue_props,
                std::vector<std::string>
@@ -94,6 +106,12 @@ struct PhysDevice {
      * other devices from the same vendor.
      */
     uint32_t vk_vend_dev_id;
+
+    /*!
+     * \brief The maximum difference the physical device supports between the
+     * current value of a timeline semaphore and the next value.
+     */
+    uint64_t max_timel_sem_val_diff;
 
     /*!
      * \brief The amount of video memory available to the device
@@ -171,8 +189,13 @@ private:
     PFN_vkGetPhysicalDeviceFeatures2 get_phys_dev_ftrs;
 
 public:
+    VkPhysicalDeviceTimelineSemaphoreFeatures timel_sem = {
+        .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TIMELINE_SEMAPHORE_FEATURES,
+    };
+
+public:
     VkPhysicalDeviceMaintenance4Features maintenance4  = {
-        .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_FEATURES
+        .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_FEATURES,
     };
 
 public:

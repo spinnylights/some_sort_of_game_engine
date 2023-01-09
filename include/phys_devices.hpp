@@ -66,11 +66,11 @@ private:
                                                  uint32_t dev_cnt);
     std::vector<VkQueueFamilyProperties>
     get_queue_fam_props(VkPhysicalDevice& dev);
-    VkPhysicalDeviceProperties get_dev_props(VkPhysicalDevice& dev);
+    PhysDevice::PhysDeviceProps get_dev_props(VkPhysicalDevice& dev);
     VkPhysicalDeviceMemoryProperties get_mem_props(VkPhysicalDevice& dev);
 
     PFN_vkEnumeratePhysicalDevices enum_phys_devs;
-    PFN_vkGetPhysicalDeviceProperties get_phys_dev_props;
+    PFN_vkGetPhysicalDeviceProperties2 get_phys_dev_props;
     PFN_vkGetPhysicalDeviceMemoryProperties get_phys_dev_mem_props;
     PFN_vkGetPhysicalDeviceQueueFamilyProperties get_phys_dev_queue_fam_props;
     PFN_vkEnumerateDeviceExtensionProperties enum_dev_ext_props;

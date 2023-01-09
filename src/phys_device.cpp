@@ -82,20 +82,23 @@ void PhysDevice::populate_mem_props(const VkPhysicalDeviceMemoryProperties&
 PhysDevice::PhysDevice(VkPhysicalDevice                     device,
                        Surface&                             surf,
                        Instance::ptr                        inst,
-                       VkPhysicalDeviceProperties           device_props,
+                       PhysDeviceProps                      device_props,
                        VkPhysicalDeviceMemoryProperties     vk_memory_props,
                        std::vector<VkQueueFamilyProperties> vk_queue_props,
                        std::vector<std::string>
                            extensions_supported)
-    : dev               {device},
-      name              {device_props.deviceName},
-      type              {device_props.deviceType},
-      raw_vk_ver        {device_props.apiVersion},
-      raw_vk_driver_ver {device_props.driverVersion},
-      vk_vend_id        {device_props.vendorID},
-      vk_vend_dev_id    {device_props.deviceID},
-      mem               {calc_total_mem(vk_memory_props)},
-      extensions        {extensions_supported},
+    : dev                    {device},
+      name                   {device_props.props.properties.deviceName},
+      type                   {device_props.props.properties.deviceType},
+      raw_vk_ver             {device_props.props.properties.apiVersion},
+      raw_vk_driver_ver      {device_props.props.properties.driverVersion},
+      vk_vend_id             {device_props.props.properties.vendorID},
+      vk_vend_dev_id         {device_props.props.properties.deviceID},
+      max_timel_sem_val_diff {
+          device_props.timel_props.maxTimelineSemaphoreValueDifference
+      },
+      mem                    {calc_total_mem(vk_memory_props)},
+      extensions             {extensions_supported},
       get_phys_dev_ftrs {
           reinterpret_cast<PFN_vkGetPhysicalDeviceFeatures2>(
               inst->get_proc_addr("vkGetPhysicalDeviceFeatures2")
@@ -104,8 +107,13 @@ PhysDevice::PhysDevice(VkPhysicalDevice                     device,
 {
     get_queue_fams(vk_queue_props, surf, inst);
     populate_mem_props(vk_memory_props);
+    maintenance4.pNext = &timel_sem;
     features.pNext = &maintenance4;
     get_phys_dev_ftrs(dev, &features);
+
+    if (!timel_sem.timelineSemaphore) {
+        throw std::runtime_error("gpu does not support timeline semaphores");
+    }
 
     if (!maintenance4.maintenance4) {
         throw std::runtime_error("gpu does not support maintenance4");
@@ -149,6 +157,7 @@ void PhysDevice::log() const
             {"device ID", vk_vend_dev_id},
             {"device type", type},
             {"video memory", mem_str()},
+            {"max timel. sem. val. diff.", max_timel_sem_val_diff},
             {"extensions", extensions}
         }
     });

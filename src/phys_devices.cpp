@@ -57,11 +57,11 @@ std::vector<VkPhysicalDevice> PhysDevices::enumerate_devs(Instance::ptr inst,
     return potential_devs;
 }
 
-VkPhysicalDeviceProperties PhysDevices::get_dev_props(VkPhysicalDevice& dev)
+PhysDevice::PhysDeviceProps PhysDevices::get_dev_props(VkPhysicalDevice& dev)
 {
-    VkPhysicalDeviceProperties props;
+    PhysDevice::PhysDeviceProps props {};
 
-    get_phys_dev_props(dev, &props);
+    get_phys_dev_props(dev, &props.props);
 
     return props;
 }
@@ -223,8 +223,8 @@ PhysDevices::PhysDevices(Instance::ptr inst, Surface& surf)
          )
      },
      get_phys_dev_props{
-         reinterpret_cast<PFN_vkGetPhysicalDeviceProperties>(
-             inst->get_proc_addr("vkGetPhysicalDeviceProperties")
+         reinterpret_cast<PFN_vkGetPhysicalDeviceProperties2>(
+             inst->get_proc_addr("vkGetPhysicalDeviceProperties2")
          )
      },
      get_phys_dev_mem_props{
