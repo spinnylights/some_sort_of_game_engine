@@ -120,6 +120,75 @@ PhysDevice::PhysDevice(VkPhysicalDevice                     device,
     }
 }
 
+void PhysDevice::fix_pnext_chain()
+{
+    maintenance4.pNext = &timel_sem;
+    features.pNext     = &maintenance4;
+}
+
+PhysDevice::PhysDevice(const PhysDevice& other)
+    : dev                    {other.dev},
+      name                   {other.name},
+      type                   {other.type},
+      raw_vk_ver             {other.raw_vk_ver},
+      raw_vk_driver_ver      {other.raw_vk_driver_ver},
+      vk_vend_id             {other.vk_vend_id},
+      vk_vend_dev_id         {other.vk_vend_id},
+      max_timel_sem_val_diff {other.max_timel_sem_val_diff},
+      mem                    {other.mem},
+      extensions             {other.extensions},
+      get_phys_dev_ftrs      {other.get_phys_dev_ftrs},
+      timel_sem              {other.timel_sem},
+      maintenance4           {other.maintenance4},
+      features               {other.features}
+{
+    fix_pnext_chain();
+}
+
+PhysDevice& PhysDevice::operator=(const PhysDevice& other)
+{
+    PhysDevice tmp {other};
+    std::swap(*this, tmp);
+    return *this;
+}
+
+PhysDevice::PhysDevice(PhysDevice&& other)
+    : dev                    {other.dev},
+      name                   {other.name},
+      type                   {other.type},
+      raw_vk_ver             {other.raw_vk_ver},
+      raw_vk_driver_ver      {other.raw_vk_driver_ver},
+      vk_vend_id             {other.vk_vend_id},
+      vk_vend_dev_id         {other.vk_vend_id},
+      max_timel_sem_val_diff {other.max_timel_sem_val_diff},
+      mem                    {other.mem},
+      extensions             {other.extensions},
+      get_phys_dev_ftrs      {other.get_phys_dev_ftrs},
+      timel_sem              {other.timel_sem},
+      maintenance4           {other.maintenance4},
+      features               {other.features}
+{
+    fix_pnext_chain();
+
+    other.dev = nullptr;
+    other.name = "";
+    other.mem_types = {};
+    other.mem_heaps = {};
+    other.extensions = {};
+    other.queue_families = {};
+    other.get_phys_dev_ftrs = nullptr;
+    other.timel_sem = {};
+    other.maintenance4 = {};
+    other.features = {};
+}
+
+PhysDevice& PhysDevice::operator=(PhysDevice&& other)
+{
+    std::swap(*this, other);
+    fix_pnext_chain();
+    return *this;
+}
+
 PhysDevice::VkVersionNumber PhysDevice::vk_ver_spprtd() const
 {
         VkVersionNumber ver_n = {

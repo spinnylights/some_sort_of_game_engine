@@ -68,6 +68,12 @@ struct PhysDevice {
                std::vector<std::string>
                    extensions_supported);
 
+    PhysDevice(const PhysDevice&);
+    PhysDevice& operator=(const PhysDevice&);
+
+    PhysDevice(PhysDevice&&);
+    PhysDevice& operator=(PhysDevice&&);
+
     /*
      * \brief The handle wrapped by the class.
      */
@@ -184,6 +190,8 @@ private:
 
     void populate_mem_props(const VkPhysicalDeviceMemoryProperties&
                                 props);
+
+    void fix_pnext_chain();
 
 private:
     PFN_vkGetPhysicalDeviceFeatures2 get_phys_dev_ftrs;

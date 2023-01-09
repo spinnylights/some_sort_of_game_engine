@@ -48,7 +48,7 @@ public:
      * \param dev The PhysDevice in use.
      * \param inst The Instance in use.
      */
-    Device(PhysDevice& dev, Instance::ptr inst);
+    Device(PhysDevice dev, Instance::ptr inst);
 
     Device(Device&&) = delete;
     Device(const Device&) = delete;
@@ -93,6 +93,9 @@ public:
 
 private:
     VkDevice dev;
+
+private:
+    PhysDevice phys_dev;
 
 private:
     PFN_vkCreateDevice create_dev;

@@ -34,7 +34,7 @@
 
 namespace cu {
 
-Swapchain::Swapchain(PhysDevice& p_dev,
+Swapchain::Swapchain(PhysDevice p_dev,
                      Device::ptr l_dev,
                      Surface& surf,
                      SDL& sdl)

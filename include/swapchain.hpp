@@ -49,7 +49,7 @@ public:
      * \param surf The Surface in use.
      * \param sdl The SDL instance in use.
      */
-    Swapchain(PhysDevice& p_dev, Device::ptr l_dev, Surface& surf, SDL& sdl);
+    Swapchain(PhysDevice p_dev, Device::ptr l_dev, Surface& surf, SDL& sdl);
 
     Swapchain(Swapchain&&) = delete;
     Swapchain(const Swapchain&) = delete;

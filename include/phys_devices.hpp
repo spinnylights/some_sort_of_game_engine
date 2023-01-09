@@ -52,7 +52,7 @@ public:
      * \brief Returns the default physical device, chosen
      * according to a set of heuristics.
      */
-    PhysDevice& default_device() { return devs.at(default_dev); }
+    PhysDevice default_device() { return devs.at(default_dev); }
 
 private:
     std::vector<PhysDevice> devs;
