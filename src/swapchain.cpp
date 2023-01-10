@@ -49,6 +49,11 @@ Swapchain::Swapchain(PhysDevice p_dev,
             l_dev->get_proc_addr("vkGetSwapchainImagesKHR")
         )
      },
+     acquire_next_img{
+        reinterpret_cast<PFN_vkAcquireNextImageKHR>(
+            l_dev->get_proc_addr("vkAcquireNextImageKHR")
+        )
+     },
      destroy_swch{
         reinterpret_cast<PFN_vkDestroySwapchainKHR>(
             l_dev->get_proc_addr("vkDestroySwapchainKHR")
@@ -199,5 +204,54 @@ Swapchain::~Swapchain() noexcept
     log.finish();
     log.brk();
 }
+
+Image* Swapchain::next_img(VkFence fnce, VkSemaphore sem, uint64_t timeout)
+{
+    uint32_t ndx;
+
+    Vulkan::vk_try(acquire_next_img(dev->inner(),
+                                    swch,
+                                    timeout,
+                                    sem,
+                                    fnce,
+                                    &ndx),
+                   "acquire next swapchain image");
+    log.indent();
+    log.enter("index", ndx);
+    log.brk();
+
+    return &imgs.at(ndx);
+}
+
+Image* Swapchain::next_img(Fence& fnce, BinarySemaphore& sem, uint64_t timeout)
+{
+    return next_img(fnce.inner(), sem.inner(), timeout);
+}
+
+Image* Swapchain::next_img(Fence& fnce, BinarySemaphore& sem)
+{
+    return next_img(fnce.inner(), sem.inner(), UINT64_MAX);
+}
+
+Image* Swapchain::next_img(Fence& fnce, uint64_t timeout)
+{
+    return next_img(fnce.inner(), VK_NULL_HANDLE, timeout);
+}
+
+Image* Swapchain::next_img(BinarySemaphore& sem, uint64_t timeout)
+{
+    return next_img(VK_NULL_HANDLE, sem.inner(), timeout);
+}
+
+Image* Swapchain::next_img(Fence& fnce)
+{
+    return next_img(fnce.inner(), VK_NULL_HANDLE, UINT64_MAX);
+}
+
+Image* Swapchain::next_img(BinarySemaphore& sem)
+{
+    return next_img(VK_NULL_HANDLE, sem.inner(), UINT64_MAX);
+}
+
 
 } // namespace cu

@@ -25,6 +25,8 @@
 #include "image.hpp"
 #include "image_view.hpp"
 #include "device.hpp"
+#include "binary_semaphore.hpp"
+#include "fence.hpp"
 
 #include <vulkan/vulkan.h>
 
@@ -51,11 +53,20 @@ public:
      */
     Swapchain(PhysDevice p_dev, Device::ptr l_dev, Surface& surf, SDL& sdl);
 
-    Swapchain(Swapchain&&) = delete;
     Swapchain(const Swapchain&) = delete;
     Swapchain& operator=(const Swapchain&) = delete;
 
+    Swapchain(Swapchain&&) = delete;
+    Swapchain& operator=(Swapchain&&) = delete;
+
     ~Swapchain() noexcept;
+
+    Image* next_img(BinarySemaphore& sem);
+    Image* next_img(Fence& fnce);
+    Image* next_img(BinarySemaphore& sem, uint64_t timeout);
+    Image* next_img(Fence& fnce, uint64_t timeout);
+    Image* next_img(Fence& fnce, BinarySemaphore& sem);
+    Image* next_img(Fence& fnce, BinarySemaphore& sem, uint64_t timeout);
 
 private:
     VkSwapchainKHR swch;
@@ -66,7 +77,11 @@ private:
 
     PFN_vkCreateSwapchainKHR create_swch;
     PFN_vkGetSwapchainImagesKHR get_swch_imgs;
+    PFN_vkAcquireNextImageKHR acquire_next_img;
     PFN_vkDestroySwapchainKHR destroy_swch;
+
+    Image* next_img(VkFence fnce, VkSemaphore sem, uint64_t timeout);
+
 };
 
 } // namespace cu

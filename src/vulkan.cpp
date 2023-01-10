@@ -31,7 +31,7 @@
 #include "descriptor_pool.hpp"
 #include "command_pool.hpp"
 #include "command_buffer.hpp"
-#include "timeline_semaphore.hpp"
+#include "fence.hpp"
 
 #include <stdexcept>
 #include <array>
@@ -276,9 +276,12 @@ void Vulkan::minicomp_setup()
 
     CommandBuffer cmd_buff {logi_dev, cmd_pool};
 
-    TimelineSemaphore sem {logi_dev};
-    sem.incr(5);
-    sem.wait_for(5);
+    Fence fnce {logi_dev};
+
+    //Image* swch_img = swch.next_img(fnce);
+    swch.next_img(fnce);
+
+    fnce.wait();
 
     // update descriptor set with swapchain img
 
