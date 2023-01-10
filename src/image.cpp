@@ -132,16 +132,8 @@ Image::Image(VkImage existing,
 Image::Image(Image&& other)
     : _img              {other.inner()},
       _dev              {other.device()},
-      _destroy_img      {
-          reinterpret_cast<PFN_vkDestroyImage>(
-              _dev->get_proc_addr("vkDestroyImage")
-          )
-      },
-      _create_img      {
-          reinterpret_cast<PFN_vkCreateImage>(
-              _dev->get_proc_addr("vkCreateImage")
-          )
-      },
+      _destroy_img      {other._destroy_img},
+      _create_img       {other._create_img},
       _queue_fam_ndcies {other.queue_fam_indicies()},
       _extent           {other.extent()},
       _format           {other.format()},
@@ -157,6 +149,29 @@ Image::Image(Image&& other)
       _should_destroy   {other.will_be_destroyed()}
 {
     other.should_destroy(false);
+    other._queue_fam_ndcies = {};
+    other._dev = nullptr;
+}
+
+Image& Image::operator=(Image&& other)
+{
+    std::swap(_img, other._img);
+    std::swap(_dev, other._dev);
+    std::swap(_queue_fam_ndcies, other._queue_fam_ndcies);
+    std::swap(_extent, other._extent);
+    std::swap(_format, other._format);
+    std::swap(_sharing_mode, other._sharing_mode);
+    std::swap(_layout, other._layout);
+    std::swap(_usage, other._usage);
+    std::swap(_flags, other._flags);
+    std::swap(_dimens, other._dimens);
+    std::swap(_samples, other._samples);
+    std::swap(_tiling, other._tiling);
+    std::swap(_mip_lvl_cnt, other._mip_lvl_cnt);
+    std::swap(_layer_cnt, other._layer_cnt);
+    std::swap(_should_destroy, other._should_destroy);
+
+    return *this;
 }
 
 Image::~Image() noexcept
