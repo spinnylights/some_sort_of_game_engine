@@ -31,6 +31,7 @@
 #include "descriptor_pool.hpp"
 #include "command_pool.hpp"
 #include "command_buffer.hpp"
+#include "timeline_semaphore.hpp"
 
 #include <stdexcept>
 #include <array>
@@ -274,6 +275,12 @@ void Vulkan::minicomp_setup()
     auto cmd_pool = std::make_shared<CommandPool>(logi_dev, Device::compute);
 
     CommandBuffer cmd_buff {logi_dev, cmd_pool};
+
+    TimelineSemaphore sem {logi_dev};
+    sem.incr(5);
+    sem.wait_for(5);
+
+    // update descriptor set with swapchain img
 
     cmd_buff.begin();
     cmd_buff.bind_pipel(pipel);
