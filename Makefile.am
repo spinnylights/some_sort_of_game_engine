@@ -32,4 +32,5 @@ crypt_underworld_SOURCES = \
 	src/semaphore.cpp \
 	src/timeline_semaphore.cpp \
 	src/binary_semaphore.cpp \
+	src/fence.cpp \
 	src/engine.cpp
