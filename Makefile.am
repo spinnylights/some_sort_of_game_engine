@@ -29,5 +29,7 @@ crypt_underworld_SOURCES = \
 	src/descriptor_pool.cpp \
 	src/command_pool.cpp \
 	src/command_buffer.cpp \
+	src/semaphore.cpp \
 	src/timeline_semaphore.cpp \
+	src/binary_semaphore.cpp \
 	src/engine.cpp

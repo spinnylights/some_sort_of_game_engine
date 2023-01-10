@@ -22,13 +22,11 @@
 #ifndef F499663386b94ee8a21953d76da122d3
 #define F499663386b94ee8a21953d76da122d3
 
-#include "deviced.hpp"
+#include "semaphore.hpp"
 
 namespace cu {
 
-class TimelineSemaphore : Deviced<PFN_vkCreateSemaphore,
-                                 PFN_vkDestroySemaphore,
-                                 VkSemaphore> {
+class TimelineSemaphore : public Semaphore {
 public:
     explicit TimelineSemaphore(Device::ptr l_dev, uint64_t initial_val = 0);
 

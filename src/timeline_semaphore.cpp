@@ -26,7 +26,7 @@
 namespace cu {
 
 TimelineSemaphore::TimelineSemaphore(Device::ptr l_dev, uint64_t initial_val)
-    : Deviced {l_dev, "timeline semaphore", "Semaphore"},
+    : Semaphore {l_dev, initial_val},
       get_val {
           reinterpret_cast<PFN_vkGetSemaphoreCounterValue>(
               dev->get_proc_addr("vkGetSemaphoreCounterValue")
@@ -42,24 +42,7 @@ TimelineSemaphore::TimelineSemaphore(Device::ptr l_dev, uint64_t initial_val)
               dev->get_proc_addr("vkWaitSemaphores")
           )
       }
-{
-    VkSemaphoreTypeCreateInfo type_inf {
-        .sType = VK_STRUCTURE_TYPE_SEMAPHORE_TYPE_CREATE_INFO,
-        .pNext = NULL,
-        .semaphoreType = v(vk::SemaphoreType::tmlne),
-        .initialValue = initial_val,
-    };
-
-    VkSemaphoreCreateInfo inf {
-        .sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,
-        .pNext = &type_inf,
-        .flags = 0,
-    };
-
-    Vulkan::vk_try(create(dev->inner(), &inf, NULL, &nner),
-                   "creating " + descrptn());
-    log.brk();
-}
+{}
 
 uint64_t TimelineSemaphore::value() const
 {
