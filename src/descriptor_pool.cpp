@@ -139,10 +139,17 @@ DescriptorPool::DescriptorPool(Device::ptr l_dev,
                    "allocating descriptor sets from pool");
 
     for (std::size_t i = 0; i < layts.size(); ++i) {
+        desc_set_map[layts.at(i)->name()] = &desc_sets.at(i);
+
         log.indent(1);
         log.enter("set " + std::to_string(i) + ":");
         layts.at(i)->log_attrs(2);
     }
+}
+
+VkDescriptorSet DescriptorPool::operator[](std::string name)
+{
+    return *desc_set_map.at(name);
 }
 
 } // namespace cu

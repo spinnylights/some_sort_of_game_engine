@@ -27,6 +27,8 @@
 #include "descriptor_set_layout.hpp"
 
 #include <initializer_list>
+#include <unordered_map>
+#include <string>
 
 namespace cu {
 
@@ -39,7 +41,10 @@ public:
 
     ~DescriptorPool() noexcept { Deviced::dstrct(); };
 
+    VkDescriptorSet operator[](std::string name);
+
 private:
+    std::unordered_map<std::string, VkDescriptorSet*> desc_set_map;
     std::vector<VkDescriptorSet> desc_sets;
 
 private:
