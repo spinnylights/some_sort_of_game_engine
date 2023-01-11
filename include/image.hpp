@@ -23,10 +23,11 @@
 #define g78ee18adaaf43c58cfaf32de84d74b2
 
 #include "device.hpp"
+#include "vulkan_util.hpp"
 
 #include <vulkan/vulkan.h>
 
-#include "vulkan_util.hpp"
+#include <bitset>
 
 namespace cu {
 
@@ -221,12 +222,28 @@ public:
      */
     VkImageViewType view_type() const;
 
+    /*!
+     * \brief The size the image takes up in memory, in bytes.
+     */
+    VkDeviceSize mem_size() const;
+
+    /*!
+     * \brief The required alignment of the image in memory, in bytes.
+     */
+    VkDeviceSize alignment() const;
+
+    /*!
+     * \brief Whether the Vulkan memory type supports this image.
+     */
+    bool mem_type_supported(MemoryType type) const;
+
 private:
     VkImage               _img;
     Device::ptr       _dev;
 
     PFN_vkDestroyImage    _destroy_img;
     PFN_vkCreateImage     _create_img;
+    PFN_vkGetImageMemoryRequirements get_mem_reqs;
 
     std::vector<uint32_t> _queue_fam_ndcies;
     VkExtent3D            _extent;
@@ -242,6 +259,10 @@ private:
     uint32_t              _layer_cnt;
 
     bool                  _should_destroy;
+
+private:
+    VkMemoryRequirements mem_reqs {};
+    std::bitset<32>      supported_types;
 };
 
 } // namespace cu

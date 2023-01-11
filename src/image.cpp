@@ -41,6 +41,11 @@ Image::Image(Device::ptr l_dev, const Image::params& ps)
               _dev->get_proc_addr("vkCreateImage")
           )
       },
+      get_mem_reqs      {
+          reinterpret_cast<PFN_vkGetImageMemoryRequirements>(
+              _dev->get_proc_addr("vkGetImageMemoryRequirements")
+          )
+      },
       _queue_fam_ndcies {ps.queue_fam_ndcies},
       _extent           {ps.extent},
       _format           {ps.format},
@@ -76,6 +81,10 @@ Image::Image(Device::ptr l_dev, const Image::params& ps)
 
     Vulkan::vk_try(_create_img(_dev->inner(), &create_inf, NULL, &_img),
                    "create image");
+    log.brk();
+
+    get_mem_reqs(_dev->inner(), _img, &mem_reqs);
+    supported_types = {mem_reqs.memoryTypeBits};
 }
 
 Image::Image(VkImage existing,
@@ -94,6 +103,11 @@ Image::Image(VkImage existing,
               _dev->get_proc_addr("vkCreateImage")
           )
       },
+      get_mem_reqs      {
+          reinterpret_cast<PFN_vkGetImageMemoryRequirements>(
+              _dev->get_proc_addr("vkGetImageMemoryRequirements")
+          )
+      },
       _queue_fam_ndcies {ps.queue_fam_ndcies},
       _extent           {ps.extent},
       _format           {ps.format},
@@ -108,6 +122,9 @@ Image::Image(VkImage existing,
       _layer_cnt        {ps.layer_cnt},
       _should_destroy   {destroy}
 {
+    get_mem_reqs(_dev->inner(), _img, &mem_reqs);
+    supported_types = {mem_reqs.memoryTypeBits};
+
     log.enter("Vulkan: new image from existing VkImage");
     log.indent();
     log.enter("flags", vk::img_create_flags_cstrs(_flags));
@@ -146,7 +163,9 @@ Image::Image(Image&& other)
       _tiling           {other.tiling()},
       _mip_lvl_cnt      {other.mip_lvl_cnt()},
       _layer_cnt        {other.layer_cnt()},
-      _should_destroy   {other.will_be_destroyed()}
+      _should_destroy   {other.will_be_destroyed()},
+      mem_reqs          {other.mem_reqs},
+      supported_types   {other.supported_types}
 {
     other.should_destroy(false);
     other._queue_fam_ndcies = {};
@@ -170,6 +189,8 @@ Image& Image::operator=(Image&& other)
     std::swap(_mip_lvl_cnt, other._mip_lvl_cnt);
     std::swap(_layer_cnt, other._layer_cnt);
     std::swap(_should_destroy, other._should_destroy);
+    std::swap(mem_reqs, other.mem_reqs);
+    std::swap(supported_types, other.supported_types);
 
     return *this;
 }
@@ -228,4 +249,18 @@ VkImageViewType Image::view_type() const
     return VK_IMAGE_VIEW_TYPE_2D;
 }
 
+VkDeviceSize Image::mem_size() const
+{
+    return mem_reqs.size;
+}
+
+VkDeviceSize Image::alignment() const
+{
+    return mem_reqs.alignment;
+}
+
+bool Image::mem_type_supported(MemoryType type) const
+{
+    return supported_types.test(type.ndx());
+}
 } // namespace cu
