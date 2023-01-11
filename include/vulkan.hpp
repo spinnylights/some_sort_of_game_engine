@@ -39,6 +39,15 @@ namespace cu {
 
 class SDL;
 
+#define STRINGIFY(arg) #arg
+
+#define GET_VK_FN_PTR(member_name,vk_fn)\
+    member_name {\
+        reinterpret_cast<PFN_vk##vk_fn>(\
+            dev->get_proc_addr(STRINGIFY(vk##vk_fn))\
+        )\
+    }
+
 /*!
  * \brief The entry point into the Vulkan code; coordinates the
  * activity of the Vulkan classes.
