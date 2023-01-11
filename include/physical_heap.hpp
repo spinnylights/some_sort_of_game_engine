@@ -22,9 +22,12 @@
 #ifndef j09deaa7dd594f34b457535d3b79dfb0
 #define j09deaa7dd594f34b457535d3b79dfb0
 
+#include "memory_type.hpp"
+
 #include <vulkan/vulkan.h>
 
 #include <cstddef>
+#include <vector>
 
 namespace cu {
 
@@ -34,6 +37,7 @@ namespace cu {
 struct PhysicalHeap {
     VkMemoryHeap inner;
     std::size_t  _ndx;
+    std::vector<MemoryType> mem_types;
 
     /*!
      * \brief The Vulkan index of the memory heap.

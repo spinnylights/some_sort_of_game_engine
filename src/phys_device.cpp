@@ -76,6 +76,12 @@ void PhysDevice::populate_mem_props(const VkPhysicalDeviceMemoryProperties&
             .inner = props.memoryHeaps[i],
             ._ndx  = i,
         });
+
+        for (const auto& type : mem_types) {
+            if (type.heap_ndx() == i) {
+                mem_heaps.back().mem_types.push_back(type);
+            }
+        }
     }
 }
 
