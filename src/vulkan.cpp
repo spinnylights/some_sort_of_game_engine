@@ -318,6 +318,14 @@ void Vulkan::minicomp_setup()
 
     cmd_buff.begin();
     cmd_buff.bind(pipel, {descpool["scratch image"]});
+    cmd_buff.barrier(scratch,
+                     vk::PipelineStageFlag::top_of_pipe,
+                     vk::PipelineStageFlag::cmpte_shader,
+                     vk::AccessFlag::none,
+                     vk::AccessFlag::shader_write,
+                     vk::ImageLayout::undfnd,
+                     vk::ImageLayout::gnrl,
+                     vk::ImageAspectFlag::color);
     cmd_buff.dispatch(scratch.extent().width, scratch.extent().height);
 }
 

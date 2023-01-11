@@ -26,6 +26,7 @@
 #include "device.hpp"
 #include "command_pool.hpp"
 #include "compute_pipeline.hpp"
+#include "image.hpp"
 
 namespace cu {
 
@@ -46,6 +47,15 @@ public:
     void dispatch(uint32_t x, uint32_t y);
     void dispatch(uint32_t x, uint32_t y, uint32_t z);
 
+    void barrier(Image&                      img,
+                 vk::PipelineStageFlag       src_stage,
+                 vk::PipelineStageFlag       dst_stage,
+                 vk::AccessFlag              src_access,
+                 vk::AccessFlag              dst_access,
+                 vk::ImageLayout             old_layt,
+                 vk::ImageLayout             new_layt,
+                 vk::ImageAspectFlag         aspect);
+
 private:
     VkCommandBuffer nner;
 
@@ -57,6 +67,7 @@ private:
     PFN_vkBeginCommandBuffer     vk_begin;
     PFN_vkCmdBindPipeline        bind_pipel;
     PFN_vkCmdBindDescriptorSets  bind_desc_sets;
+    PFN_vkCmdPipelineBarrier     pipel_barr;
     PFN_vkCmdDispatch            vk_dispatch;
 };
 

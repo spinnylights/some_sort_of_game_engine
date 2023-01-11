@@ -46,6 +46,11 @@ CommandBuffer::CommandBuffer(Device::ptr l_dev, CommandPool::ptr cmd_pool)
               l_dev->get_proc_addr("vkCmdBindDescriptorSets")
           )
       },
+      pipel_barr {
+          reinterpret_cast<PFN_vkCmdPipelineBarrier>(
+              l_dev->get_proc_addr("vkCmdPipelineBarrier")
+          )
+      },
       vk_dispatch {
           reinterpret_cast<PFN_vkCmdDispatch>(
               l_dev->get_proc_addr("vkCmdDispatch")
@@ -137,6 +142,51 @@ void CommandBuffer::dispatch(uint32_t x, uint32_t y)
 void CommandBuffer::dispatch(uint32_t x)
 {
     dispatch(x, 1, 1);
+}
+
+void CommandBuffer::barrier(Image&                 img,
+                            vk::PipelineStageFlag  src_stage,
+                            vk::PipelineStageFlag  dst_stage,
+                            vk::AccessFlag         src_access,
+                            vk::AccessFlag         dst_access,
+                            vk::ImageLayout        old_layt,
+                            vk::ImageLayout        new_layt,
+                            vk::ImageAspectFlag    aspect)
+{
+    VkImageMemoryBarrier barr {
+        .sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,
+        .pNext = NULL,
+        .srcAccessMask = flgs(src_access),
+        .dstAccessMask = flgs(dst_access),
+        .oldLayout     = v(old_layt),
+        .newLayout     = v(new_layt),
+        .image         = img.inner(),
+        .subresourceRange = {
+            .aspectMask = flgs(aspect),
+            .levelCount = 1,
+            .layerCount = 1,
+        }
+    };
+
+    pipel_barr(nner,
+               flgs(src_stage),
+               flgs(dst_stage),
+               1,
+               0, NULL,
+               0, NULL,
+               1, &barr);
+
+    log.enter("Vulkan", "recording pipeline barrier to command buffer from "
+              + pool->descrptn());
+    log.indent();
+    log.enter("source stage", vk::pplne_stage_flag_str(src_stage));
+    log.enter("dest. stage", vk::pplne_stage_flag_str(dst_stage));
+    log.enter("source access", vk::access_flag_str(src_access));
+    log.enter("dest. access", vk::access_flag_str(dst_access));
+    log.enter("old image layout", vk::img_layout_str(old_layt));
+    log.enter("new image layout", vk::img_layout_str(new_layt));
+    log.enter("image aspects", vk::img_aspect_flag_str(aspect));
+    log.brk();
 }
 
 } // namespace cu
