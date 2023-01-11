@@ -205,7 +205,7 @@ Swapchain::~Swapchain() noexcept
     log.brk();
 }
 
-Image* Swapchain::next_img(VkFence fnce, VkSemaphore sem, uint64_t timeout)
+ImageView* Swapchain::next_img(VkFence fnce, VkSemaphore sem, uint64_t timeout)
 {
     uint32_t ndx;
 
@@ -220,35 +220,35 @@ Image* Swapchain::next_img(VkFence fnce, VkSemaphore sem, uint64_t timeout)
     log.enter("index", ndx);
     log.brk();
 
-    return &imgs.at(ndx);
+    return &_img_views.at(ndx);
 }
 
-Image* Swapchain::next_img(Fence& fnce, BinarySemaphore& sem, uint64_t timeout)
+ImageView* Swapchain::next_img(Fence& fnce, BinarySemaphore& sem, uint64_t timeout)
 {
     return next_img(fnce.inner(), sem.inner(), timeout);
 }
 
-Image* Swapchain::next_img(Fence& fnce, BinarySemaphore& sem)
+ImageView* Swapchain::next_img(Fence& fnce, BinarySemaphore& sem)
 {
     return next_img(fnce.inner(), sem.inner(), UINT64_MAX);
 }
 
-Image* Swapchain::next_img(Fence& fnce, uint64_t timeout)
+ImageView* Swapchain::next_img(Fence& fnce, uint64_t timeout)
 {
     return next_img(fnce.inner(), VK_NULL_HANDLE, timeout);
 }
 
-Image* Swapchain::next_img(BinarySemaphore& sem, uint64_t timeout)
+ImageView* Swapchain::next_img(BinarySemaphore& sem, uint64_t timeout)
 {
     return next_img(VK_NULL_HANDLE, sem.inner(), timeout);
 }
 
-Image* Swapchain::next_img(Fence& fnce)
+ImageView* Swapchain::next_img(Fence& fnce)
 {
     return next_img(fnce.inner(), VK_NULL_HANDLE, UINT64_MAX);
 }
 
-Image* Swapchain::next_img(BinarySemaphore& sem)
+ImageView* Swapchain::next_img(BinarySemaphore& sem)
 {
     return next_img(VK_NULL_HANDLE, sem.inner(), UINT64_MAX);
 }

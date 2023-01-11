@@ -61,12 +61,12 @@ public:
 
     ~Swapchain() noexcept;
 
-    Image* next_img(BinarySemaphore& sem);
-    Image* next_img(Fence& fnce);
-    Image* next_img(BinarySemaphore& sem, uint64_t timeout);
-    Image* next_img(Fence& fnce, uint64_t timeout);
-    Image* next_img(Fence& fnce, BinarySemaphore& sem);
-    Image* next_img(Fence& fnce, BinarySemaphore& sem, uint64_t timeout);
+    ImageView* next_img(BinarySemaphore& sem);
+    ImageView* next_img(Fence& fnce);
+    ImageView* next_img(BinarySemaphore& sem, uint64_t timeout);
+    ImageView* next_img(Fence& fnce, uint64_t timeout);
+    ImageView* next_img(Fence& fnce, BinarySemaphore& sem);
+    ImageView* next_img(Fence& fnce, BinarySemaphore& sem, uint64_t timeout);
 
 private:
     VkSwapchainKHR swch;
@@ -80,7 +80,7 @@ private:
     PFN_vkAcquireNextImageKHR acquire_next_img;
     PFN_vkDestroySwapchainKHR destroy_swch;
 
-    Image* next_img(VkFence fnce, VkSemaphore sem, uint64_t timeout);
+    ImageView* next_img(VkFence fnce, VkSemaphore sem, uint64_t timeout);
 
 };
 
