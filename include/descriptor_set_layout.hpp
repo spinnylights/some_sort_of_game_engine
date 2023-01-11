@@ -31,6 +31,11 @@
 
 namespace cu {
 
+/*!
+ * \brief A <a
+ * href="https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDescriptorSetLayout.html">VkDescriptorSetLayout</a>
+ * wrapper.
+ */
 class DescriptorSetLayout : public Deviced<PFN_vkCreateDescriptorSetLayout,
                                            PFN_vkDestroyDescriptorSetLayout,
                                            VkDescriptorSetLayout> {
