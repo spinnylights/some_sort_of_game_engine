@@ -726,7 +726,10 @@ class EnumClass
         )
       end
 
-      els
+      els + vk_xml.css(
+        "extension[name=VK_KHR_swapchain] > require > " \
+        + "enum[extends=#{name.vk_name}]"
+      )
     end.map do |val|
       val_name_class.new(
         val['name'],

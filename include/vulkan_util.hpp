@@ -57,6 +57,7 @@ enum class ImageLayout {
     stncl_read_only_optml = VK_IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL,
     read_only_optml = VK_IMAGE_LAYOUT_READ_ONLY_OPTIMAL,
     attchmt_optml = VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL,
+    prsnt_src = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
 };
 
 constexpr std::string img_layout_str(ImageLayout val)
@@ -98,6 +99,8 @@ constexpr std::string img_layout_str(ImageLayout val)
         return "read only optimal";
     case attchmt_optml:
         return "attachment optimal";
+    case prsnt_src:
+        return "present src";
     default:
         return std::to_string(static_cast<int>(val));
     }
@@ -2122,6 +2125,14 @@ enum class StructureType {
     physcl_device_mntnnc_4_prprts = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_PROPERTIES,
     device_buffer_memory_rqrmnts = VK_STRUCTURE_TYPE_DEVICE_BUFFER_MEMORY_REQUIREMENTS,
     device_img_memory_rqrmnts = VK_STRUCTURE_TYPE_DEVICE_IMAGE_MEMORY_REQUIREMENTS,
+    swpchn_create_info = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR,
+    prsnt_info = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
+    device_group_prsnt_cpblts = VK_STRUCTURE_TYPE_DEVICE_GROUP_PRESENT_CAPABILITIES_KHR,
+    img_swpchn_create_info = VK_STRUCTURE_TYPE_IMAGE_SWAPCHAIN_CREATE_INFO_KHR,
+    bind_img_memory_swpchn_info = VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_SWAPCHAIN_INFO_KHR,
+    acqre_next_img_info = VK_STRUCTURE_TYPE_ACQUIRE_NEXT_IMAGE_INFO_KHR,
+    device_group_prsnt_info = VK_STRUCTURE_TYPE_DEVICE_GROUP_PRESENT_INFO_KHR,
+    device_group_swpchn_create_info = VK_STRUCTURE_TYPE_DEVICE_GROUP_SWAPCHAIN_CREATE_INFO_KHR,
 };
 
 constexpr std::string strctr_type_str(StructureType val)
@@ -2561,6 +2572,22 @@ constexpr std::string strctr_type_str(StructureType val)
         return "device buffer memory requirements";
     case device_img_memory_rqrmnts:
         return "device image memory requirements";
+    case swpchn_create_info:
+        return "swapchain create info";
+    case prsnt_info:
+        return "present info";
+    case device_group_prsnt_cpblts:
+        return "device group present capabilities";
+    case img_swpchn_create_info:
+        return "image swapchain create info";
+    case bind_img_memory_swpchn_info:
+        return "bind image memory swapchain info";
+    case acqre_next_img_info:
+        return "acquire next image info";
+    case device_group_prsnt_info:
+        return "device group present info";
+    case device_group_swpchn_create_info:
+        return "device group swapchain create info";
     default:
         return std::to_string(static_cast<int>(val));
     }
@@ -2626,6 +2653,8 @@ enum class Result {
     error_frgmntn = VK_ERROR_FRAGMENTATION,
     error_invld_opaque_cptre_addrss = VK_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS,
     pplne_cmple_rqrd = VK_PIPELINE_COMPILE_REQUIRED,
+    sbptml = VK_SUBOPTIMAL_KHR,
+    error_out_of_date = VK_ERROR_OUT_OF_DATE_KHR,
 };
 
 constexpr std::string result_str(Result val)
@@ -2681,6 +2710,10 @@ constexpr std::string result_str(Result val)
         return "error invalid opaque capture address";
     case pplne_cmple_rqrd:
         return "pipeline compile required";
+    case sbptml:
+        return "suboptimal";
+    case error_out_of_date:
+        return "error out of date";
     default:
         return std::to_string(static_cast<int>(val));
     }
@@ -2841,6 +2874,7 @@ enum class ObjectType {
     smplr_ycbcr_cnvrsn = VK_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION,
     dscrpt_update_tmplte = VK_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE,
     prvte_data_slot = VK_OBJECT_TYPE_PRIVATE_DATA_SLOT,
+    swpchn = VK_OBJECT_TYPE_SWAPCHAIN_KHR,
 };
 
 constexpr std::string object_type_str(ObjectType val)
@@ -2906,6 +2940,8 @@ constexpr std::string object_type_str(ObjectType val)
         return "descriptor update template";
     case prvte_data_slot:
         return "private data slot";
+    case swpchn:
+        return "swapchain";
     default:
         return std::to_string(static_cast<int>(val));
     }
@@ -6975,6 +7011,50 @@ constexpr std::vector<const char*> device_group_prsnt_mode_flags_cstrs(VkDeviceG
 }
 
 /*!
+ * \brief Maps to VkSwapchainCreateFlagBitsKHR. Should be safe to static_cast between.
+ */
+enum class SwapchainCreateFlag {
+    split_instnc_bind_rgns = VK_SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR,
+    prtctd = VK_SWAPCHAIN_CREATE_PROTECTED_BIT_KHR,
+};
+
+constexpr std::string swpchn_create_flag_str(SwapchainCreateFlag val)
+{
+    using enum SwapchainCreateFlag;
+
+    switch(val) {
+    case split_instnc_bind_rgns:
+        return "split instance bind regions";
+    case prtctd:
+        return "protected";
+    default:
+        return std::to_string(static_cast<int>(val));
+    }
+}
+
+constexpr std::string swpchn_create_flag_str(VkSwapchainCreateFlagBitsKHR val)
+{
+    return swpchn_create_flag_str(static_cast<SwapchainCreateFlag>(val));
+}
+
+using SwapchainCreateFlags = VkSwapchainCreateFlagsKHR;
+
+constexpr std::vector<const char*> swpchn_create_flags_cstrs(VkSwapchainCreateFlagsKHR vals)
+{
+    std::vector<const char*> cstrs;
+
+    if (vals & VK_SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR) {
+        cstrs.push_back("split instance bind regions");
+    }
+
+    if (vals & VK_SWAPCHAIN_CREATE_PROTECTED_BIT_KHR) {
+        cstrs.push_back("protected");
+    }
+
+    return cstrs;
+}
+
+/*!
  * \brief Maps to VkDescriptorBindingFlagBits. Should be safe to static_cast between.
  */
 enum class DescriptorBindingFlag {
@@ -8185,6 +8265,11 @@ constexpr VkDeviceGroupPresentModeFlagBitsKHR v(vk::DeviceGroupPresentModeFlag t
     return static_cast<VkDeviceGroupPresentModeFlagBitsKHR>(t);
 }
 
+constexpr VkSwapchainCreateFlagBitsKHR v(vk::SwapchainCreateFlag t)
+{
+    return static_cast<VkSwapchainCreateFlagBitsKHR>(t);
+}
+
 constexpr VkDescriptorBindingFlagBits v(vk::DescriptorBindingFlag t)
 {
     return static_cast<VkDescriptorBindingFlagBits>(t);
@@ -8493,6 +8578,11 @@ constexpr vk::MemoryAllocateFlags flgs(vk::MemoryAllocateFlag t)
 constexpr vk::DeviceGroupPresentModeFlags flgs(vk::DeviceGroupPresentModeFlag t)
 {
     return static_cast<vk::DeviceGroupPresentModeFlags>(t);
+}
+
+constexpr vk::SwapchainCreateFlags flgs(vk::SwapchainCreateFlag t)
+{
+    return static_cast<vk::SwapchainCreateFlags>(t);
 }
 
 constexpr vk::DescriptorBindingFlags flgs(vk::DescriptorBindingFlag t)
