@@ -75,7 +75,7 @@ CommandBuffer::CommandBuffer(Device::ptr l_dev, CommandPool::ptr cmd_pool)
     log.brk();
 }
 
-void CommandBuffer::begin()
+CommandBuffer& CommandBuffer::begin()
 {
     VkCommandBufferBeginInfo inf = {
         .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
@@ -91,19 +91,23 @@ void CommandBuffer::begin()
         log.enter("flags", vk::cmmnd_buffer_usage_flags_cstrs(inf.flags));
     }
     log.brk();
+
+    return *this;
 }
 
-void CommandBuffer::bind(ComputePipeline& p)
+CommandBuffer& CommandBuffer::bind(ComputePipeline& p)
 {
     bind_pipel(nner, VK_PIPELINE_BIND_POINT_COMPUTE, p.inner());
     log.enter("Vulkan", "binding compute pipeline to command buffer from "
               + pool->descrptn());
     log.brk();
+
+    return *this;
 }
 
-void CommandBuffer::bind(ComputePipeline& p,
-                         uint32_t set_bndng_offset,
-                         std::vector<VkDescriptorSet> sets)
+CommandBuffer& CommandBuffer::bind(ComputePipeline& p,
+                                   uint32_t set_bndng_offset,
+                                   std::vector<VkDescriptorSet> sets)
 {
     bind(p);
 
@@ -119,15 +123,17 @@ void CommandBuffer::bind(ComputePipeline& p,
     log.enter("Vulkan", "binding desc sets to command buffer from "
               + pool->descrptn());
     log.brk();
+
+    return *this;
 }
 
-void CommandBuffer::bind(ComputePipeline& p,
+CommandBuffer& CommandBuffer::bind(ComputePipeline& p,
                          std::vector<VkDescriptorSet> sets)
 {
-    bind(p, 0, sets);
+    return bind(p, 0, sets);
 }
 
-void CommandBuffer::dispatch(uint32_t x, uint32_t y, uint32_t z)
+CommandBuffer& CommandBuffer::dispatch(uint32_t x, uint32_t y, uint32_t z)
 {
     vk_dispatch(nner, x, y, z);
     log.enter("Vulkan", "recording dispatch to command buffer from "
@@ -137,19 +143,21 @@ void CommandBuffer::dispatch(uint32_t x, uint32_t y, uint32_t z)
     if (y > 1) log.enter("y", y);
     if (z > 1) log.enter("z", z);
     log.brk();
+
+    return *this;
 }
 
-void CommandBuffer::dispatch(uint32_t x, uint32_t y)
+CommandBuffer& CommandBuffer::dispatch(uint32_t x, uint32_t y)
 {
-    dispatch(x, y, 1);
+    return dispatch(x, y, 1);
 }
 
-void CommandBuffer::dispatch(uint32_t x)
+CommandBuffer& CommandBuffer::dispatch(uint32_t x)
 {
-    dispatch(x, 1, 1);
+    return dispatch(x, 1, 1);
 }
 
-void CommandBuffer::barrier(Image&                 img,
+CommandBuffer& CommandBuffer::barrier(Image&                 img,
                             vk::PipelineStageFlag  src_stage,
                             vk::PipelineStageFlag  dst_stage,
                             vk::AccessFlag         src_access,
@@ -192,13 +200,17 @@ void CommandBuffer::barrier(Image&                 img,
     log.enter("new image layout", vk::img_layout_str(new_layt));
     log.enter("image aspects", vk::img_aspect_flag_str(aspect));
     log.brk();
+
+    return *this;
 }
 
-void CommandBuffer::end()
+CommandBuffer& CommandBuffer::end()
 {
     Vulkan::vk_try(vk_end(nner),
                    "ending command buffer from " + pool->descrptn());
     log.brk();
+
+    return *this;
 }
 
 } // namespace cu

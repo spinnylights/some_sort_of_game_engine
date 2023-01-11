@@ -316,18 +316,18 @@ void Vulkan::minicomp_setup()
             .storage_image("scratch image", 0, 0, &scratch_v)
             .submit();
 
-    cmd_buff.begin();
-    cmd_buff.bind(pipel, {descpool["scratch image"]});
-    cmd_buff.barrier(scratch,
+    cmd_buff.begin()
+            .bind(pipel, {descpool["scratch image"]})
+            .barrier(scratch,
                      vk::PipelineStageFlag::top_of_pipe,
                      vk::PipelineStageFlag::cmpte_shader,
                      vk::AccessFlag::none,
                      vk::AccessFlag::shader_write,
                      vk::ImageLayout::undfnd,
                      vk::ImageLayout::gnrl,
-                     vk::ImageAspectFlag::color);
-    cmd_buff.dispatch(scratch.extent().width, scratch.extent().height);
-    cmd_buff.end();
+                     vk::ImageAspectFlag::color)
+            .dispatch(scratch.extent().width, scratch.extent().height)
+            .end();
 
     Fence scratch_fnce {logi_dev};
 

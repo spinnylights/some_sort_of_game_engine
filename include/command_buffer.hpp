@@ -34,29 +34,29 @@ class CommandBuffer {
 public:
     CommandBuffer(Device::ptr l_dev, CommandPool::ptr cmd_pool);
 
-    void begin();
+    CommandBuffer& begin();
 
-    void bind(ComputePipeline&);
-    void bind(ComputePipeline&, std::vector<VkDescriptorSet>);
-    void bind(ComputePipeline&,
-              uint32_t set_bndng_offset,
-              std::vector<VkDescriptorSet>);
+    CommandBuffer& bind(ComputePipeline&);
+    CommandBuffer& bind(ComputePipeline&, std::vector<VkDescriptorSet>);
+    CommandBuffer& bind(ComputePipeline&,
+                        uint32_t set_bndng_offset,
+                        std::vector<VkDescriptorSet>);
     // TODO: dynamic offsets
 
-    void dispatch(uint32_t x);
-    void dispatch(uint32_t x, uint32_t y);
-    void dispatch(uint32_t x, uint32_t y, uint32_t z);
+    CommandBuffer& dispatch(uint32_t x);
+    CommandBuffer& dispatch(uint32_t x, uint32_t y);
+    CommandBuffer& dispatch(uint32_t x, uint32_t y, uint32_t z);
 
-    void barrier(Image&                      img,
-                 vk::PipelineStageFlag       src_stage,
-                 vk::PipelineStageFlag       dst_stage,
-                 vk::AccessFlag              src_access,
-                 vk::AccessFlag              dst_access,
-                 vk::ImageLayout             old_layt,
-                 vk::ImageLayout             new_layt,
-                 vk::ImageAspectFlag         aspect);
+    CommandBuffer& barrier(Image&                      img,
+                           vk::PipelineStageFlag       src_stage,
+                           vk::PipelineStageFlag       dst_stage,
+                           vk::AccessFlag              src_access,
+                           vk::AccessFlag              dst_access,
+                           vk::ImageLayout             old_layt,
+                           vk::ImageLayout             new_layt,
+                           vk::ImageAspectFlag         aspect);
 
-    void end();
+    CommandBuffer& end();
 
     const VkCommandBuffer* inner() const { return &nner; }
 
