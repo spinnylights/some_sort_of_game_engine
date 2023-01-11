@@ -42,6 +42,10 @@ public:
               std::vector<VkDescriptorSet>);
     // TODO: dynamic offsets
 
+    void dispatch(uint32_t x);
+    void dispatch(uint32_t x, uint32_t y);
+    void dispatch(uint32_t x, uint32_t y, uint32_t z);
+
 private:
     VkCommandBuffer nner;
 
@@ -53,6 +57,7 @@ private:
     PFN_vkBeginCommandBuffer     vk_begin;
     PFN_vkCmdBindPipeline        bind_pipel;
     PFN_vkCmdBindDescriptorSets  bind_desc_sets;
+    PFN_vkCmdDispatch            vk_dispatch;
 };
 
 } // namespace cu

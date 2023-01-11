@@ -45,6 +45,11 @@ CommandBuffer::CommandBuffer(Device::ptr l_dev, CommandPool::ptr cmd_pool)
           reinterpret_cast<PFN_vkCmdBindDescriptorSets>(
               l_dev->get_proc_addr("vkCmdBindDescriptorSets")
           )
+      },
+      vk_dispatch {
+          reinterpret_cast<PFN_vkCmdDispatch>(
+              l_dev->get_proc_addr("vkCmdDispatch")
+          )
       }
 {
     VkCommandBufferAllocateInfo inf {
@@ -110,6 +115,28 @@ void CommandBuffer::bind(ComputePipeline& p,
                          std::vector<VkDescriptorSet> sets)
 {
     bind(p, 0, sets);
+}
+
+void CommandBuffer::dispatch(uint32_t x, uint32_t y, uint32_t z)
+{
+    vk_dispatch(nner, x, y, z);
+    log.enter("Vulkan", "recording dispatch to command buffer from "
+              + pool->descrptn());
+    log.indent();
+    log.enter("x", x);
+    if (y > 1) log.enter("y", y);
+    if (z > 1) log.enter("z", z);
+    log.brk();
+}
+
+void CommandBuffer::dispatch(uint32_t x, uint32_t y)
+{
+    dispatch(x, y, 1);
+}
+
+void CommandBuffer::dispatch(uint32_t x)
+{
+    dispatch(x, 1, 1);
 }
 
 } // namespace cu

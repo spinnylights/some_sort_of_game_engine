@@ -318,6 +318,7 @@ void Vulkan::minicomp_setup()
 
     cmd_buff.begin();
     cmd_buff.bind(pipel, {descpool["scratch image"]});
+    cmd_buff.dispatch(scratch.extent().width, scratch.extent().height);
 }
 
 void Vulkan::add_shader(std::string name, BinFile f)
