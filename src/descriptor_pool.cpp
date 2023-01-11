@@ -32,6 +32,9 @@
 #include <functional>
 
 namespace cu {
+
+// from https://en.cppreference.com/w/cpp/algorithm/ranges/fold_left, coming in
+// the stdlib in C++23
 struct fold_left_fn
 {
     template<
