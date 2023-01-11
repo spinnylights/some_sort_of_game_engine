@@ -51,8 +51,8 @@ private:
 private:
     PFN_vkAllocateCommandBuffers alloc;
     PFN_vkBeginCommandBuffer     vk_begin;
-    PFN_vkCmdBindPipeline        vk_bind_pipel;
-    PFN_vkCmdBindDescriptorSets  vk_bind_desc_sets;
+    PFN_vkCmdBindPipeline        bind_pipel;
+    PFN_vkCmdBindDescriptorSets  bind_desc_sets;
 };
 
 } // namespace cu

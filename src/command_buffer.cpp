@@ -36,12 +36,12 @@ CommandBuffer::CommandBuffer(Device::ptr l_dev, CommandPool::ptr cmd_pool)
               l_dev->get_proc_addr("vkBeginCommandBuffer")
           )
       },
-      vk_bind_pipel {
+      bind_pipel {
           reinterpret_cast<PFN_vkCmdBindPipeline>(
               l_dev->get_proc_addr("vkCmdBindPipeline")
           )
       },
-      vk_bind_desc_sets {
+      bind_desc_sets {
           reinterpret_cast<PFN_vkCmdBindDescriptorSets>(
               l_dev->get_proc_addr("vkCmdBindDescriptorSets")
           )
@@ -80,7 +80,7 @@ void CommandBuffer::begin()
 
 void CommandBuffer::bind(ComputePipeline& p)
 {
-    vk_bind_pipel(nner, VK_PIPELINE_BIND_POINT_COMPUTE, p.inner());
+    bind_pipel(nner, VK_PIPELINE_BIND_POINT_COMPUTE, p.inner());
     log.enter("Vulkan", "binding compute pipeline to command buffer from "
               + pool->descrptn());
     log.brk();
@@ -92,14 +92,14 @@ void CommandBuffer::bind(ComputePipeline& p,
 {
     bind(p);
 
-    vk_bind_desc_sets(nner,
-                      v(vk::PipelineBindPoint::cmpte),
-                      p.layout()->inner(),
-                      set_bndng_offset,
-                      sets.size(),
-                      sets.data(),
-                      0,
-                      NULL);
+    bind_desc_sets(nner,
+                   v(vk::PipelineBindPoint::cmpte),
+                   p.layout()->inner(),
+                   set_bndng_offset,
+                   sets.size(),
+                   sets.data(),
+                   0,
+                   NULL);
 
     log.enter("Vulkan", "binding desc sets to command buffer from "
               + pool->descrptn());
