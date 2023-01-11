@@ -49,6 +49,9 @@ Surface::Surface(SDL& sdl, Instance::ptr instance)
      inst {instance}
 {
     sdl.create_surface(instance, &surf);
+    auto size = sdl.get_win_size();
+    w = size.width;
+    h = size.height;
 }
 
 Surface::~Surface() noexcept

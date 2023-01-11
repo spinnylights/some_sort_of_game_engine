@@ -77,6 +77,9 @@ public:
      */
     std::vector<VkPresentModeKHR> present_modes(PhysDevice& dev);
 
+    uint32_t width() const { return w; }
+    uint32_t height() const { return h; }
+
 private:
     PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR get_surf_caps;
     PFN_vkGetPhysicalDeviceSurfacePresentModesKHR get_pres_modes;
@@ -85,6 +88,10 @@ private:
     Instance::ptr inst;
 
     VkSurfaceKHR surf;
+
+private:
+    uint32_t w;
+    uint32_t h;
 };
 
 } // namespace cu
