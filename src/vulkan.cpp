@@ -328,6 +328,12 @@ void Vulkan::minicomp_setup()
                      vk::ImageAspectFlag::color);
     cmd_buff.dispatch(scratch.extent().width, scratch.extent().height);
     cmd_buff.end();
+
+    Fence scratch_fnce {logi_dev};
+
+    logi_dev->submit(Device::compute, cmd_buff, scratch_fnce);
+
+    scratch_fnce.wait();
 }
 
 void Vulkan::add_shader(std::string name, BinFile f)

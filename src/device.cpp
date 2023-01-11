@@ -24,6 +24,8 @@
 #include "log.hpp"
 
 #include "vulkan.hpp"
+#include "command_buffer.hpp"
+#include "fence.hpp"
 
 #include <iostream>
 #include <functional>
@@ -138,6 +140,12 @@ Device::Device(PhysDevice physi_dev, Instance::ptr inst)
         )
     };
 
+    queue_submit = {
+        reinterpret_cast<PFN_vkQueueSubmit>(
+            get_proc_addr("vkQueueSubmit")
+        )
+    };
+
     destroy_dev = {
        reinterpret_cast<PFN_vkDestroyDevice>(
            get_proc_addr("vkDestroyDevice")
@@ -187,6 +195,25 @@ uint32_t Device::queue_ndx(QueueFlavor f) const
 VkQueue Device::queue_for(QueueFlavor f)
 {
     return std::get<VkQueue>(queue_map.at(f));
+}
+
+void Device::submit(QueueFlavor f, CommandBuffer& buff, Fence& fnce)
+{
+    VkSubmitInfo inf {
+        .sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
+        .pNext = NULL,
+        .waitSemaphoreCount = 0,
+        .pWaitSemaphores = NULL,
+        .pWaitDstStageMask = NULL,
+        .commandBufferCount = 1,
+        .pCommandBuffers = buff.inner(),
+        .signalSemaphoreCount = 0,
+        .pSignalSemaphores = NULL,
+    };
+
+    Vulkan::vk_try(queue_submit(queue_for(f), 1, &inf, fnce.inner()),
+                   "submitting to " + qflav_str(f) + " queue");
+    log.brk();
 }
 
 } // namespace cu

@@ -31,6 +31,9 @@
 
 namespace cu {
 
+class CommandBuffer;
+class Fence;
+
 /*!
  * \brief A Vulkan logical device wrapper.
  */
@@ -92,6 +95,8 @@ public:
 
     VkQueue queue_for(QueueFlavor f);
 
+    void submit(QueueFlavor f, CommandBuffer& buff, Fence& fnce);
+
     uint64_t max_timel_sem_val_diff() const
     {
         return phys_dev.max_timel_sem_val_diff;
@@ -107,6 +112,7 @@ private:
     PFN_vkCreateDevice create_dev;
     PFN_vkGetDeviceQueue get_dev_queue;
     PFN_vkGetDeviceProcAddr get_dev_proc_addr;
+    PFN_vkQueueSubmit queue_submit;
     PFN_vkDestroyDevice destroy_dev;
 
 private:
