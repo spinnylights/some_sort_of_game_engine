@@ -181,6 +181,11 @@ struct PhysDevice {
      */
     void log() const;
 
+    /*!
+     * \brief The largest device-local heap on the device.
+     */
+    PhysicalHeap largest_dev_local_heap() const;
+
 private:
 
     void get_queue_fams(std::vector<VkQueueFamilyProperties>&

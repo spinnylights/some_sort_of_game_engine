@@ -280,4 +280,27 @@ void PhysDevice::log() const
     }
 }
 
+PhysicalHeap PhysDevice::largest_dev_local_heap() const
+{
+    std::size_t out_ndx = SIZE_MAX;
+
+    for (std::size_t i = 0; i < mem_heaps.size(); ++i) {
+        if (mem_heaps.at(i).device_local()) {
+            if (out_ndx == SIZE_MAX) {
+                out_ndx = i;
+            } else {
+                if (mem_heaps.at(out_ndx).size() < mem_heaps.at(i).size()) {
+                    out_ndx = i;
+                }
+            }
+        }
+    }
+
+    if (out_ndx == SIZE_MAX) {
+        throw std::runtime_error("no device-local heaps found");
+    }
+
+    return mem_heaps.at(out_ndx);
+}
+
 } // namespace cu
