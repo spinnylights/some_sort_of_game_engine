@@ -195,7 +195,12 @@ public:
     /*!
      * \brief Whether the image can be used as a color attachment.
      */
-    bool color() const { return _usage & VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT; }
+    bool color() const
+    {
+        return _usage & VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT
+               || _usage & VK_IMAGE_USAGE_STORAGE_BIT
+               || _usage & VK_IMAGE_USAGE_SAMPLED_BIT;
+    }
 
     /*!
      * \brief Whether the image can be used as a depth/stencil attachment.
