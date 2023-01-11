@@ -90,6 +90,8 @@ public:
 
     uint32_t queue_ndx(QueueFlavor f) const;
 
+    VkQueue queue_for(QueueFlavor f);
+
     uint64_t max_timel_sem_val_diff() const
     {
         return phys_dev.max_timel_sem_val_diff;

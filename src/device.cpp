@@ -184,4 +184,9 @@ uint32_t Device::queue_ndx(QueueFlavor f) const
     return std::get<uint32_t>(queue_map.at(f));
 }
 
+VkQueue Device::queue_for(QueueFlavor f)
+{
+    return std::get<VkQueue>(queue_map.at(f));
+}
+
 } // namespace cu
