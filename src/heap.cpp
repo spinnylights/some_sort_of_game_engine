@@ -184,6 +184,11 @@ Heap::Block Heap::Pool::reserve_space(VkDeviceSize sz, VkDeviceSize alignment)
 
 void Heap::alloc_on_dev(Image& img)
 {
+    if (!img.mem_type_supported(main_pool.type)) {
+        throw std::runtime_error("main pool memory does not support this type "
+                                 "of image");
+    }
+
     auto block = main_pool.reserve_space(img.mem_size(), img.alignment());
     Vulkan::vk_try(bind_img_mem(dev->inner(),
                                 img.inner(),
