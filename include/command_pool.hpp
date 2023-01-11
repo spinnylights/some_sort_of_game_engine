@@ -53,8 +53,13 @@ public:
 
     Device::QueueFlavor flav() const { return flv; }
 
+    void reset(bool release_resources = false);
+
 private:
     Device::QueueFlavor flv;
+
+private:
+    PFN_vkResetCommandPool reset_pool;
 };
 
 } // namespace 

@@ -334,6 +334,8 @@ void Vulkan::minicomp_setup()
     logi_dev->submit(Device::compute, cmd_buff, scratch_fnce);
 
     scratch_fnce.wait();
+
+    cmd_pool->reset();
 }
 
 void Vulkan::add_shader(std::string name, BinFile f)

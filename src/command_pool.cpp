@@ -28,7 +28,8 @@ CommandPool::CommandPool(Device::ptr l_dev, Device::QueueFlavor qflav)
     : Deviced(l_dev,
               "command pool (" + l_dev->qflav_str(qflav) + ")",
               "CommandPool"),
-      flv {qflav}
+      flv {qflav},
+      GET_VK_FN_PTR(reset_pool, ResetCommandPool)
 
 {
     VkCommandPoolCreateInfo inf = {
@@ -44,6 +45,13 @@ CommandPool::CommandPool(Device::ptr l_dev, Device::QueueFlavor qflav)
         log.indent();
         log.enter("flags", vk::cmmnd_pool_create_flags_cstrs(inf.flags));
     }
+    log.brk();
+}
+
+void CommandPool::reset(bool release_resources)
+{
+    Vulkan::vk_try(reset_pool(dev->inner(), nner, release_resources),
+                   "resetting command pool " + descrptn());
     log.brk();
 }
 
