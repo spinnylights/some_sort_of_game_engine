@@ -24,43 +24,15 @@
 
 namespace cu {
 
-CommandBuffer::CommandBuffer(Device::ptr l_dev, CommandPool::ptr cmd_pool)
+CommandBuffer::CommandBuffer(Device::ptr dev, CommandPool::ptr cmd_pool)
     : pool {cmd_pool},
-      alloc {
-          reinterpret_cast<PFN_vkAllocateCommandBuffers>(
-              l_dev->get_proc_addr("vkAllocateCommandBuffers")
-          )
-      },
-      vk_begin {
-          reinterpret_cast<PFN_vkBeginCommandBuffer>(
-              l_dev->get_proc_addr("vkBeginCommandBuffer")
-          )
-      },
-      bind_pipel {
-          reinterpret_cast<PFN_vkCmdBindPipeline>(
-              l_dev->get_proc_addr("vkCmdBindPipeline")
-          )
-      },
-      bind_desc_sets {
-          reinterpret_cast<PFN_vkCmdBindDescriptorSets>(
-              l_dev->get_proc_addr("vkCmdBindDescriptorSets")
-          )
-      },
-      pipel_barr {
-          reinterpret_cast<PFN_vkCmdPipelineBarrier>(
-              l_dev->get_proc_addr("vkCmdPipelineBarrier")
-          )
-      },
-      vk_dispatch {
-          reinterpret_cast<PFN_vkCmdDispatch>(
-              l_dev->get_proc_addr("vkCmdDispatch")
-          )
-      },
-      vk_end {
-          reinterpret_cast<PFN_vkEndCommandBuffer>(
-              l_dev->get_proc_addr("vkEndCommandBuffer")
-          )
-      }
+      GET_VK_FN_PTR(alloc, AllocateCommandBuffers),
+      GET_VK_FN_PTR(vk_begin, BeginCommandBuffer),
+      GET_VK_FN_PTR(bind_pipel, CmdBindPipeline),
+      GET_VK_FN_PTR(bind_desc_sets, CmdBindDescriptorSets),
+      GET_VK_FN_PTR(pipel_barr, CmdPipelineBarrier),
+      GET_VK_FN_PTR(vk_dispatch, CmdDispatch),
+      GET_VK_FN_PTR(vk_end, EndCommandBuffer)
 {
     VkCommandBufferAllocateInfo inf {
         .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
@@ -70,7 +42,7 @@ CommandBuffer::CommandBuffer(Device::ptr l_dev, CommandPool::ptr cmd_pool)
         .commandBufferCount = 1,
     };
 
-    Vulkan::vk_try(alloc(l_dev->inner(), &inf, &nner),
+    Vulkan::vk_try(alloc(dev->inner(), &inf, &nner),
                    "allocating command buffer from " + pool->descrptn());
     log.brk();
 }
