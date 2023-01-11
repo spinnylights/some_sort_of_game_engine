@@ -63,6 +63,15 @@ struct PhysicalHeap {
     {
         return inner.flags & VK_MEMORY_HEAP_DEVICE_LOCAL_BIT;
     }
+
+    /*!
+     * \brief The heap's "optimal memory type" (the fastest type with the least
+     * properties in the heap).
+     */
+    MemoryType optimal_type() const
+    {
+        return mem_types.front();
+    }
 };
 
 
