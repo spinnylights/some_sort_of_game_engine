@@ -31,7 +31,7 @@ namespace cu {
 /*!
  * \brief A Vulkan memory heap wrapper.
  */
-struct MemoryHeap {
+struct PhysicalHeap {
     VkMemoryHeap inner;
     std::size_t  _ndx;
 

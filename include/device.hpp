@@ -24,7 +24,6 @@
 
 #include "instance.hpp"
 #include "phys_device.hpp"
-#include "memory_heap.hpp"
 
 #include <vulkan/vulkan.h>
 

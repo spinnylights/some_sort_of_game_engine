@@ -23,7 +23,7 @@
 #define J2f15c99194b4bc4bef27446c0d923d0
 
 #include "queue_family.hpp"
-#include "memory_heap.hpp"
+#include "physical_heap.hpp"
 #include "memory_type.hpp"
 
 #include <vulkan/vulkan.h>
@@ -133,7 +133,7 @@ struct PhysDevice {
     /*!
      * \brief The Vulkan heaps of memory available to the device.
      */
-    std::vector<MemoryHeap> mem_heaps;
+    std::vector<PhysicalHeap> mem_heaps;
 
     /*!
      * \brief The extensions supported by the device.
