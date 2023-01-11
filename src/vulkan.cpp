@@ -32,6 +32,7 @@
 #include "command_pool.hpp"
 #include "command_buffer.hpp"
 #include "fence.hpp"
+#include "heap.hpp"
 
 #include <stdexcept>
 #include <array>
@@ -253,7 +254,7 @@ void Vulkan::minicomp_setup()
     std::vector<DescriptorSetLayoutBinding> bndgs = {swapimg};
 
     auto d_layt = std::make_shared<DescriptorSetLayout>(logi_dev,
-                                                        "swapchain image",
+                                                        "scratch image",
                                                         bndgs);
 
     std::vector<DescriptorSetLayout::ptr> d_layts = {d_layt};
@@ -272,18 +273,48 @@ void Vulkan::minicomp_setup()
 
     DescriptorPool descpool {logi_dev, d_layts};
 
+    Heap heap {logi_dev, phys_devs.default_device()};
+
+    Image scratch {logi_dev, {
+        .extent = {
+            .width  = surf.width(),
+            .height = surf.height(),
+            .depth  = 1,
+        },
+        .usage  = v(vk::ImageUsageFlag::strge),
+        .format = v(vk::Format::r8g8b8a8_uint),
+    }};
+
+    heap.alloc_on_dev(scratch);
+
+    ImageView scratch_v {scratch};
+
     auto cmd_pool = std::make_shared<CommandPool>(logi_dev, Device::compute);
 
     CommandBuffer cmd_buff {logi_dev, cmd_pool};
 
-    Fence fnce {logi_dev};
+    //Fence fnce {logi_dev};
 
-    //Image* swch_img = swch.next_img(fnce);
-    swch.next_img(fnce);
+    //ImageView* swch_img = swch.next_img(fnce);
 
-    fnce.wait();
+    // storage image
+    //
+    // descpool.writes({
+    //     .set = "scratch image",
+    //     .binding = 0,
+    //     .index = 0,
+    //     .count = 1,
+    //     .type = vk::DescriptorType::strge_img,
+    //     .imgs = {swch_img},
+    // })
 
-    // update descriptor set with swapchain img
+    //fnce.wait();
+
+    // update descriptor set with scratch img
+
+    descpool.write()
+            .storage_image("scratch image", 0, 0, &scratch_v)
+            .submit();
 
     cmd_buff.begin();
     cmd_buff.bind_pipel(pipel);
