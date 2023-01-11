@@ -58,6 +58,8 @@ public:
 
     void end();
 
+    const VkCommandBuffer* inner() const { return &nner; }
+
 private:
     VkCommandBuffer nner;
 
