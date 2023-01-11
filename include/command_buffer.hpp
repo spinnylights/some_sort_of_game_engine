@@ -35,7 +35,7 @@ public:
 
     void begin();
 
-    void bind_pipel(ComputePipeline&);
+    void bind(ComputePipeline&);
 
 private:
     VkCommandBuffer nner;

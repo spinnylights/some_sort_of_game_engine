@@ -73,7 +73,7 @@ void CommandBuffer::begin()
     log.brk();
 }
 
-void CommandBuffer::bind_pipel(ComputePipeline& p)
+void CommandBuffer::bind(ComputePipeline& p)
 {
     vk_bind_pipel(nner, VK_PIPELINE_BIND_POINT_COMPUTE, p.inner());
     log.enter("Vulkan", "binding compute pipeline to command buffer from "
