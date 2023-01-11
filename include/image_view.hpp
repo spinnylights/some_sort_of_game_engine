@@ -100,6 +100,14 @@ public:
      */
     constexpr VkComponentMapping swizzle() { return _swizzle; }
 
+    bool identity_swizzle() const
+    {
+        return _swizzle.r == VK_COMPONENT_SWIZZLE_IDENTITY
+            && _swizzle.g == VK_COMPONENT_SWIZZLE_IDENTITY
+            && _swizzle.b == VK_COMPONENT_SWIZZLE_IDENTITY
+            && _swizzle.a == VK_COMPONENT_SWIZZLE_IDENTITY;
+    }
+
     /*!
      * \brief The subresource range of the viewed image represented in the view.
      */
