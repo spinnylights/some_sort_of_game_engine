@@ -42,6 +42,8 @@ public:
 
     ~ComputePipeline() noexcept { dstrct(); }
 
+    PipelineLayout::ptr layout() { return pipelt; }
+
 private:
     ShaderModule::ptr   shdr;
     PipelineLayout::ptr pipelt;

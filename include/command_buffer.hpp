@@ -36,6 +36,11 @@ public:
     void begin();
 
     void bind(ComputePipeline&);
+    void bind(ComputePipeline&, std::vector<VkDescriptorSet>);
+    void bind(ComputePipeline&,
+              uint32_t set_bndng_offset,
+              std::vector<VkDescriptorSet>);
+    // TODO: dynamic offsets
 
 private:
     VkCommandBuffer nner;
@@ -47,6 +52,7 @@ private:
     PFN_vkAllocateCommandBuffers alloc;
     PFN_vkBeginCommandBuffer     vk_begin;
     PFN_vkCmdBindPipeline        vk_bind_pipel;
+    PFN_vkCmdBindDescriptorSets  vk_bind_desc_sets;
 };
 
 } // namespace cu
