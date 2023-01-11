@@ -327,6 +327,7 @@ void Vulkan::minicomp_setup()
                      vk::ImageLayout::gnrl,
                      vk::ImageAspectFlag::color);
     cmd_buff.dispatch(scratch.extent().width, scratch.extent().height);
+    cmd_buff.end();
 }
 
 void Vulkan::add_shader(std::string name, BinFile f)

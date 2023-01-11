@@ -55,6 +55,11 @@ CommandBuffer::CommandBuffer(Device::ptr l_dev, CommandPool::ptr cmd_pool)
           reinterpret_cast<PFN_vkCmdDispatch>(
               l_dev->get_proc_addr("vkCmdDispatch")
           )
+      },
+      vk_end {
+          reinterpret_cast<PFN_vkEndCommandBuffer>(
+              l_dev->get_proc_addr("vkEndCommandBuffer")
+          )
       }
 {
     VkCommandBufferAllocateInfo inf {
@@ -186,6 +191,13 @@ void CommandBuffer::barrier(Image&                 img,
     log.enter("old image layout", vk::img_layout_str(old_layt));
     log.enter("new image layout", vk::img_layout_str(new_layt));
     log.enter("image aspects", vk::img_aspect_flag_str(aspect));
+    log.brk();
+}
+
+void CommandBuffer::end()
+{
+    Vulkan::vk_try(vk_end(nner),
+                   "ending command buffer from " + pool->descrptn());
     log.brk();
 }
 
