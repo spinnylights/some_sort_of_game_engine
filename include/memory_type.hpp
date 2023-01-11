@@ -38,9 +38,9 @@ struct MemoryType {
     /*!
      * \brief The Vulkan index of the memory type.
      */
-    std::size_t ndx() const
+    uint32_t ndx() const
     {
-        return _ndx;
+        return static_cast<uint32_t>(_ndx);
     }
 
     /*!
