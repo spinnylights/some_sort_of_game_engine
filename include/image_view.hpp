@@ -128,6 +128,8 @@ public:
      */
     void should_destroy(bool destroy) { _should_destroy = destroy; }
 
+    vk::ImageUsageFlags usage() const { return _usage; }
+
 private:
     VkImageView             _inner;
     Device::ptr         _dev;
@@ -145,6 +147,8 @@ private:
         .a = VK_COMPONENT_SWIZZLE_IDENTITY,
     };
     VkImageSubresourceRange _subresource_range;
+
+    VkImageUsageFlags       _usage;
 
     bool                    _should_destroy;
 };

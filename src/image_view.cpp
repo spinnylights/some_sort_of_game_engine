@@ -43,6 +43,7 @@ ImageView::ImageView(Image& img)
       _type              {img.view_type()},
       _format            {img.format()},
       _subresource_range {img.all_subresources()},
+      _usage             {img.usage()},
       _should_destroy    {true}
 {
     VkImageViewCreateInfo create_inf = {
@@ -85,6 +86,7 @@ ImageView::ImageView(ImageView&& other)
       _format            {other.format()},
       _swizzle           {other.swizzle()},
       _subresource_range {other.subresource_range()},
+      _usage             {other.usage()},
       _should_destroy    {other.will_be_destroyed()}
 
 {
