@@ -65,9 +65,15 @@ DescriptorPool::DescriptorPool(Device::ptr l_dev,
                                    layts)
     : Deviced(l_dev, "descriptor pool", "DescriptorPool"),
       desc_sets(layts.size()),
+      wc_ops {*this},
       alloc_desc_sets {
           reinterpret_cast<PFN_vkAllocateDescriptorSets>(
               dev->get_proc_addr("vkAllocateDescriptorSets")
+          )
+      },
+      upd_desc_sets {
+          reinterpret_cast<PFN_vkUpdateDescriptorSets>(
+              dev->get_proc_addr("vkUpdateDescriptorSets")
           )
       }
 {
@@ -153,6 +159,74 @@ DescriptorPool::DescriptorPool(Device::ptr l_dev,
 VkDescriptorSet DescriptorPool::operator[](std::string name)
 {
     return *desc_set_map.at(name);
+}
+
+void DescriptorPool::update()
+{
+    std::string log_out = "descriptor pool: updating descriptor sets";
+    log.enter("Vulkan", log_out);
+    log.brk();
+
+    upd_desc_sets(dev->inner(),
+                  wc_ops.writes.size(), wc_ops.writes.data(),
+                  wc_ops.copies.size(), wc_ops.copies.data());
+}
+
+DescriptorPool::WriteCopyOps&
+DescriptorPool::WriteCopyOps::storage_image(std::string desc_name,
+                                            uint32_t binding_ndx,
+                                            uint32_t offset,
+                                            ImageView* view)
+{
+    if (!view->identity_swizzle()) {
+        throw std::runtime_error("storage images must have the identity "
+                                 "swizzle");
+    }
+
+    if (!(view->usage() & flgs(vk::ImageUsageFlag::strge))) {
+        throw std::runtime_error("storage images must have storage usage");
+    }
+
+    img_infs.push_back({
+        .sampler     = VK_NULL_HANDLE,
+        .imageView   = view->inner(),
+        .imageLayout = v(vk::ImageLayout::gnrl), // should get this from image
+                                                 // view, really
+    });
+
+    writes.push_back({
+        .sType           = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
+        .pNext           = NULL,
+        .dstSet          = pool[desc_name],
+        .dstBinding      = binding_ndx,
+        .dstArrayElement = offset,
+        .descriptorCount = 1,
+        .descriptorType  = v(vk::DescriptorType::strge_img),
+        .pImageInfo      = &img_infs.back(),
+    });
+
+   std::string log_out = "descriptor pool: adding storage image write";
+    log.enter("Vulkan", log_out);
+    log.indent();
+    log.enter("name", desc_name);
+    log.enter("binding", binding_ndx);
+    log.enter("offset", offset);
+    log.brk();
+
+    return *this;
+}
+
+void DescriptorPool::WriteCopyOps::clear()
+{
+    writes = {};
+    img_infs = {};
+    copies = {};
+}
+
+void DescriptorPool::WriteCopyOps::submit()
+{
+    pool.update();
+    clear();
 }
 
 } // namespace cu
