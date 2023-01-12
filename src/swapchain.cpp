@@ -207,7 +207,7 @@ Swapchain::~Swapchain() noexcept
     log.brk();
 }
 
-ImageView* Swapchain::next_img(VkFence fnce, VkSemaphore sem, uint64_t timeout)
+void Swapchain::next_img(VkFence fnce, VkSemaphore sem, uint64_t timeout)
 {
     uint32_t ndx;
 
@@ -222,41 +222,50 @@ ImageView* Swapchain::next_img(VkFence fnce, VkSemaphore sem, uint64_t timeout)
     log.enter("index", ndx);
     log.brk();
 
-    return &_img_views.at(ndx);
 }
 
-ImageView* Swapchain::next_img(Fence& fnce, BinarySemaphore& sem, uint64_t timeout)
+void Swapchain::next(Fence& fnce, BinarySemaphore& sem, uint64_t timeout)
 {
-    return next_img(fnce.inner(), sem.inner(), timeout);
+    next_img(fnce.inner(), sem.inner(), timeout);
     fnce.wait();
 }
 
-ImageView* Swapchain::next_img(Fence& fnce, BinarySemaphore& sem)
+void Swapchain::next(Fence& fnce, BinarySemaphore& sem)
 {
-    return next_img(fnce.inner(), sem.inner(), UINT64_MAX);
+    next_img(fnce.inner(), sem.inner(), UINT64_MAX);
     fnce.wait();
 }
 
-ImageView* Swapchain::next_img(Fence& fnce, uint64_t timeout)
+void Swapchain::next(Fence& fnce, uint64_t timeout)
 {
-    return next_img(fnce.inner(), VK_NULL_HANDLE, timeout);
+    next_img(fnce.inner(), VK_NULL_HANDLE, timeout);
     fnce.wait();
 }
 
-ImageView* Swapchain::next_img(BinarySemaphore& sem, uint64_t timeout)
+void Swapchain::next(Fence& fnce)
 {
-    return next_img(VK_NULL_HANDLE, sem.inner(), timeout);
+    next_img(fnce.inner(), VK_NULL_HANDLE, UINT64_MAX);
     fnce.wait();
 }
 
-ImageView* Swapchain::next_img(Fence& fnce)
+void Swapchain::next(BinarySemaphore& sem, uint64_t timeout)
 {
-    return next_img(fnce.inner(), VK_NULL_HANDLE, UINT64_MAX);
+    next_img(VK_NULL_HANDLE, sem.inner(), timeout);
 }
 
-ImageView* Swapchain::next_img(BinarySemaphore& sem)
+void Swapchain::next(BinarySemaphore& sem)
 {
-    return next_img(VK_NULL_HANDLE, sem.inner(), UINT64_MAX);
+    next_img(VK_NULL_HANDLE, sem.inner(), UINT64_MAX);
+}
+
+ImageView& Swapchain::view()
+{
+    return _img_views.at(current_ndx);
+}
+
+Image& Swapchain::img()
+{
+    return imgs.at(current_ndx);
 }
 
 

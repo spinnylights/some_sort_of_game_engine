@@ -61,12 +61,15 @@ public:
 
     ~Swapchain() noexcept;
 
-    ImageView* next_img(BinarySemaphore& sem);
-    ImageView* next_img(Fence& fnce);
-    ImageView* next_img(BinarySemaphore& sem, uint64_t timeout);
-    ImageView* next_img(Fence& fnce, uint64_t timeout);
-    ImageView* next_img(Fence& fnce, BinarySemaphore& sem);
-    ImageView* next_img(Fence& fnce, BinarySemaphore& sem, uint64_t timeout);
+    void next(BinarySemaphore& sem);
+    void next(Fence& fnce);
+    void next(BinarySemaphore& sem, uint64_t timeout);
+    void next(Fence& fnce, uint64_t timeout);
+    void next(Fence& fnce, BinarySemaphore& sem);
+    void next(Fence& fnce, BinarySemaphore& sem, uint64_t timeout);
+
+    ImageView& view();
+    Image&     img();
 
 private:
     VkSwapchainKHR swch;
@@ -74,13 +77,14 @@ private:
     Device::ptr dev;
     std::vector<Image> imgs;
     std::vector<ImageView> _img_views;
+    uint32_t current_ndx;
 
     PFN_vkCreateSwapchainKHR create_swch;
     PFN_vkGetSwapchainImagesKHR get_swch_imgs;
     PFN_vkAcquireNextImageKHR acquire_next_img;
     PFN_vkDestroySwapchainKHR destroy_swch;
 
-    ImageView* next_img(VkFence fnce, VkSemaphore sem, uint64_t timeout);
+    void next_img(VkFence fnce, VkSemaphore sem, uint64_t timeout);
 
 };
 
