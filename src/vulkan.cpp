@@ -244,11 +244,13 @@ Vulkan::Vulkan(std::vector<const char*> exts,
 
 void Vulkan::minicomp_setup()
 {
+    using namespace vk;
+
     DescriptorSetLayoutBinding swapimg ({
         .binding_ndx   = 0,
-        .type          = vk::DescriptorType::strge_img,
+        .type          = DescriptorType::strge_img,
         .count         = 1,
-        .shader_stages = flgs(vk::ShaderStageFlag::cmpte),
+        .shader_stages = flgs(ShaderStageFlag::cmpte),
     });
 
     std::vector<DescriptorSetLayoutBinding> bndgs = {swapimg};
@@ -281,9 +283,9 @@ void Vulkan::minicomp_setup()
             .height = surf.height(),
             .depth  = 1,
         },
-        .usage  = flgs(vk::ImageUsageFlag::strge)
-                  | flgs(vk::ImageUsageFlag::trnsfr_src),
-        .format = v(vk::Format::r8g8b8a8_uint),
+        .usage  = flgs(ImageUsageFlag::strge)
+                  | flgs(ImageUsageFlag::trnsfr_src),
+        .format = v(Format::r8g8b8a8_uint),
     }};
 
     heap.alloc_on_dev(scratch);
@@ -305,7 +307,7 @@ void Vulkan::minicomp_setup()
     //     .binding = 0,
     //     .index = 0,
     //     .count = 1,
-    //     .type = vk::DescriptorType::strge_img,
+    //     .type = DescriptorType::strge_img,
     //     .imgs = {swch_img},
     // })
 
@@ -320,13 +322,13 @@ void Vulkan::minicomp_setup()
     cmd_buff.begin()
             .bind(pipel, {descpool["scratch image"]})
             .barrier(scratch,
-                     vk::PipelineStageFlag::top_of_pipe,
-                     vk::PipelineStageFlag::cmpte_shader,
-                     vk::AccessFlag::none,
-                     vk::AccessFlag::shader_write,
-                     vk::ImageLayout::undfnd,
-                     vk::ImageLayout::gnrl,
-                     vk::ImageAspectFlag::color)
+                     PipelineStageFlag::top_of_pipe,
+                     PipelineStageFlag::cmpte_shader,
+                     AccessFlag::none,
+                     AccessFlag::shader_write,
+                     ImageLayout::undfnd,
+                     ImageLayout::gnrl,
+                     ImageAspectFlag::color)
             .dispatch(scratch.extent().width, scratch.extent().height)
             .end();
 
