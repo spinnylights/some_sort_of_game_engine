@@ -177,4 +177,21 @@ PFN_vkGetInstanceProcAddr SDL::get_get_inst_proc_addr()
            );
 }
 
+void SDL::poll()
+{
+    SDL_Event e;
+    while (SDL_PollEvent(&e)) {
+        if (e.type == SDL_QUIT) {
+            evs.quit = true;
+            log.enter("SDL", std::string("quit event received"));
+            log.brk();
+        }
+    }
+}
+
+bool SDL::quit()
+{
+    return evs.quit;
+}
+
 } // namespace cu

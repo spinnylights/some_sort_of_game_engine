@@ -121,8 +121,24 @@ public:
      */
     WinSize get_win_size();
 
+    /*!
+     * \brief Refreshes the event state. Call this at the top of the frame.
+     */
+    void poll();
+
+    /*!
+     * \brief Whether or not the user has requested to quit.
+     */
+    bool quit();
+
 private:
     SDL_Window* win;
+
+    struct Events {
+        bool quit = false;
+    };
+
+    Events evs;
 };
 
 } // namespace cu

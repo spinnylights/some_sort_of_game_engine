@@ -71,6 +71,17 @@ void Engine::minicomp_mode(std::filesystem::path comp_spv_path)
     mode(minicomp);
     add_shader(mode_str(), {comp_spv_path});
     vulk.minicomp_setup();
+
+    bool quit = false;
+    while (!quit) {
+        sdl.poll();
+
+        if (sdl.quit()) {
+            break;
+        }
+
+        // render
+    }
 }
 
 } // namespace cu
