@@ -257,11 +257,17 @@ void Swapchain::next(BinarySemaphore& sem)
 
 ImageView& Swapchain::view()
 {
+    log.enter("Vulkan", "getting view handle to image at index "
+              + std::to_string(current_ndx));
+    log.brk();
     return _img_views.at(current_ndx);
 }
 
 Image& Swapchain::img()
 {
+    log.enter("Vulkan", "getting handle to image at index "
+              + std::to_string(current_ndx));
+    log.brk();
     return imgs.at(current_ndx);
 }
 

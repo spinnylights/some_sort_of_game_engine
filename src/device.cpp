@@ -175,11 +175,17 @@ PFN_vkVoidFunction Device::get_proc_addr(const char* name)
 
 uint32_t Device::queue_ndx(QueueFlavor f) const
 {
-    return std::get<uint32_t>(queue_map.at(f));
+    auto ndx = std::get<uint32_t>(queue_map.at(f));
+    log.enter("Vulkan",
+              "queue " + qflav_str(f) + " is at " + std::to_string(ndx));
+    log.brk();
+    return ndx;
 }
 
 VkQueue Device::queue(QueueFlavor f)
 {
+    log.enter("Vulkan", "getting handle of " + qflav_str(f) + " queue");
+    log.brk();
     return std::get<VkQueue>(queue_map.at(f));
 }
 
