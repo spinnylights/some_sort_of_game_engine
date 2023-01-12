@@ -31,7 +31,8 @@ Fence::Fence(Device::ptr l_dev, bool signaled)
           reinterpret_cast<PFN_vkWaitForFences>(
               dev->get_proc_addr("vkWaitForFences")
           )
-      }
+      },
+      GET_VK_FN_PTR(vk_reset, ResetFences)
 {
     vk::FenceCreateFlags flags = 0;
     if (signaled) flags = flgs(vk::FenceCreateFlag::sgnld);
@@ -52,12 +53,22 @@ void Fence::wait_for(uint64_t timeout)
     Vulkan::vk_try(vk_wait(dev->inner(), 1, &nner, VK_FALSE, timeout),
                    "waiting on fence with timeout " + std::to_string(timeout));
     log.brk();
+
+    reset();
 }
 
 void Fence::wait()
 {
     Vulkan::vk_try(vk_wait(dev->inner(), 1, &nner, VK_FALSE, UINT64_MAX),
                    "waiting on fence");
+    log.brk();
+
+    reset();
+}
+
+void Fence::reset()
+{
+    Vulkan::vk_try(vk_reset(dev->inner(), 1, &nner), "resetting fence");
     log.brk();
 }
 

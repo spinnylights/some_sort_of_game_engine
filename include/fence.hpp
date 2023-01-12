@@ -38,12 +38,24 @@ public:
 
     ~Fence() noexcept { Deviced::dstrct(); }
 
+    /*!
+     * \brief Waits on this fence (blocking) until the fence is signaled. Can
+     * hang the thread if nothing ever signals the fence. Automatically resets
+     * the fence afterwards.
+     */
     void wait();
 
-    void wait_for(uint64_t timeout);
+    /*!
+     * \brief Waits on this fence (blocking) for ns nanoseconds, then continues.
+     * Automatically resets the fence afterwards.
+     */
+    void wait_for(uint64_t ns);
 
 private:
     PFN_vkWaitForFences vk_wait;
+    PFN_vkResetFences   vk_reset;
+
+    void reset();
 };
 
 } // namespace cu
