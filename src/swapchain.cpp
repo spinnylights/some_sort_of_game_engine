@@ -228,21 +228,25 @@ ImageView* Swapchain::next_img(VkFence fnce, VkSemaphore sem, uint64_t timeout)
 ImageView* Swapchain::next_img(Fence& fnce, BinarySemaphore& sem, uint64_t timeout)
 {
     return next_img(fnce.inner(), sem.inner(), timeout);
+    fnce.wait();
 }
 
 ImageView* Swapchain::next_img(Fence& fnce, BinarySemaphore& sem)
 {
     return next_img(fnce.inner(), sem.inner(), UINT64_MAX);
+    fnce.wait();
 }
 
 ImageView* Swapchain::next_img(Fence& fnce, uint64_t timeout)
 {
     return next_img(fnce.inner(), VK_NULL_HANDLE, timeout);
+    fnce.wait();
 }
 
 ImageView* Swapchain::next_img(BinarySemaphore& sem, uint64_t timeout)
 {
     return next_img(VK_NULL_HANDLE, sem.inner(), timeout);
+    fnce.wait();
 }
 
 ImageView* Swapchain::next_img(Fence& fnce)

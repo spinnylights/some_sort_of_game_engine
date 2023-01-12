@@ -214,6 +214,8 @@ void Device::submit(QueueFlavor f, CommandBuffer& buff, Fence& fnce)
     Vulkan::vk_try(queue_submit(queue_for(f), 1, &inf, fnce.inner()),
                    "submitting to " + qflav_str(f) + " queue");
     log.brk();
+
+    fnce.wait();
 }
 
 } // namespace cu

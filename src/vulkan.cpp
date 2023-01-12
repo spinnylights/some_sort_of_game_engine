@@ -312,8 +312,6 @@ void Vulkan::minicomp_setup()
     //     .imgs = {swch_img},
     // })
 
-    //fnce.wait();
-
     // update descriptor set with scratch img
 
     descpool.write()
@@ -336,8 +334,6 @@ void Vulkan::minicomp_setup()
     Fence fnce {logi_dev};
 
     logi_dev->submit(Device::compute_queue, cmd_buff, fnce);
-
-    fnce.wait();
 
     cmd_pool->reset();
 }
