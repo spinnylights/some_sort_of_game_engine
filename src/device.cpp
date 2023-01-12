@@ -136,6 +136,7 @@ Device::Device(PhysDevice physi_dev, Instance::ptr inst)
     GET_VK_FN_PTR_INNER(get_dev_queue, GetDeviceQueue);
     GET_VK_FN_PTR_INNER(queue_submit, QueueSubmit);
     GET_VK_FN_PTR_INNER(destroy_dev, DestroyDevice);
+    GET_VK_FN_PTR_INNER(queue_present, QueuePresentKHR);
 
     for (const auto& [_, t] : queue_map) {
         get_dev_queue(dev,
@@ -201,6 +202,22 @@ void Device::submit(QueueFlavor f, CommandBuffer& buff, Fence& fnce)
     log.brk();
 
     fnce.wait();
+}
+
+void Device::present(Swapchain& swch)
+{
+    // TODO: check for need to transfer image to present queue
+
+    VkPresentInfoKHR inf {
+        .sType          = v(vk::StructureType::prsnt_info),
+        .swapchainCount = 1,
+        .pSwapchains    = swch.inner(),
+        .pImageIndices  = swch.ndx(),
+    };
+
+    Vulkan::vk_try(queue_present(queue(present_queue), &inf),
+                   "presenting swapchain image");
+    log.brk();
 }
 
 } // namespace cu

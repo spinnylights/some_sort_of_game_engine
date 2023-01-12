@@ -368,6 +368,8 @@ void Vulkan::minicomp_setup()
             .end();
 
     logi_dev->submit(Device::compute_queue, cmd_buff, fnce);
+
+    logi_dev->present(swch);
 }
 
 void Vulkan::add_shader(std::string name, BinFile f)

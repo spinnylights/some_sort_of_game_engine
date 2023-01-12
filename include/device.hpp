@@ -33,6 +33,7 @@ namespace cu {
 
 class CommandBuffer;
 class Fence;
+class Swapchain;
 
 /*!
  * \brief A Vulkan logical device wrapper.
@@ -104,6 +105,15 @@ public:
         return phys_dev.max_timel_sem_val_diff;
     }
 
+    // present:
+    //   multiple of:
+    //     swapchain
+    //     image index
+    //     optional semaphore to wait on
+    //     optional swapchain-specific VkResult*
+
+    void present(Swapchain& swch);
+
 private:
     VkDevice dev;
 
@@ -115,6 +125,7 @@ private:
     PFN_vkGetDeviceQueue get_dev_queue;
     PFN_vkGetDeviceProcAddr get_dev_proc_addr;
     PFN_vkQueueSubmit queue_submit;
+    PFN_vkQueuePresentKHR queue_present;
     PFN_vkDestroyDevice destroy_dev;
 
 private:
