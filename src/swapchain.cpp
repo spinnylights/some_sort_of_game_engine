@@ -209,19 +209,16 @@ Swapchain::~Swapchain() noexcept
 
 void Swapchain::next_img(VkFence fnce, VkSemaphore sem, uint64_t timeout)
 {
-    uint32_t ndx;
-
     Vulkan::vk_try(acquire_next_img(dev->inner(),
                                     swch,
                                     timeout,
                                     sem,
                                     fnce,
-                                    &ndx),
+                                    &current_ndx),
                    "acquire next swapchain image");
     log.indent();
-    log.enter("index", ndx);
+    log.enter("index", current_ndx);
     log.brk();
-
 }
 
 void Swapchain::next(Fence& fnce, BinarySemaphore& sem, uint64_t timeout)
