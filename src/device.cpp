@@ -54,7 +54,7 @@ uint32_t pick_queue_ndx(PhysDevice& phys_dev,
 
 #define GET_QUEUE_DAT(name) \
     {\
-        name,\
+        name##_queue,\
         {\
             pick_queue_ndx(phys_dev, [](QueueFamily& q) { return q.name(); }),\
             {}\

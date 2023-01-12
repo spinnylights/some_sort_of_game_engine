@@ -292,7 +292,8 @@ void Vulkan::minicomp_setup()
 
     ImageView scratch_v {scratch};
 
-    auto cmd_pool = std::make_shared<CommandPool>(logi_dev, Device::compute);
+    auto cmd_pool = std::make_shared<CommandPool>(logi_dev,
+                                                  Device::compute_queue);
 
     CommandBuffer cmd_buff {logi_dev, cmd_pool};
 
@@ -334,7 +335,7 @@ void Vulkan::minicomp_setup()
 
     Fence fnce {logi_dev};
 
-    logi_dev->submit(Device::compute, cmd_buff, fnce);
+    logi_dev->submit(Device::compute_queue, cmd_buff, fnce);
 
     fnce.wait();
 

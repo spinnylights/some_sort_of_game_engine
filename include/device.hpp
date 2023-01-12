@@ -73,18 +73,20 @@ public:
      */
     PFN_vkVoidFunction get_proc_addr(const char* name);
 
-    enum QueueFlavor { graphics, compute, present, transfer };
+    enum QueueFlavor {
+        graphics_queue, compute_queue, present_queue, transfer_queue
+    };
 
     static constexpr std::string qflav_str(QueueFlavor f)
     {
         switch(f) {
-        case(graphics):
+        case(graphics_queue):
             return "graphics";
-        case(compute):
+        case(compute_queue):
             return "compute";
-        case(present):
+        case(present_queue):
             return "present";
-        case(transfer):
+        case(transfer_queue):
             return "transfer";
         default:
             return "";
