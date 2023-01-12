@@ -126,23 +126,16 @@ Device::Device(PhysDevice physi_dev, Instance::ptr inst)
     Vulkan::vk_try(create_dev(phys_dev.inner(), &dev_info, NULL, &dev),
                    "create logical device");
 
-    get_dev_queue = {
-        reinterpret_cast<PFN_vkGetDeviceQueue>(
-            get_proc_addr("vkGetDeviceQueue")
-        )
-    };
+#define GET_VK_FN_PTR_INNER(member_name,vk_fn)\
+    member_name = {\
+        reinterpret_cast<PFN_vk##vk_fn>(\
+            get_proc_addr(STRINGIFY(vk##vk_fn))\
+        )\
+    }
 
-    queue_submit = {
-        reinterpret_cast<PFN_vkQueueSubmit>(
-            get_proc_addr("vkQueueSubmit")
-        )
-    };
-
-    destroy_dev = {
-       reinterpret_cast<PFN_vkDestroyDevice>(
-           get_proc_addr("vkDestroyDevice")
-       )
-    };
+    GET_VK_FN_PTR_INNER(get_dev_queue, GetDeviceQueue);
+    GET_VK_FN_PTR_INNER(queue_submit, QueueSubmit);
+    GET_VK_FN_PTR_INNER(destroy_dev, DestroyDevice);
 
     for (const auto& [_, t] : queue_map) {
         get_dev_queue(dev,
