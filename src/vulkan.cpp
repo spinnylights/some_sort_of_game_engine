@@ -330,11 +330,11 @@ void Vulkan::minicomp_setup()
             .dispatch(scratch.extent().width, scratch.extent().height)
             .end();
 
-    Fence scratch_fnce {logi_dev};
+    Fence fnce {logi_dev};
 
-    logi_dev->submit(Device::compute, cmd_buff, scratch_fnce);
+    logi_dev->submit(Device::compute, cmd_buff, fnce);
 
-    scratch_fnce.wait();
+    fnce.wait();
 
     cmd_pool->reset();
 }
