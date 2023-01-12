@@ -32,6 +32,7 @@ CommandBuffer::CommandBuffer(Device::ptr dev, CommandPool::ptr cmd_pool)
       GET_VK_FN_PTR(bind_desc_sets, CmdBindDescriptorSets),
       GET_VK_FN_PTR(pipel_barr, CmdPipelineBarrier),
       GET_VK_FN_PTR(vk_dispatch, CmdDispatch),
+      GET_VK_FN_PTR(copy_image, CmdCopyImage),
       GET_VK_FN_PTR(vk_end, EndCommandBuffer)
 {
     VkCommandBufferAllocateInfo inf {
@@ -180,6 +181,33 @@ CommandBuffer& CommandBuffer::end()
 {
     Vulkan::vk_try(vk_end(nner),
                    "ending command buffer from " + pool->descrptn());
+    log.brk();
+
+    return *this;
+}
+
+CommandBuffer& CommandBuffer::copy(Image& from, Image& to)
+{
+    VkImageCopy inf {
+        .srcSubresource {
+            .aspectMask = flgs(vk::ImageAspectFlag::color),
+            .layerCount = 1,
+        },
+        .dstSubresource {
+            .aspectMask = flgs(vk::ImageAspectFlag::color),
+            .layerCount = 1,
+        },
+        .extent = to.extent(),
+    };
+
+    copy_image(nner,
+               from.inner(), v(vk::ImageLayout::trnsfr_src_optml),
+               to.inner(), v(vk::ImageLayout::trnsfr_dst_optml),
+               1, &inf);
+
+    log.enter("Vulkan",
+              "recording image copy to command buffer from "
+                  + pool->descrptn());
     log.brk();
 
     return *this;

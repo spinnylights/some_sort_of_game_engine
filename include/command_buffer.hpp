@@ -56,6 +56,8 @@ public:
                            vk::ImageLayout             new_layt,
                            vk::ImageAspectFlag         aspect);
 
+    CommandBuffer& copy(Image& from, Image& to);
+
     CommandBuffer& end();
 
     const VkCommandBuffer* inner() const { return &nner; }
@@ -73,6 +75,7 @@ private:
     PFN_vkCmdBindDescriptorSets  bind_desc_sets;
     PFN_vkCmdPipelineBarrier     pipel_barr;
     PFN_vkCmdDispatch            vk_dispatch;
+    PFN_vkCmdCopyImage           copy_image;
     PFN_vkEndCommandBuffer       vk_end;
 };
 

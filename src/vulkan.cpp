@@ -338,6 +338,36 @@ void Vulkan::minicomp_setup()
     cmd_pool->reset();
 
     swch.next(fnce);
+
+    cmd_buff.begin()
+            .barrier(scratch,
+                     PipelineStageFlag::top_of_pipe,
+                     PipelineStageFlag::trnsfr,
+                     AccessFlag::none,
+                     AccessFlag::trnsfr_read,
+                     ImageLayout::gnrl,
+                     ImageLayout::trnsfr_src_optml,
+                     ImageAspectFlag::color)
+            .barrier(swch.img(),
+                     PipelineStageFlag::trnsfr,
+                     PipelineStageFlag::trnsfr,
+                     AccessFlag::trnsfr_read,
+                     AccessFlag::trnsfr_write,
+                     ImageLayout::undfnd,
+                     ImageLayout::trnsfr_dst_optml,
+                     ImageAspectFlag::color)
+            .copy(scratch, swch.img())
+            .barrier(swch.img(),
+                     PipelineStageFlag::trnsfr,
+                     PipelineStageFlag::bottom_of_pipe,
+                     AccessFlag::trnsfr_write,
+                     AccessFlag::none,
+                     ImageLayout::trnsfr_dst_optml,
+                     ImageLayout::prsnt_src,
+                     ImageAspectFlag::color)
+            .end();
+
+    logi_dev->submit(Device::compute_queue, cmd_buff, fnce);
 }
 
 void Vulkan::add_shader(std::string name, BinFile f)
