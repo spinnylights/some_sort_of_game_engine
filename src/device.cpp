@@ -63,16 +63,8 @@ uint32_t pick_queue_ndx(PhysDevice& phys_dev,
 
 Device::Device(PhysDevice physi_dev, Instance::ptr inst)
     : phys_dev {physi_dev},
-      create_dev {
-         reinterpret_cast<PFN_vkCreateDevice>(
-             inst->get_proc_addr("vkCreateDevice")
-         )
-      },
-      get_dev_proc_addr {
-          reinterpret_cast<PFN_vkGetDeviceProcAddr>(
-              inst->get_proc_addr("vkGetDeviceProcAddr")
-          )
-      },
+      GET_VK_FN_PTR_INST(create_dev, CreateDevice),
+      GET_VK_FN_PTR_INST(get_dev_proc_addr, GetDeviceProcAddr),
       queue_map {
         GET_QUEUE_DAT(graphics),
         GET_QUEUE_DAT(compute),

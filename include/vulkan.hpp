@@ -48,6 +48,13 @@ class SDL;
         )\
     }
 
+#define GET_VK_FN_PTR_INST(member_name,vk_fn)\
+    member_name {\
+        reinterpret_cast<PFN_vk##vk_fn>(\
+            inst->get_proc_addr(STRINGIFY(vk##vk_fn))\
+        )\
+    }
+
 /*!
  * \brief The entry point into the Vulkan code; coordinates the
  * activity of the Vulkan classes.
