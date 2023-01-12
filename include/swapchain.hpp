@@ -71,6 +71,9 @@ public:
     ImageView& view();
     Image&     img();
 
+    const uint32_t* ndx() { return &current_ndx; }
+    const VkSwapchainKHR* inner() { return &swch; }
+
 private:
     VkSwapchainKHR swch;
     VkSwapchainKHR old_swch = VK_NULL_HANDLE;
