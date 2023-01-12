@@ -35,3 +35,13 @@ crypt_underworld_SOURCES = \
 	src/fence.cpp \
 	src/heap.cpp \
 	src/engine.cpp
+
+examples_dir = $(top_srcdir)/examples
+circ_dir = $(examples_dir)/circ
+shaders_out_dir = shaders
+
+BUILT_SOURCES := shaders/comp.spv
+
+$(shaders_out_dir)/comp.spv : $(circ_dir)/main.comp
+	mkdir -p $(shaders_out_dir)
+	glslangValidator --target-env vulkan1.3 $^ -o $@

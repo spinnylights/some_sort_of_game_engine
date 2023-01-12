@@ -1,0 +1,17 @@
+#version 460
+
+writeonly uniform layout(set = 0, binding = 0) uimage2D disp_img;
+
+void main()
+{
+    vec2 raw_center = gl_NumWorkGroups.xy / 2;
+    vec2 p = (vec2(gl_WorkGroupID.xy) - raw_center) / (gl_NumWorkGroups.xy / 2);
+    vec2 center = vec2(0);
+    float dist = distance(p, center);
+
+    if (dist > 0.9 && dist <= 1.1) {
+        uvec4 uout_col = uvec4(0, 255, 0, 255);
+
+        imageStore(disp_img, ivec2(gl_WorkGroupID.xy), uout_col);
+    }
+}
