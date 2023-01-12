@@ -177,7 +177,7 @@ uint32_t Device::queue_ndx(QueueFlavor f) const
     return std::get<uint32_t>(queue_map.at(f));
 }
 
-VkQueue Device::queue_for(QueueFlavor f)
+VkQueue Device::queue(QueueFlavor f)
 {
     return std::get<VkQueue>(queue_map.at(f));
 }
@@ -196,7 +196,7 @@ void Device::submit(QueueFlavor f, CommandBuffer& buff, Fence& fnce)
         .pSignalSemaphores = NULL,
     };
 
-    Vulkan::vk_try(queue_submit(queue_for(f), 1, &inf, fnce.inner()),
+    Vulkan::vk_try(queue_submit(queue(f), 1, &inf, fnce.inner()),
                    "submitting to " + qflav_str(f) + " queue");
     log.brk();
 

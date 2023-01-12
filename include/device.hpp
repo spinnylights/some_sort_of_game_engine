@@ -95,7 +95,7 @@ public:
 
     uint32_t queue_ndx(QueueFlavor f) const;
 
-    VkQueue queue_for(QueueFlavor f);
+    VkQueue queue(QueueFlavor f);
 
     void submit(QueueFlavor f, CommandBuffer& buff, Fence& fnce);
 
