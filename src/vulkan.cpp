@@ -349,9 +349,9 @@ void Vulkan::minicomp_setup()
                      ImageLayout::trnsfr_src_optml,
                      ImageAspectFlag::color)
             .barrier(swch.img(),
+                     PipelineStageFlag::top_of_pipe,
                      PipelineStageFlag::trnsfr,
-                     PipelineStageFlag::trnsfr,
-                     AccessFlag::trnsfr_read,
+                     AccessFlag::none,
                      AccessFlag::trnsfr_write,
                      ImageLayout::undfnd,
                      ImageLayout::trnsfr_dst_optml,
