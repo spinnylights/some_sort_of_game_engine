@@ -117,7 +117,9 @@ Swapchain::Swapchain(PhysDevice p_dev,
         .imageArrayLayers      = 1,
 
         // this will probably need to be changed later
-        .imageUsage            = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
+        //.imageUsage            = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
+        .imageUsage            = VK_IMAGE_USAGE_TRANSFER_DST_BIT
+                                 | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
 
         .imageSharingMode      = VK_SHARING_MODE_EXCLUSIVE,
         .queueFamilyIndexCount = 0,

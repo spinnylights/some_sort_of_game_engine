@@ -281,7 +281,8 @@ void Vulkan::minicomp_setup()
             .height = surf.height(),
             .depth  = 1,
         },
-        .usage  = v(vk::ImageUsageFlag::strge),
+        .usage  = flgs(vk::ImageUsageFlag::strge)
+                  | flgs(vk::ImageUsageFlag::trnsfr_src),
         .format = v(vk::Format::r8g8b8a8_uint),
     }};
 
