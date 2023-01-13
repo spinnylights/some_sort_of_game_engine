@@ -51,7 +51,7 @@ public:
      * \param surf The Surface in use.
      * \param sdl The SDL instance in use.
      */
-    Swapchain(PhysDevice p_dev, Device::ptr l_dev, Surface& surf, SDL& sdl);
+    Swapchain(PhysDevice p_dev, Device::ptr l_dev, Surface& surf);
 
     Swapchain(const Swapchain&) = delete;
     Swapchain& operator=(const Swapchain&) = delete;
@@ -74,10 +74,13 @@ public:
     const uint32_t* ndx() { return &current_ndx; }
     const VkSwapchainKHR* inner() { return &swch; }
 
+    void recreate();
+
 private:
     VkSwapchainKHR swch;
-    VkSwapchainKHR old_swch = VK_NULL_HANDLE;
+    PhysDevice p_dev;
     Device::ptr dev;
+    Surface& surf;
     std::vector<Image> imgs;
     std::vector<ImageView> _img_views;
     uint32_t current_ndx;
@@ -89,6 +92,7 @@ private:
 
     void next_img(VkFence fnce, VkSemaphore sem, uint64_t timeout);
 
+    void create(VkSwapchainKHR old_swapchain = VK_NULL_HANDLE);
 };
 
 } // namespace cu

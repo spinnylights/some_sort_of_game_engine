@@ -27,41 +27,14 @@
 #include "device.hpp"
 #include "surface.hpp"
 #include "vulkan.hpp"
-#include "sdl.hpp"
 
 #include <vector>
 #include <algorithm>
 
 namespace cu {
 
-Swapchain::Swapchain(PhysDevice p_dev,
-                     Device::ptr l_dev,
-                     Surface& surf,
-                     SDL& sdl)
-    :dev{l_dev},
-     create_swch{
-        reinterpret_cast<PFN_vkCreateSwapchainKHR>(
-            l_dev->get_proc_addr("vkCreateSwapchainKHR")
-        )
-     },
-     get_swch_imgs{
-        reinterpret_cast<PFN_vkGetSwapchainImagesKHR>(
-            l_dev->get_proc_addr("vkGetSwapchainImagesKHR")
-        )
-     },
-     acquire_next_img{
-        reinterpret_cast<PFN_vkAcquireNextImageKHR>(
-            l_dev->get_proc_addr("vkAcquireNextImageKHR")
-        )
-     },
-     destroy_swch{
-        reinterpret_cast<PFN_vkDestroySwapchainKHR>(
-            l_dev->get_proc_addr("vkDestroySwapchainKHR")
-        )
-     }
+void Swapchain::create(VkSwapchainKHR old_swch)
 {
-    const auto win_size = sdl.get_win_size();
-
     const auto surface_caps = surf.capabilities(p_dev);
     uint32_t   min_img_cnt  = 2;
     if (surface_caps.maxImageCount < min_img_cnt) {
@@ -110,10 +83,7 @@ Swapchain::Swapchain(PhysDevice p_dev,
         .imageFormat           = VK_FORMAT_B8G8R8A8_SRGB,
         .imageColorSpace       = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR,
 
-        .imageExtent           = {
-            .width  = static_cast<uint32_t>(win_size.width),
-            .height = static_cast<uint32_t>(win_size.height)
-        },
+        .imageExtent           = surface_caps.currentExtent,
         .imageArrayLayers      = 1,
 
         // this will probably need to be changed later
@@ -129,8 +99,6 @@ Swapchain::Swapchain(PhysDevice p_dev,
         .presentMode           = pres_mode,
         .clipped               = VK_TRUE,
 
-        // TODO: remember to set this properly during swap chain
-        // recreation
         .oldSwapchain          = old_swch,
     };
 
@@ -191,12 +159,42 @@ Swapchain::Swapchain(PhysDevice p_dev,
     };
 
     for (auto&& vk_img : vk_imgs) {
-        imgs.push_back(Image {vk_img, l_dev, ps});
+        imgs.push_back(Image {vk_img, dev, ps});
     }
 
     for (auto&& img : imgs) {
         _img_views.push_back(ImageView {img});
     }
+}
+
+Swapchain::Swapchain(PhysDevice p_dev_in,
+                     Device::ptr l_dev,
+                     Surface& surf_in)
+    :p_dev {p_dev_in},
+     dev{l_dev},
+     surf {surf_in},
+     create_swch{
+        reinterpret_cast<PFN_vkCreateSwapchainKHR>(
+            l_dev->get_proc_addr("vkCreateSwapchainKHR")
+        )
+     },
+     get_swch_imgs{
+        reinterpret_cast<PFN_vkGetSwapchainImagesKHR>(
+            l_dev->get_proc_addr("vkGetSwapchainImagesKHR")
+        )
+     },
+     acquire_next_img{
+        reinterpret_cast<PFN_vkAcquireNextImageKHR>(
+            l_dev->get_proc_addr("vkAcquireNextImageKHR")
+        )
+     },
+     destroy_swch{
+        reinterpret_cast<PFN_vkDestroySwapchainKHR>(
+            l_dev->get_proc_addr("vkDestroySwapchainKHR")
+        )
+     }
+{
+    create();
 }
 
 Swapchain::~Swapchain() noexcept
@@ -205,6 +203,11 @@ Swapchain::~Swapchain() noexcept
     destroy_swch(dev->inner(), swch, NULL);
     log.finish();
     log.brk();
+}
+
+void Swapchain::recreate()
+{
+    create(swch);
 }
 
 void Swapchain::next_img(VkFence fnce, VkSemaphore sem, uint64_t timeout)

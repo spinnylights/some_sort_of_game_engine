@@ -112,7 +112,11 @@ public:
     //     optional semaphore to wait on
     //     optional swapchain-specific VkResult*
 
-    void present(Swapchain& swch);
+    /*!
+     * \brief Returns true if present succeeded, false if the Swapchain needs to
+     * be recereated.
+     */
+    bool present(Swapchain& swch);
 
 private:
     VkDevice dev;

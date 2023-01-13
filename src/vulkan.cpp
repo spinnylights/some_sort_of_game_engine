@@ -239,7 +239,7 @@ Vulkan::Vulkan(std::vector<const char*> exts,
       logi_dev {
           std::make_shared<Device>(phys_devs.default_device(), inst)
       },
-      swch{phys_devs.default_device(), logi_dev, surf, sdl}
+      swch{phys_devs.default_device(), logi_dev, surf}
 {}
 
 void Vulkan::minicomp_setup()
@@ -297,23 +297,6 @@ void Vulkan::minicomp_setup()
 
     CommandBuffer cmd_buff {logi_dev, cmd_pool};
 
-    //Fence fnce {logi_dev};
-
-    //ImageView* swch_img = swch.next_img(fnce);
-
-    // storage image
-    //
-    // descpool.writes({
-    //     .set = "scratch image",
-    //     .binding = 0,
-    //     .index = 0,
-    //     .count = 1,
-    //     .type = DescriptorType::strge_img,
-    //     .imgs = {swch_img},
-    // })
-
-    // update descriptor set with scratch img
-
     descpool.write()
             .storage_image("scratch image", 0, 0, &scratch_v)
             .submit();
@@ -369,7 +352,7 @@ void Vulkan::minicomp_setup()
 
     logi_dev->submit(Device::compute_queue, cmd_buff, fnce);
 
-    logi_dev->present(swch);
+    while (!logi_dev->present(swch)) swch.recreate();
 }
 
 void Vulkan::add_shader(std::string name, BinFile f)

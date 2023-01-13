@@ -71,7 +71,7 @@ SDL_Window* create_window()
     const auto y_pos = SDL_WINDOWPOS_UNDEFINED;
     const int width = 640;
     const int height = 480;
-    const auto flags = SDL_WINDOW_VULKAN;
+    const auto flags = SDL_WINDOW_VULKAN | SDL_WINDOW_RESIZABLE;
     SDL::sdl_try(win = SDL_CreateWindow(title.c_str(),
                                         x_pos,
                                         y_pos,
@@ -179,13 +179,19 @@ PFN_vkGetInstanceProcAddr SDL::get_get_inst_proc_addr()
 
 void SDL::poll()
 {
+    evs = {};
+
     SDL_Event e;
     while (SDL_PollEvent(&e)) {
-        if (e.type == SDL_QUIT) {
+        switch (e.type) {
+        case SDL_QUIT:
             evs.quit = true;
             log.enter("SDL", std::string("quit event received"));
             log.brk();
-        }
+            break;
+        default:
+            break;
+        };
     }
 }
 

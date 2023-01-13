@@ -23,6 +23,7 @@
 
 #include "log.hpp"
 
+#include "vulkan_util.hpp"
 #include "vulkan.hpp"
 #include "command_buffer.hpp"
 #include "fence.hpp"
@@ -210,7 +211,7 @@ void Device::submit(QueueFlavor f, CommandBuffer& buff, Fence& fnce)
     fnce.wait();
 }
 
-void Device::present(Swapchain& swch)
+bool Device::present(Swapchain& swch)
 {
     // TODO: check for need to transfer image to present queue
 
@@ -221,9 +222,17 @@ void Device::present(Swapchain& swch)
         .pImageIndices  = swch.ndx(),
     };
 
-    Vulkan::vk_try(queue_present(queue(present_queue), &inf),
-                   "presenting swapchain image");
-    log.brk();
+    VkResult res = queue_present(queue(present_queue), &inf);
+    if (res == VK_ERROR_OUT_OF_DATE_KHR || res == VK_SUBOPTIMAL_KHR) {
+        log.enter("Vulkan", std::string("swapchain needs recreating"));
+        log.brk();
+        return false;
+    } else {
+        Vulkan::vk_try(res, "presenting swapchain image");
+        log.brk();
+    }
+
+    return true;
 }
 
 } // namespace cu

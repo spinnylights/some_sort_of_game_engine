@@ -115,13 +115,19 @@ public:
 private:
     Instance::ptr inst;
     DebugMsgr dbg_msgr;
+
+private:
     Surface surf;
     PhysDevices phys_devs;
     Device::ptr logi_dev;
+
+
+private:
     Swapchain swch;
 
 private:
     std::unordered_map<std::string, ShaderModule::ptr> shdrs;
+
 };
 
 } // namespace cu
