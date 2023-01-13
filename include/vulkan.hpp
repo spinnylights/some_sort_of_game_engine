@@ -34,6 +34,7 @@
 #include "device.hpp"
 #include "swapchain.hpp"
 #include "shader_module.hpp"
+#include "heap.hpp"
 
 namespace cu {
 
@@ -121,6 +122,8 @@ private:
     PhysDevices phys_devs;
     Device::ptr logi_dev;
 
+private:
+    Heap heap;
 
 private:
     Swapchain swch;

@@ -32,7 +32,6 @@
 #include "command_pool.hpp"
 #include "command_buffer.hpp"
 #include "fence.hpp"
-#include "heap.hpp"
 
 #include <stdexcept>
 #include <array>
@@ -239,6 +238,7 @@ Vulkan::Vulkan(std::vector<const char*> exts,
       logi_dev {
           std::make_shared<Device>(phys_devs.default_device(), inst)
       },
+      heap {logi_dev, phys_devs.default_device()},
       swch{phys_devs.default_device(), logi_dev, surf}
 {}
 
@@ -274,8 +274,6 @@ void Vulkan::minicomp_setup()
     ComputePipeline pipel {logi_dev, minicomp_shdr, p_layt};
 
     DescriptorPool descpool {logi_dev, d_layts};
-
-    Heap heap {logi_dev, phys_devs.default_device()};
 
     Image scratch {logi_dev, {
         .extent = {
