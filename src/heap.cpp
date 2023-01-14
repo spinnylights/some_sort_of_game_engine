@@ -69,10 +69,54 @@ Heap::Pool::Pool(VkDeviceSize size, MemoryType mem_type)
     : sz {size},
       type {mem_type}
 {
-    blocks.push_back({ .sz = sz, .offset = 0, });
+    blocks = new Block { .front = true };
+    blocks->nxt = new Block { .sz = sz, .offset = 0 };
+    blocks->prv = blocks->nxt;
+    blocks->nxt->prv = blocks;
+    blocks->nxt->nxt = blocks;
 }
 
-Heap::Block Heap::Pool::reserve_space(VkDeviceSize sz, VkDeviceSize alignment)
+Heap::Pool::~Pool() noexcept
+{
+    Block* p = blocks->nxt;
+    while (!p->front) {
+        Block* tmp = p->nxt;
+        p->erase();
+        p = tmp;
+    }
+    p->erase();
+}
+
+void Heap::Block::insert_before(Block* p)
+{
+    Block* tmp = prv;
+    prv = p;
+    tmp->nxt = p;
+    p->prv = tmp;
+    p->nxt = this;
+}
+
+void Heap::Block::erase()
+{
+    prv->nxt = nxt;
+    nxt->prv = prv;
+    log.enter("Vulkan", std::string("erasing block"));
+    log_attrs();
+    log.brk();
+    delete this;
+}
+
+void Heap::Block::log_attrs()
+{
+    log.indent();
+    log.enter("sz", sz);
+    log.enter("offset", offset);
+    log.enter("handle", handle);
+    log.enter("avail", static_cast<int>(avail));
+    log.enter("front", static_cast<int>(front));
+}
+
+Heap::Block* Heap::Pool::reserve_space(VkDeviceSize sz, VkDeviceSize alignment)
 {
     // [{.sz = 128, .offset = 0, .avail = true}]
     //
@@ -93,44 +137,51 @@ Heap::Block Heap::Pool::reserve_space(VkDeviceSize sz, VkDeviceSize alignment)
     //  2: {.sz = 11, .offset = 37, .avail = true}
     //  3: {.sz = 20, .offset = 48, .avail = false}
     //  4: {.sz = 60, .offset = 68, .avail = true}]
+
     VkDeviceSize start = 0;
     VkDeviceSize end = 0;
-    auto find_free = [sz, alignment, &start, &end](Block b)
+    auto find_free = [sz, alignment, &start, &end](Block* b)
     {
-        if (b.avail) {
-            if (b.offset % alignment) {
-                start = b.offset + (alignment - (b.offset % alignment));
+        if (b->avail) {
+            if (b->offset % alignment) {
+                start = b->offset + (alignment - (b->offset % alignment));
             } else {
-                start = b.offset;
+                start = b->offset;
             }
 
             end = start + sz;
 
-            return b.sz > sz && b.end() > end;
+            return b->sz > sz && b->end() > end;
         } else {
             return false;
         }
     };
 
     log.attempt("Vulkan", "finding free block in main pool");
-    auto free_b = std::find_if(blocks.begin(), blocks.end(), find_free);
-
-    if (free_b == std::end(blocks)) {
-        throw std::runtime_error("no space left in main pool "
-                                 "(PLACEHOLDER: reserve more memory)");
+    Block* free_b = blocks->nxt;
+    for (; !free_b->front && find_free(free_b); free_b = free_b->nxt) {
+        if (free_b->front) {
+            throw std::runtime_error("no space left in main pool "
+                                     "(PLACEHOLDER: reserve more memory)");
+            log.finish();
+        }
     }
-    log.finish();
 
     log.indent();
 
-    Block reserved {
+    Block* reserved = new Block {
         .sz     = sz,
         .offset = start,
+        .handle = next_handle++,
         .avail  = false,
     };
 
+    if (next_handle == 0) {
+        next_handle = 1;
+    }
+
     if (free_b->offset < start) {
-        Block before {
+        Block* before = new Block {
             .sz     = start - free_b->offset,
             .offset = free_b->offset,
             .avail  = true,
@@ -139,26 +190,26 @@ Heap::Block Heap::Pool::reserve_space(VkDeviceSize sz, VkDeviceSize alignment)
         log.enter({
             .name = "before block",
             .members = {
-                {"size", before.sz},
-                {"offset", before.offset},
+                {"size", before->sz},
+                {"offset", before->offset},
             }
         });
 
-        blocks.insert(free_b, before);
+        free_b->insert_before(before);
     }
 
-    blocks.insert(free_b, reserved);
+    free_b->insert_before(reserved);
 
     log.enter({
         .name = "reserved block",
         .members = {
-            {"size", reserved.sz},
-            {"offset", reserved.offset},
+            {"size", reserved->sz},
+            {"offset", reserved->offset},
         }
     });
 
     if (free_b->end() > end) {
-        Block after {
+        Block* after = new Block {
             .sz     = free_b->end() - end,
             .offset = end,
             .avail  = true,
@@ -167,22 +218,22 @@ Heap::Block Heap::Pool::reserve_space(VkDeviceSize sz, VkDeviceSize alignment)
         log.enter({
             .name = "after block",
             .members = {
-                {"size", after.sz},
-                {"offset", after.offset},
+                {"size", after->sz},
+                {"offset", after->offset},
             }
         });
 
-        blocks.insert(free_b, after);
+        free_b->insert_before(after);
     }
 
-    blocks.erase(free_b);
+    if (!free_b->front) free_b->erase();
 
     log.brk();
 
     return reserved;
 }
 
-void Heap::alloc_on_dev(Image& img)
+Heap::handle_t Heap::alloc_on_dev(Image& img)
 {
     if (!img.mem_type_supported(main_pool.type)) {
         throw std::runtime_error("main pool memory does not support this type "
@@ -193,9 +244,24 @@ void Heap::alloc_on_dev(Image& img)
     Vulkan::vk_try(bind_img_mem(dev->inner(),
                                 img.inner(),
                                 main_pool.nner,
-                                block.offset),
+                                block->offset),
                    "binding image to memory");
     log.brk();
+
+    return block->handle;
+}
+
+void Heap::Pool::release(Heap::handle_t h)
+{
+    Block* p = blocks->nxt;
+    for (; !p->front && p->handle != h; p = p->nxt);
+
+    if (!p->front) p->erase();
+}
+
+void Heap::release(handle_t h)
+{
+    main_pool.release(h);
 }
 
 } // namespace cu

@@ -27,8 +27,6 @@
 #include "image.hpp"
 #include "log.hpp"
 
-#include <list>
-
 namespace cu {
 
 /*!
@@ -39,9 +37,12 @@ namespace cu {
  */
 class Heap {
 public:
+    using handle_t = uint64_t;
+
     Heap(Device::ptr l_dev, PhysDevice ph_dev);
 
-    void alloc_on_dev(Image& img);
+    handle_t alloc_on_dev(Image& img);
+    void release(handle_t h);
 
     ~Heap() noexcept;
 
@@ -56,22 +57,35 @@ private:
 
 private:
     struct Block {
+        constexpr static handle_t no_handle = 0;
+
         VkDeviceSize sz;
         VkDeviceSize offset;
+        handle_t handle = no_handle;
+        Block* prv;
+        Block* nxt;
         bool avail = true;
+        bool front = false;
 
         VkDeviceSize end() const { return offset + sz; }
+
+        void insert_before(Block*);
+        void erase();
+        void log_attrs();
     };
 
     struct Pool {
         VkDeviceMemory nner;
         VkDeviceSize   sz;
         MemoryType     type;
-        std::list<Block> blocks;
+        Block* blocks;
+        handle_t next_handle = Block::no_handle + 1;
 
         Pool(VkDeviceSize size, MemoryType mem_type);
+        ~Pool() noexcept;
 
-        Block reserve_space(VkDeviceSize sz, VkDeviceSize alignment);
+        Block* reserve_space(VkDeviceSize sz, VkDeviceSize alignment);
+        void release(handle_t h);
     };
 
     Pool main_pool;
@@ -80,7 +94,6 @@ private:
     PFN_vkAllocateMemory  alloc_mem;
     PFN_vkFreeMemory      free_mem;
     PFN_vkBindImageMemory bind_img_mem;
-
 };
 
 } // namespace cu
