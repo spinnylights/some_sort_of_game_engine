@@ -84,6 +84,7 @@ void Engine::minicomp_mode(std::filesystem::path comp_spv_path)
         }
 
         // render
+        vulk.minicomp_frame();
         auto end = std::chrono::steady_clock::now();
 
         std::chrono::duration<double> dur = end - start;

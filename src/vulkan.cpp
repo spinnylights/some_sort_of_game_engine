@@ -246,6 +246,8 @@ void Vulkan::minicomp_setup()
 {
     using namespace vk;
 
+    // set up the "scratch" image descriptor set layout
+
     DescriptorSetLayoutBinding swapimg ({
         .binding_ndx   = 0,
         .type          = DescriptorType::strge_img,
@@ -253,29 +255,35 @@ void Vulkan::minicomp_setup()
         .shader_stages = flgs(ShaderStageFlag::cmpte),
     });
 
-    std::vector<DescriptorSetLayoutBinding> bndgs = {swapimg};
+    minist.bndgs({swapimg});
 
     auto d_layt = std::make_shared<DescriptorSetLayout>(logi_dev,
                                                         "scratch image",
-                                                        bndgs);
+                                                        minist.bndgs());
 
-    std::vector<DescriptorSetLayout::ptr> d_layts = {d_layt};
+    minist.d_layts({d_layt});
 
-    auto p_layt = std::make_shared<PipelineLayout>(logi_dev, d_layts);
+    // compute pipeline and shader module
 
-    ShaderModule::ptr minicomp_shdr;
+    minist.p_layt(std::make_shared<PipelineLayout>(logi_dev, minist.d_layts()));
 
     if (auto search = shdrs.find("minicomp"); search != shdrs.end()) {
-        minicomp_shdr = search->second;
+        minist.minicomp_shdr(search->second);
     } else {
         throw std::runtime_error("failed to find shader 'minicomp'");
     }
 
-    ComputePipeline pipel {logi_dev, minicomp_shdr, p_layt};
+    minist.pipel(new ComputePipeline {logi_dev,
+                                      minist.minicomp_shdr(),
+                                      minist.p_layt()});
 
-    DescriptorPool descpool {logi_dev, d_layts};
+    // create scrach image descriptor pool/set
 
-    Image scratch {logi_dev, {
+    minist.descpool(new DescriptorPool {logi_dev, minist.d_layts()});
+
+    // set up scratch image and view
+
+    minist.scratch(new Image {logi_dev, {
         .extent = {
             .width  = surf.width(),
             .height = surf.height(),
@@ -284,73 +292,138 @@ void Vulkan::minicomp_setup()
         .usage  = flgs(ImageUsageFlag::strge)
                   | flgs(ImageUsageFlag::trnsfr_src),
         .format = v(Format::r8g8b8a8_uint),
-    }};
+    }});
 
-    heap.alloc_on_dev(scratch);
+    minist.scrtch_h = heap.alloc_on_dev(minist.scratch());
 
-    ImageView scratch_v {scratch};
+    minist.scratch_v(new ImageView {minist.scratch()});
 
-    auto cmd_pool = std::make_shared<CommandPool>(logi_dev,
-                                                  Device::compute_queue);
+    // update scratch image descriptor set
 
-    CommandBuffer cmd_buff {logi_dev, cmd_pool};
-
-    descpool.write()
-            .storage_image("scratch image", 0, 0, &scratch_v)
+    minist.descpool().write()
+            .storage_image("scratch image", 0, 0, &minist.scratch_v())
             .submit();
 
-    cmd_buff.begin()
-            .bind(pipel, {descpool["scratch image"]})
-            .barrier(scratch,
-                     PipelineStageFlag::top_of_pipe,
-                     PipelineStageFlag::cmpte_shader,
-                     AccessFlag::none,
-                     AccessFlag::shader_write,
-                     ImageLayout::undfnd,
-                     ImageLayout::gnrl,
-                     ImageAspectFlag::color)
-            .dispatch(scratch.extent().width, scratch.extent().height)
-            .end();
+    // create compute queue command pool and buffer
 
-    Fence fnce {logi_dev};
+    minist.cmd_pool(std::make_shared<CommandPool>(logi_dev,
+                                                      Device::compute_queue));
 
-    logi_dev->submit(Device::compute_queue, cmd_buff, fnce);
+    minist.cmd_buff(new CommandBuffer {logi_dev, minist.cmd_pool()});
 
-    cmd_pool->reset();
+    // create fence
 
-    swch.next(fnce);
+    minist.fnce(new Fence {logi_dev});
+}
 
-    cmd_buff.begin()
-            .barrier(scratch,
-                     PipelineStageFlag::top_of_pipe,
-                     PipelineStageFlag::trnsfr,
-                     AccessFlag::none,
-                     AccessFlag::trnsfr_read,
-                     ImageLayout::gnrl,
-                     ImageLayout::trnsfr_src_optml,
-                     ImageAspectFlag::color)
-            .barrier(swch.img(),
-                     PipelineStageFlag::top_of_pipe,
-                     PipelineStageFlag::trnsfr,
-                     AccessFlag::none,
-                     AccessFlag::trnsfr_write,
-                     ImageLayout::undfnd,
-                     ImageLayout::trnsfr_dst_optml,
-                     ImageAspectFlag::color)
-            .copy(scratch, swch.img())
-            .barrier(swch.img(),
-                     PipelineStageFlag::trnsfr,
-                     PipelineStageFlag::bottom_of_pipe,
-                     AccessFlag::trnsfr_write,
-                     AccessFlag::none,
-                     ImageLayout::trnsfr_dst_optml,
-                     ImageLayout::prsnt_src,
-                     ImageAspectFlag::color)
-            .end();
+void Vulkan::minicomp_recreate_swch()
+{
+    using namespace vk;
 
-    logi_dev->submit(Device::compute_queue, cmd_buff, fnce);
+    log.enter("Vulkan", std::string("WARNING WARNING WARNING this is probably "
+                                    "a sign of imminent disaster"));
+    log.brk();
 
-    while (!logi_dev->present(swch)) swch.recreate();
+    // recreate swapchain
+
+    swch.recreate();
+
+    delete minist.ppl;
+    minist.pipel(new ComputePipeline {logi_dev,
+                                      minist.minicomp_shdr(),
+                                      minist.p_layt()});
+
+    // recreate scratch image + view
+
+    delete minist.scrtch_v;
+    delete minist.scrtch;
+    heap.release(minist.scrtch_h);
+
+    minist.scratch(new Image {logi_dev, {
+        .extent = {
+            .width  = swch.width(),
+            .height = swch.height(),
+            .depth  = 1,
+        },
+        .usage  = flgs(ImageUsageFlag::strge)
+                  | flgs(ImageUsageFlag::trnsfr_src),
+        .format = v(Format::r8g8b8a8_uint),
+    }});
+    minist.scrtch_h = heap.alloc_on_dev(minist.scratch());
+    minist.scratch_v(new ImageView {minist.scratch()});
+
+    // update scratch image descriptor set
+
+    minist.descpool().write()
+                     .storage_image("scratch image",
+                                    0,
+                                    0,
+                                    &minist.scratch_v())
+                     .submit();
+}
+
+void Vulkan::minicomp_frame()
+{
+    using namespace vk;
+
+    // get next swapchain image
+
+    auto res = swch.next(minist.fnce());
+    if (res == SwapchainResult::needs_recreate) {
+        minicomp_recreate_swch();
+        return;
+    } else if (res == SwapchainResult::not_ready) {
+        return;
+    }
+
+    // render to scratch image + copy to swapchain image
+
+    minist.cmd_pool()->reset();
+
+    minist.cmd_buff().begin()
+                     .bind(minist.pipel(), {minist.descpool()["scratch image"]})
+                     .barrier(minist.scratch(),
+                              PipelineStageFlag::top_of_pipe,
+                              PipelineStageFlag::cmpte_shader,
+                              AccessFlag::none,
+                              AccessFlag::shader_write,
+                              ImageLayout::undfnd,
+                              ImageLayout::gnrl,
+                              ImageAspectFlag::color)
+                     .dispatch(swch.width(),
+                               swch.height())
+                     .barrier(swch.img(),
+                              PipelineStageFlag::top_of_pipe,
+                              PipelineStageFlag::trnsfr,
+                              AccessFlag::none,
+                              AccessFlag::trnsfr_write,
+                              ImageLayout::undfnd,
+                              ImageLayout::trnsfr_dst_optml,
+                              ImageAspectFlag::color)
+                     .barrier(minist.scratch(),
+                              PipelineStageFlag::cmpte_shader,
+                              PipelineStageFlag::trnsfr,
+                              AccessFlag::shader_write,
+                              AccessFlag::trnsfr_read,
+                              ImageLayout::gnrl,
+                              ImageLayout::trnsfr_src_optml,
+                              ImageAspectFlag::color)
+                     .copy(minist.scratch(), swch.img())
+                     .barrier(swch.img(),
+                              PipelineStageFlag::trnsfr,
+                              PipelineStageFlag::bottom_of_pipe,
+                              AccessFlag::trnsfr_write,
+                              AccessFlag::none,
+                              ImageLayout::trnsfr_dst_optml,
+                              ImageLayout::prsnt_src,
+                              ImageAspectFlag::color)
+                     .end();
+
+    logi_dev->submit(Device::compute_queue, minist.cmd_buff(), minist.fnce());
+
+    while (!logi_dev->present(swch)) {
+        minicomp_recreate_swch();
+    }
 }
 
 void Vulkan::add_shader(std::string name, BinFile f)
@@ -368,6 +441,16 @@ void Vulkan::add_shader(std::string name, BinFile f)
     if (!ok) {
         throw std::runtime_error("failed to add shader " + name);
     }
+}
+
+Vulkan::minicomp_state::~minicomp_state() noexcept
+{
+    delete f;
+    delete cmdb;
+    delete scrtch_v;
+    delete scrtch;
+    delete descpl;
+    delete ppl;
 }
 
 } // namespace cu

@@ -35,6 +35,9 @@
 #include "swapchain.hpp"
 #include "shader_module.hpp"
 #include "heap.hpp"
+#include "command_pool.hpp"
+#include "descriptor_pool.hpp"
+#include "compute_pipeline.hpp"
 
 namespace cu {
 
@@ -113,6 +116,8 @@ public:
     // TODO: replace with something more general-purpose
     void minicomp_setup();
 
+    void minicomp_frame();
+
 private:
     Instance::ptr inst;
     DebugMsgr dbg_msgr;
@@ -131,6 +136,60 @@ private:
 private:
     std::unordered_map<std::string, ShaderModule::ptr> shdrs;
 
+private:
+    struct minicomp_state {
+        std::vector<DescriptorSetLayoutBinding> bns;
+        std::vector<DescriptorSetLayout::ptr> dls;
+        PipelineLayout::ptr pl;
+        ShaderModule::ptr shdr;
+        ComputePipeline* ppl;
+        DescriptorPool* descpl;
+        Image* scrtch;
+        Heap::handle_t scrtch_h;
+        ImageView* scrtch_v;
+        CommandPool::ptr cmdp;
+        CommandBuffer* cmdb;
+        Fence* f;
+
+        std::vector<DescriptorSetLayoutBinding>& bndgs() { return bns; }
+        void bndgs(std::vector<DescriptorSetLayoutBinding> b) { bns = b; }
+
+        std::vector<DescriptorSetLayout::ptr>& d_layts() { return dls; }
+        void d_layts(std::vector<DescriptorSetLayout::ptr> d) { dls = d; }
+
+        PipelineLayout::ptr p_layt() { return pl; }
+        void p_layt(PipelineLayout::ptr p) { pl = p; }
+
+        ShaderModule::ptr minicomp_shdr() { return shdr; }
+        void minicomp_shdr(ShaderModule::ptr p ) { shdr = p; }
+
+        ComputePipeline& pipel() { return *ppl; }
+        void pipel(ComputePipeline* newp) { ppl = newp; }
+
+        DescriptorPool& descpool() { return *descpl; }
+        void descpool(DescriptorPool* newp) { descpl = newp; }
+
+        Image& scratch() { return *scrtch; }
+        void scratch(Image* img) { scrtch = img; }
+
+        ImageView& scratch_v() { return *scrtch_v; }
+        void scratch_v(ImageView* imgv) { scrtch_v = imgv; }
+
+        CommandPool::ptr cmd_pool() { return cmdp; }
+        void cmd_pool(CommandPool::ptr newp) { cmdp = newp; }
+
+        CommandBuffer& cmd_buff() { return *cmdb; }
+        void cmd_buff(CommandBuffer* newp) { cmdb = newp; }
+
+        Fence& fnce() { return *f; }
+        void fnce(Fence* newp) { f = newp; }
+
+        ~minicomp_state() noexcept;
+    };
+
+    minicomp_state minist = {};
+
+    void minicomp_recreate_swch();
 };
 
 } // namespace cu
