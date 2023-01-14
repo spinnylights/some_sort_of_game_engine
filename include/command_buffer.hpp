@@ -34,7 +34,7 @@ class CommandBuffer {
 public:
     CommandBuffer(Device::ptr l_dev, CommandPool::ptr cmd_pool);
 
-    CommandBuffer& begin();
+    CommandBuffer& record();
 
     CommandBuffer& bind(ComputePipeline&);
     CommandBuffer& bind(ComputePipeline&, std::vector<VkDescriptorSet>);

@@ -48,7 +48,7 @@ CommandBuffer::CommandBuffer(Device::ptr dev, CommandPool::ptr cmd_pool)
     log.brk();
 }
 
-CommandBuffer& CommandBuffer::begin()
+CommandBuffer& CommandBuffer::record()
 {
     VkCommandBufferBeginInfo inf = {
         .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,

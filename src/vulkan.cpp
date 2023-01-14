@@ -380,7 +380,7 @@ void Vulkan::minicomp_frame()
 
     minist.cmd_pool()->reset();
 
-    minist.cmd_buff().begin()
+    minist.cmd_buff().record()
                      .bind(minist.pipel(), {minist.descpool()["scratch image"]})
                      .barrier(minist.scratch(),
                               PipelineStageFlag::top_of_pipe,
