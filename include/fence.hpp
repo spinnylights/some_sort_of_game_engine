@@ -51,11 +51,11 @@ public:
      */
     void wait_for(uint64_t ns);
 
+    void reset();
+
 private:
     PFN_vkWaitForFences vk_wait;
     PFN_vkResetFences   vk_reset;
-
-    void reset();
 };
 
 } // namespace cu
