@@ -36,6 +36,7 @@ namespace cu {
 void Swapchain::create(VkSwapchainKHR old_swch)
 {
     const auto surface_caps = surf.capabilities(p_dev);
+    extent = surface_caps.currentExtent;
     uint32_t   min_img_cnt  = 2;
     if (surface_caps.maxImageCount < min_img_cnt) {
         min_img_cnt = surface_caps.maxImageCount;
@@ -83,7 +84,7 @@ void Swapchain::create(VkSwapchainKHR old_swch)
         .imageFormat           = VK_FORMAT_B8G8R8A8_SRGB,
         .imageColorSpace       = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR,
 
-        .imageExtent           = surface_caps.currentExtent,
+        .imageExtent           = extent,
         .imageArrayLayers      = 1,
 
         // this will probably need to be changed later

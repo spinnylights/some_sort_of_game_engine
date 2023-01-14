@@ -76,6 +76,9 @@ public:
 
     void recreate();
 
+    uint32_t width() { return extent.width; }
+    uint32_t height() { return extent.height; }
+
 private:
     VkSwapchainKHR swch;
     PhysDevice p_dev;
@@ -83,6 +86,7 @@ private:
     Surface& surf;
     std::vector<Image> imgs;
     std::vector<ImageView> _img_views;
+    VkExtent2D extent;
     uint32_t current_ndx;
 
     PFN_vkCreateSwapchainKHR create_swch;
