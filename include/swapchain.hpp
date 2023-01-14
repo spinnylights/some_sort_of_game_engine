@@ -38,6 +38,8 @@ class Surface;
 class Instance;
 class SDL;
 
+enum class SwapchainResult { okay, needs_recreate, not_ready };
+
 /*!
  * \brief A Vulkan swapchain wrapper.
  */
@@ -61,12 +63,12 @@ public:
 
     ~Swapchain() noexcept;
 
-    void next(BinarySemaphore& sem);
-    void next(Fence& fnce);
-    void next(BinarySemaphore& sem, uint64_t timeout);
-    void next(Fence& fnce, uint64_t timeout);
-    void next(Fence& fnce, BinarySemaphore& sem);
-    void next(Fence& fnce, BinarySemaphore& sem, uint64_t timeout);
+    SwapchainResult next(BinarySemaphore& sem);
+    SwapchainResult next(Fence& fnce);
+    SwapchainResult next(BinarySemaphore& sem, uint64_t timeout);
+    SwapchainResult next(Fence& fnce, uint64_t timeout);
+    SwapchainResult next(Fence& fnce, BinarySemaphore& sem);
+    SwapchainResult next(Fence& fnce, BinarySemaphore& sem, uint64_t timeout);
 
     ImageView& view();
     Image&     img();
@@ -94,7 +96,7 @@ private:
     PFN_vkAcquireNextImageKHR acquire_next_img;
     PFN_vkDestroySwapchainKHR destroy_swch;
 
-    void next_img(VkFence fnce, VkSemaphore sem, uint64_t timeout);
+    SwapchainResult next_img(VkFence fnce, VkSemaphore sem, uint64_t timeout);
 
     void create(VkSwapchainKHR old_swapchain = VK_NULL_HANDLE);
 };

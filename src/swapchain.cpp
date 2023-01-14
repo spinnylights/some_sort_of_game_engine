@@ -101,9 +101,14 @@ void Swapchain::create(VkSwapchainKHR old_swch)
         .clipped               = VK_TRUE,
 
         .oldSwapchain          = old_swch,
+        //.oldSwapchain          = VK_NULL_HANDLE,
     };
 
-    Vulkan::vk_try(create_swch(dev->inner(), &create_info, NULL, &swch),
+    _img_views.clear();
+    imgs.clear();
+
+    VkSwapchainKHR new_swch;
+    Vulkan::vk_try(create_swch(dev->inner(), &create_info, NULL, &new_swch),
                    "creating swapchain");
     log.indent();
     log.enter("min image count", min_img_cnt);
@@ -123,6 +128,15 @@ void Swapchain::create(VkSwapchainKHR old_swch)
     log.enter("present mode",
               vk::prsnt_mode_str(create_info.presentMode));
     log.brk();
+
+    if (old_swch != VK_NULL_HANDLE) {
+        log.attempt("Vulkan", "destroying old swapchain");
+        destroy_swch(dev->inner(), old_swch, NULL);
+        log.finish();
+        log.brk();
+    }
+
+    swch = std::move(new_swch);
 
     uint32_t imgs_cnt;
     Vulkan::vk_try(get_swch_imgs(dev->inner(), swch, &imgs_cnt, NULL),
@@ -208,55 +222,93 @@ Swapchain::~Swapchain() noexcept
 
 void Swapchain::recreate()
 {
+    log.enter("Vulkan", std::string("recreating swapchain"));
+    log.brk();
     create(swch);
 }
 
-void Swapchain::next_img(VkFence fnce, VkSemaphore sem, uint64_t timeout)
+SwapchainResult Swapchain::next_img(VkFence fnce,
+                                    VkSemaphore sem,
+                                    uint64_t timeout)
 {
-    Vulkan::vk_try(acquire_next_img(dev->inner(),
+    log.attempt("Vulkan", "acquiring next swapchain image");
+    VkResult res = acquire_next_img(dev->inner(),
                                     swch,
                                     timeout,
                                     sem,
                                     fnce,
-                                    &current_ndx),
-                   "acquire next swapchain image");
-    log.indent();
-    log.enter("index", current_ndx);
-    log.brk();
+                                    &current_ndx);
+
+    if (res == VK_ERROR_OUT_OF_DATE_KHR || res == VK_SUBOPTIMAL_KHR) {
+        log.enter("swapchain needs recreation");
+        log.brk();
+        return SwapchainResult::needs_recreate;
+    } else if (res == VK_TIMEOUT || res == VK_NOT_READY) {
+        log.enter("not ready");
+        log.brk();
+        return SwapchainResult::not_ready;
+    } else {
+        log.finish();
+        Vulkan::vk_try(res, "double-checking swapchain image acquisition");
+        log.indent();
+        log.enter("index", current_ndx);
+        log.brk();
+    }
+
+    return SwapchainResult::okay;
 }
 
-void Swapchain::next(Fence& fnce, BinarySemaphore& sem, uint64_t timeout)
+void fence_response(Fence& fnce, SwapchainResult res)
 {
-    next_img(fnce.inner(), sem.inner(), timeout);
-    fnce.wait();
+    if (res == SwapchainResult::okay) {
+        fnce.wait();
+    } else {
+        fnce.reset();
+    }
 }
 
-void Swapchain::next(Fence& fnce, BinarySemaphore& sem)
+SwapchainResult Swapchain::next(Fence& fnce,
+                                BinarySemaphore& sem,
+                                uint64_t timeout)
 {
-    next_img(fnce.inner(), sem.inner(), UINT64_MAX);
-    fnce.wait();
+    auto res = next_img(fnce.inner(), sem.inner(), timeout);
+
+    fence_response(fnce, res);
+    return res;
 }
 
-void Swapchain::next(Fence& fnce, uint64_t timeout)
+SwapchainResult Swapchain::next(Fence& fnce, BinarySemaphore& sem)
 {
-    next_img(fnce.inner(), VK_NULL_HANDLE, timeout);
-    fnce.wait();
+    auto res = next_img(fnce.inner(), sem.inner(), 0);
+
+    fence_response(fnce, res);
+    return res;
 }
 
-void Swapchain::next(Fence& fnce)
+SwapchainResult Swapchain::next(Fence& fnce, uint64_t timeout)
 {
-    next_img(fnce.inner(), VK_NULL_HANDLE, UINT64_MAX);
-    fnce.wait();
+    auto res = next_img(fnce.inner(), VK_NULL_HANDLE, timeout);
+
+    fence_response(fnce, res);
+    return res;
 }
 
-void Swapchain::next(BinarySemaphore& sem, uint64_t timeout)
+SwapchainResult Swapchain::next(Fence& fnce)
 {
-    next_img(VK_NULL_HANDLE, sem.inner(), timeout);
+    auto res = next_img(fnce.inner(), VK_NULL_HANDLE, 0);
+
+    fence_response(fnce, res);
+    return res;
 }
 
-void Swapchain::next(BinarySemaphore& sem)
+SwapchainResult Swapchain::next(BinarySemaphore& sem, uint64_t timeout)
 {
-    next_img(VK_NULL_HANDLE, sem.inner(), UINT64_MAX);
+    return next_img(VK_NULL_HANDLE, sem.inner(), timeout);
+}
+
+SwapchainResult Swapchain::next(BinarySemaphore& sem)
+{
+    return next_img(VK_NULL_HANDLE, sem.inner(), 0);
 }
 
 ImageView& Swapchain::view()
