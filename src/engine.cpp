@@ -23,6 +23,8 @@
 
 #include "log.hpp"
 
+#include <chrono>
+
 namespace cu {
 
 std::vector<const char*> Engine::layers()
@@ -74,6 +76,7 @@ void Engine::minicomp_mode(std::filesystem::path comp_spv_path)
 
     bool quit = false;
     while (!quit) {
+        auto start = std::chrono::steady_clock::now();
         sdl.poll();
 
         if (sdl.quit()) {
@@ -81,6 +84,14 @@ void Engine::minicomp_mode(std::filesystem::path comp_spv_path)
         }
 
         // render
+        auto end = std::chrono::steady_clock::now();
+
+        std::chrono::duration<double> dur = end - start;
+
+        log.enter("Engine", "** END OF FRAME ** ("
+                  + std::to_string(dur.count())
+                  + " s.)");
+        log.brk();
     }
 }
 
