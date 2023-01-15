@@ -27,6 +27,7 @@
 #include "command_pool.hpp"
 #include "compute_pipeline.hpp"
 #include "image.hpp"
+#include "pc_range.hpp"
 
 namespace cu {
 
@@ -58,6 +59,8 @@ public:
 
     CommandBuffer& copy(Image& from, Image& to);
 
+    CommandBuffer& push_constants(ComputePipeline&, PCRange&);
+
     CommandBuffer& end();
 
     const VkCommandBuffer* inner() const { return &nner; }
@@ -76,6 +79,7 @@ private:
     PFN_vkCmdPipelineBarrier     pipel_barr;
     PFN_vkCmdDispatch            vk_dispatch;
     PFN_vkCmdCopyImage           copy_image;
+    PFN_vkCmdPushConstants       push_consts;
     PFN_vkEndCommandBuffer       vk_end;
 };
 

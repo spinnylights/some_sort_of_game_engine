@@ -25,6 +25,7 @@
 #include "vulkan_util.hpp"
 #include "descriptor_set_layout.hpp"
 #include "deviced.hpp"
+#include "pc_range.hpp"
 
 #include <vector>
 #include <algorithm>
@@ -37,10 +38,9 @@ class PipelineLayout : public Deviced<PFN_vkCreatePipelineLayout,
 public:
     using ptr = std::shared_ptr<PipelineLayout>;
 
-    struct Args {
-        std::vector<DescriptorSetLayout::ptr> dscrpt_set_layouts;
-        // TODO: push constants
-    };
+    PipelineLayout(Device::ptr l_dev,
+                   std::vector<DescriptorSetLayout::ptr> dscrpt_set_layouts,
+                   std::vector<PCRange*> push_consts);
 
     PipelineLayout(Device::ptr l_dev,
                    std::vector<DescriptorSetLayout::ptr> dscrpt_set_layouts);
@@ -53,7 +53,9 @@ private:
     std::vector<DescriptorSetLayout::ptr> dscr_layts;
 
 private:
-    VkPipelineLayoutCreateFlags flgs;
+    PipelineLayout(Device::ptr l_dev,
+                   std::vector<VkDescriptorSetLayout> layts,
+                   std::vector<const VkPushConstantRange*> pcrs);
 };
 
 } // namespace cu

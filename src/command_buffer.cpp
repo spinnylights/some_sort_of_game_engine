@@ -22,6 +22,8 @@
 #include "command_buffer.hpp"
 #include "vulkan.hpp"
 
+// TODO: fancier command buffer log output
+
 namespace cu {
 
 CommandBuffer::CommandBuffer(Device::ptr dev, CommandPool::ptr cmd_pool)
@@ -33,6 +35,7 @@ CommandBuffer::CommandBuffer(Device::ptr dev, CommandPool::ptr cmd_pool)
       GET_VK_FN_PTR(pipel_barr, CmdPipelineBarrier),
       GET_VK_FN_PTR(vk_dispatch, CmdDispatch),
       GET_VK_FN_PTR(copy_image, CmdCopyImage),
+      GET_VK_FN_PTR(push_consts, CmdPushConstants),
       GET_VK_FN_PTR(vk_end, EndCommandBuffer)
 {
     VkCommandBufferAllocateInfo inf {
@@ -208,6 +211,23 @@ CommandBuffer& CommandBuffer::copy(Image& from, Image& to)
     log.enter("Vulkan",
               "recording image copy to command buffer from "
                   + pool->descrptn());
+    log.brk();
+
+    return *this;
+}
+
+CommandBuffer& CommandBuffer::push_constants(ComputePipeline& pipel,
+                                             PCRange& pcs)
+{
+    push_consts(nner,
+                pipel.layout()->inner(),
+                pcs.stages(),
+                pcs.offset(),
+                pcs.size(),
+                pcs.values_voidp());
+
+    log.enter("Vulkan", "recording a push constants push to compute pipeline "
+              "to command buffer from " + pool->descrptn());
     log.brk();
 
     return *this;
