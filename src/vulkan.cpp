@@ -32,6 +32,7 @@
 #include "command_pool.hpp"
 #include "command_buffer.hpp"
 #include "fence.hpp"
+#include "push_constants.hpp"
 
 #include <stdexcept>
 #include <array>
@@ -246,6 +247,9 @@ void Vulkan::minicomp_setup()
 {
     using namespace vk;
 
+    static_assert(sizeof(float) == 4,
+                  "shader interface requires 32-bit floats");
+
     // set up the "scratch" image descriptor set layout
 
     DescriptorSetLayoutBinding swapimg ({
@@ -265,7 +269,16 @@ void Vulkan::minicomp_setup()
 
     // compute pipeline and shader module
 
-    minist.p_layt(std::make_shared<PipelineLayout>(logi_dev, minist.d_layts()));
+    minist.push_consts({new PushConstants<MinicompPCs> {
+        flgs(vk::ShaderStageFlag::cmpte)
+    }});
+
+   static_cast<PushConstants<MinicompPCs>*>(minist.push_consts()[0])
+       ->values()->time = 0;
+
+    minist.p_layt(std::make_shared<PipelineLayout>(logi_dev,
+                                                   minist.d_layts(),
+                                                   minist.push_consts()));
 
     if (auto search = shdrs.find("minicomp"); search != shdrs.end()) {
         minist.minicomp_shdr(search->second);
@@ -314,6 +327,10 @@ void Vulkan::minicomp_setup()
     // create fence
 
     minist.fnce(new Fence {logi_dev});
+
+    // record start time
+
+    minist.start = std::chrono::steady_clock::now();
 }
 
 void Vulkan::minicomp_recreate_swch()
@@ -378,6 +395,13 @@ void Vulkan::minicomp_frame()
 
     // render to scratch image + copy to swapchain image
 
+    using fp_secs = std::chrono::duration<float,
+                                          std::chrono::seconds::period>;
+    auto now = std::chrono::steady_clock::now();
+
+    static_cast<PushConstants<MinicompPCs>*>(minist.push_consts()[0])
+         ->values()->time = fp_secs(now - minist.start).count();
+
     minist.cmd_pool()->reset();
 
     minist.cmd_buff().record()
@@ -390,6 +414,7 @@ void Vulkan::minicomp_frame()
                               ImageLayout::undfnd,
                               ImageLayout::gnrl,
                               ImageAspectFlag::color)
+                     .push_constants(minist.pipel(), *minist.push_consts()[0])
                      .dispatch(swch.width(),
                                swch.height())
                      .barrier(swch.img(),
@@ -451,6 +476,7 @@ Vulkan::minicomp_state::~minicomp_state() noexcept
     delete scrtch;
     delete descpl;
     delete ppl;
+    delete pcs[0];
 }
 
 } // namespace cu

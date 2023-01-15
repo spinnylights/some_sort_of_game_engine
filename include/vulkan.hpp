@@ -38,6 +38,7 @@
 #include "command_pool.hpp"
 #include "descriptor_pool.hpp"
 #include "compute_pipeline.hpp"
+#include "pc_range.hpp"
 
 namespace cu {
 
@@ -137,9 +138,14 @@ private:
     std::unordered_map<std::string, ShaderModule::ptr> shdrs;
 
 private:
+    struct MinicompPCs {
+        float time;
+    };
+
     struct minicomp_state {
         std::vector<DescriptorSetLayoutBinding> bns;
         std::vector<DescriptorSetLayout::ptr> dls;
+        std::vector<PCRange*> pcs;
         PipelineLayout::ptr pl;
         ShaderModule::ptr shdr;
         ComputePipeline* ppl;
@@ -150,6 +156,10 @@ private:
         CommandPool::ptr cmdp;
         CommandBuffer* cmdb;
         Fence* f;
+        std::chrono::time_point<std::chrono::steady_clock> start;
+
+        std::vector<PCRange*>& push_consts() { return pcs; }
+        void push_consts(std::vector<PCRange*> p) { pcs = p; }
 
         std::vector<DescriptorSetLayoutBinding>& bndgs() { return bns; }
         void bndgs(std::vector<DescriptorSetLayoutBinding> b) { bns = b; }
