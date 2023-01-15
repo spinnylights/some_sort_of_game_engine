@@ -64,15 +64,39 @@ void SDL::sdl_throw(std::string oper)
 
 SDL_Window* create_window()
 {
+    SDL_Rect disp_bounds;
+    SDL::sdl_try(SDL_GetDisplayBounds(0, &disp_bounds),
+                 "getting display dimensions");
+    log.indent();
+    log.enter({
+        .members = {
+            { "w", disp_bounds.w },
+            { "h", disp_bounds.h },
+        }
+    });
+    log.brk();
+
     SDL_Window* win;
 
-    const std::string title = Game::name;
-    const auto x_pos = SDL_WINDOWPOS_UNDEFINED;
-    const auto y_pos = SDL_WINDOWPOS_UNDEFINED;
-    const int width = 2000;
-    const int height = 2000;
-    //const auto flags = SDL_WINDOW_VULKAN | SDL_WINDOW_RESIZABLE;
-    const auto flags = SDL_WINDOW_VULKAN | SDL_WINDOW_ALLOW_HIGHDPI;
+    std::string title = Game::name;
+    auto x_pos = SDL_WINDOWPOS_UNDEFINED;
+    auto y_pos = SDL_WINDOWPOS_UNDEFINED;
+
+    int short_side;
+    if (disp_bounds.w <= disp_bounds.h) {
+        short_side = disp_bounds.w;
+    } else {
+        short_side = disp_bounds.h;
+    }
+
+    double win_ratio = 0.825;
+    int win_size = std::round(win_ratio * short_side);
+
+    int width;
+    int height;
+    width = height = win_size;
+
+    auto flags = SDL_WINDOW_VULKAN | SDL_WINDOW_ALLOW_HIGHDPI;
     SDL::sdl_try(win = SDL_CreateWindow(title.c_str(),
                                         x_pos,
                                         y_pos,
