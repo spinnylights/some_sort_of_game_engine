@@ -29,7 +29,7 @@ namespace cu {
 
 ShaderModule::ShaderModule(Device::ptr l_dev, std::string name, BinFile file)
     : Deviced(l_dev,
-              "shader module from " + std::string(file.path()),
+              "shader module from " + file.path().string(),
               "ShaderModule"),
       f {file},
       nme {name}
@@ -45,7 +45,7 @@ ShaderModule::ShaderModule(Device::ptr l_dev, std::string name, BinFile file)
     Vulkan::vk_try(create(dev->inner(), &create_info, nullptr, &nner),
                    "create " + descrptn());
     log.indent();
-    log.enter("path: ", std::string(file.path()));
+    log.enter("path: ", file.path().string());
     log.enter("filesize: ", file.size());
     log.brk();
 

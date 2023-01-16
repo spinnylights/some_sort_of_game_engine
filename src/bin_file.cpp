@@ -40,7 +40,7 @@ BinFile::BinFile(fs::path fpath)
         is.close();
     } else {
         throw std::runtime_error("failed to open file at "
-                                 + std::string(fpath));
+                                 + fpath.string());
     }
 }
 
