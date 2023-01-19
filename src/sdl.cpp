@@ -218,7 +218,7 @@ void SDL::poll()
     }
 }
 
-bool SDL::quit()
+bool SDL::quit() const
 {
     return should_quit;
 }

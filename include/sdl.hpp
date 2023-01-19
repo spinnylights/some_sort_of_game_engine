@@ -129,7 +129,7 @@ public:
     /*!
      * \brief Whether or not the user has requested to quit.
      */
-    bool quit();
+    bool quit() const;
 
 private:
     SDL_Window* win;
