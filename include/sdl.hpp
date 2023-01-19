@@ -134,11 +134,7 @@ public:
 private:
     SDL_Window* win;
 
-    struct Events {
-        bool quit = false;
-    };
-
-    Events evs;
+    bool should_quit = false;
 };
 
 } // namespace cu

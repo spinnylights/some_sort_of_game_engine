@@ -204,13 +204,11 @@ PFN_vkGetInstanceProcAddr SDL::get_get_inst_proc_addr()
 
 void SDL::poll()
 {
-    evs = {};
-
     SDL_Event e;
     while (SDL_PollEvent(&e)) {
         switch (e.type) {
         case SDL_QUIT:
-            evs.quit = true;
+            should_quit = true;
             log.enter("SDL", std::string("quit event received"));
             log.brk();
             break;
@@ -222,7 +220,7 @@ void SDL::poll()
 
 bool SDL::quit()
 {
-    return evs.quit;
+    return should_quit;
 }
 
 } // namespace cu
