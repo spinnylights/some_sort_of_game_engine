@@ -42,9 +42,23 @@ public:
      * \brief (constructor)
      *
      * \param l_dev The current Device.
-     * \param file  The compiled (SPIR-V) shader.
+     * \param name  A name to identify the shader by.
+     * \param file  The compiled (SPIR-V) shader in file form.
      */
-    ShaderModule(Device::ptr l_dev, std::string name, BinFile file);
+    ShaderModule(Device::ptr l_dev, std::string name, const BinFile& file);
+
+    /*!
+     * \brief (constructor)
+     *
+     * \param l_dev The current Device.
+     * \param name  A name to identify the shader by.
+     * \param bin   A pointer to the compiled (SPIR-V) shader data.
+     * \param sz    The size of the data.
+     */
+    ShaderModule(Device::ptr l_dev,
+                 std::string name,
+                 const std::uint32_t* bin,
+                 std::size_t sz);
 
     ShaderModule(const ShaderModule&) = delete;
     ShaderModule& operator=(const ShaderModule&) = delete;
@@ -58,9 +72,6 @@ public:
 
 public:
     bool free_inner = false;
-
-public:
-    BinFile f;
 
 private:
     std::string nme;

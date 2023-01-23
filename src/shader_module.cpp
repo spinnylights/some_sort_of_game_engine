@@ -27,35 +27,39 @@
 
 namespace cu {
 
-ShaderModule::ShaderModule(Device::ptr l_dev, std::string name, BinFile file)
+ShaderModule::ShaderModule(Device::ptr l_dev,
+                           std::string name,
+                           const std::uint32_t* bin,
+                           std::size_t sz)
     : Deviced(l_dev,
-              "shader module from " + file.path().string(),
+              "shader module '" + name + "'",
               "ShaderModule"),
-      f {file},
       nme {name}
 {
     VkShaderModuleCreateInfo create_info {
-        .sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
-        .pNext = NULL,
-        .flags = 0,
-        .codeSize = file.size(),
-        .pCode    = file.u32()
+        .sType    = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
+        .codeSize = sz,
+        .pCode    = bin
     };
 
     Vulkan::vk_try(create(dev->inner(), &create_info, nullptr, &nner),
-                   "create " + descrptn());
+                   "creating " + descrptn());
     log.indent();
-    log.enter("path: ", file.path().string());
-    log.enter("filesize: ", file.size());
+    log.enter("filesize", sz);
     log.brk();
 
     free_inner = true;
 }
 
+ShaderModule::ShaderModule(Device::ptr l_dev,
+                           std::string name,
+                           const BinFile& file)
+    : ShaderModule(l_dev, name, file.u32(), file.size())
+{}
+
 ShaderModule::ShaderModule(ShaderModule&& s)
     : Deviced(s.dev, s.descrptn(), s.create_fn_suffix(), s.destroy_fn_suffix()),
-      free_inner {true},
-      f {std::move(s.f)}
+      free_inner {true}
 {
     s.nner = nullptr;
     s.free_inner = false;
