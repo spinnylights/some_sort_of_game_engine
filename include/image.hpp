@@ -40,17 +40,18 @@ class Image {
 public:
     struct params {
         VkExtent3D            extent;
-        VkImageUsageFlags     usage;
-        VkImageCreateFlags    flags                = 0;
-        VkImageType           dimens               = VK_IMAGE_TYPE_2D;
-        VkFormat              format               = VK_FORMAT_B8G8R8A8_SRGB;
+        vk::ImageUsageFlags   usage;
+        vk::ImageCreateFlags  flags                = 0;
+        vk::ImageType         dimens               = vk::ImageType::twoD;
+        vk::Format            format               = vk::Format::b8g8r8a8_srgb;
         uint32_t              mip_lvl_cnt          = 1;
         uint32_t              layer_cnt            = 1;
-        VkSampleCountFlagBits samples              = VK_SAMPLE_COUNT_1_BIT;
-        VkImageTiling         tiling               = VK_IMAGE_TILING_OPTIMAL;
-        VkSharingMode         sharing_mode         = VK_SHARING_MODE_EXCLUSIVE;
+        vk::SampleCountFlags  samples              =
+            flgs(vk::SampleCountFlag::one);
+        vk::ImageTiling       tiling               = vk::ImageTiling::optml;
+        vk::SharingMode       sharing_mode         = vk::SharingMode::exclsv;
         std::vector<uint32_t> queue_fam_ndcies     = {};
-        VkImageLayout         layout               = VK_IMAGE_LAYOUT_UNDEFINED;
+        vk::ImageLayout       layout               = vk::ImageLayout::undfnd;
     };
 
     /*!

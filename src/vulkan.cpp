@@ -304,7 +304,7 @@ void Vulkan::minicomp_setup()
         },
         .usage  = flgs(ImageUsageFlag::strge)
                   | flgs(ImageUsageFlag::trnsfr_src),
-        .format = v(Format::r8g8b8a8_uint),
+        .format = Format::r8g8b8a8_uint,
     }});
 
     minist.scrtch_h = heap.alloc_on_dev(minist.scratch());
@@ -364,7 +364,7 @@ void Vulkan::minicomp_recreate_swch()
         },
         .usage  = flgs(ImageUsageFlag::strge)
                   | flgs(ImageUsageFlag::trnsfr_src),
-        .format = v(Format::r8g8b8a8_uint),
+        .format = Format::r8g8b8a8_uint,
     }});
     minist.scrtch_h = heap.alloc_on_dev(minist.scratch());
     minist.scratch_v(new ImageView {minist.scratch()});
