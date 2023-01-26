@@ -38,19 +38,121 @@ class Device;
  */
 class Image {
 public:
+    /*!
+     * \brief See
+     * [VkImageCreateInfo](https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkImageCreateInfo.html).
+     */
     struct params {
+
+        /*!
+         * \brief A
+         * [VkExtent3D](https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkExtent3D.html)
+         * defining the bounds of the image.
+         */
         VkExtent3D            extent;
+
+        /*!
+         * \brief What the image will be used for; see
+         * [VkImageUsageFlagBits](https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkImageUsageFlagBits.html)
+         * and
+         * [VkImageUsageFlags](https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkImageUsageFlags.html)
+         * for the details. If you're going to create an ImageView from this
+         * image, the VkImageUsageFlags page gives a list of usage flags to pick
+         * from.
+         */
         vk::ImageUsageFlags   usage;
+
+        /*!
+         * \brief See
+         * [VkImageCreateFlagBits](https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkImageCreateFlagBits.html).
+         * */
         vk::ImageCreateFlags  flags                = 0;
+
+        /*!
+         * \brief The spatial dimensionality of the image (1D, 2D, or 3D).
+         */
         vk::ImageType         dimens               = vk::ImageType::twoD;
+
+        /*!
+         * \brief The in-memory format of the image data; see
+         * [VkFormat](https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkFormat.html).
+         * The default value here is for the Swapchain and maybe isn't really
+         * appropriate as a general-purpose default.
+         */
         vk::Format            format               = vk::Format::b8g8r8a8_srgb;
+
+        /*!
+         * \brief This creates space in the image for MIP maps. It must be at
+         * least 1 at and at most ⌊log2(max(extent.width, extent.height,
+         * extent.depth))⌋ + 1. Also, it doesn't actually create the MIP maps,
+         * only _space_ for the MIP maps. Once we actually have MIP mapping
+         * going I think maybe this should be replaced with something more
+         * user-friendly.
+         */
         uint32_t              mip_lvl_cnt          = 1;
+
+        /*!
+         * \brief Vulkan allows you to create an "array image" that stores
+         * multiple layers of color data. This has a variety of possible uses,
+         * such as cube maps or multi-view rendering. You can leave it at 1 if
+         * you just want a normal image.
+         */
         uint32_t              layer_cnt            = 1;
+
+        /*!
+         * \brief The number of samples per texel to take for multisample
+         * anti-aliasing (MSAA). If you're planning to use this image as a
+         * render target, the idea is that you can set this to a higher value to
+         * get some automatic anti-aliasing (see [multisampling in the Vulkan
+         * spec](https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#primsrast-multisampling),
+         * [multisampling in the Vulkan
+         * tutorial](https://vulkan-tutorial.com/Multisampling)). I haven't
+         * actually implemented this feature yet on our side, though.
+         */
         vk::SampleCountFlags  samples              =
             flgs(vk::SampleCountFlag::one);
+
+        /*!
+         * \brief Whether the image is arranged in memory "optimally," i.e. in
+         * an implementation-defined GPU-friendly format, or "linearly," i.e. in
+         * row-major order in memory with maybe some padding on each row. This
+         * is fixed at image creation; it can't be changed later. Linear tiling
+         * is much more specialized than optimal, because you can also write
+         * color data into a Buffer from the host and then use e.g.
+         * [vkCmdCopyBufferToImage()](https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/vkCmdCopyBufferToImage.html)
+         * to copy that color data directly into an optimally-tiled Image. In
+         * certain environments and for specific applications, linearly-tiled
+         * images may be fast enough that they can be used without converting
+         * their data to optimally-tiled first, which I think is the main use
+         * case for them. I get the impression that tends to be true more with
+         * integrated graphics or on mobile GPUs.
+         */
         vk::ImageTiling       tiling               = vk::ImageTiling::optml;
+
+        /*!
+         * \brief An "exclusively-shared" image belongs to a specific queue
+         * family at any given time, and you have to explicitly transfer
+         * ownership of it to a different queue family if you want to use it
+         * from that queue. "Concurrently-shared" images are created with a list
+         * of queue families that can access the image simultaneously. So far
+         * the engine only supports exclusively-shared images, so this part of
+         * the API is kinda placeholder.
+         */
         vk::SharingMode       sharing_mode         = vk::SharingMode::exclsv;
+
+        /*!
+         * \brief These are the indicies of the queues that would have access to
+         * the image if you picked "concurrently-shared." I haven't really built
+         * infrastructure around this yet.
+         */
         std::vector<uint32_t> queue_fam_ndcies     = {};
+
+        /*!
+         * \brief The "layout" of the image in Vulkan terms (see
+         * [VkImageLayout](https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkImageLayout.html)).
+         * If you're making a "fresh" image, you almost certainly want
+         * vk::ImageLayout::undfnd here.
+         */
         vk::ImageLayout       layout               = vk::ImageLayout::undfnd;
     };
 
