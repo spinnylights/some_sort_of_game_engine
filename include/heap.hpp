@@ -23,45 +23,51 @@
 #define t5366c1c045740cebfcc013c292e1bbc
 
 #include "phys_device.hpp"
-#include "device.hpp"
-#include "image.hpp"
 #include "log.hpp"
 
 namespace cu {
+
+class Device;
+class Image;
 
 /*!
  * \brief An interface to "graphics memory."
  *
  * A Heap provides an interface to allocate memory on the graphics device, or at
- * least in a way that the graphics device can make use of.
+ * least in a way that the graphics device can make use of. In most cases, you
+ * won't need to create or manage one directly; you can use the Device interface
+ * to allocate memory for e.g. an Image. In many ways it's reasonable to think
+ * of this class as an implementation detail of Device.
+ *
+ * If you do create a Heap directly, note that it doesn't follow RAII; you have
+ * to explicitly construct it using construct() and free it using the function
+ * free_self(). The Device takes care of this automatically for its memory.
  */
 class Heap {
 public:
     using handle_t = uint64_t;
+    static constexpr handle_t null_handle = 0;
 
-    Heap(Device::ptr l_dev, PhysDevice ph_dev);
+    void construct(Device& l_dev, PhysDevice ph_dev);
 
-    handle_t alloc_on_dev(Image& img);
+    handle_t alloc_on_dev(Device& dev, Image& img);
+
+    /*!
+     * \brief Free the memory associated with h. If h is Heap::null_handle, does
+     * nothing.
+     */
     void release(handle_t h);
 
-    ~Heap() noexcept;
-
-private:
-    Device::ptr dev;
-
-private:
-    PhysDevice phys_dev;
+    void free_self(Device& dev) noexcept;
 
 private:
     PhysicalHeap largest_dev_heap;
 
 private:
     struct Block {
-        constexpr static handle_t no_handle = 0;
-
         VkDeviceSize sz;
         VkDeviceSize offset;
-        handle_t handle = no_handle;
+        handle_t handle = null_handle;
         Block* prv;
         Block* nxt;
         bool avail = true;
@@ -79,9 +85,18 @@ private:
         VkDeviceSize   sz;
         MemoryType     type;
         Block* blocks;
-        handle_t next_handle = Block::no_handle + 1;
+        handle_t next_handle = null_handle + 1;
+        bool should_destroy = false;
 
+        Pool() = default;
         Pool(VkDeviceSize size, MemoryType mem_type);
+
+        Pool(const Pool&) = delete;
+        Pool& operator=(const Pool&) = delete;
+
+        Pool(Pool&&);
+        Pool& operator=(Pool&&);
+
         ~Pool() noexcept;
 
         Block* reserve_space(VkDeviceSize sz, VkDeviceSize alignment);

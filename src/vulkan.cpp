@@ -239,7 +239,6 @@ Vulkan::Vulkan(std::vector<const char*> exts,
       logi_dev {
           std::make_shared<Device>(phys_devs.default_device(), inst)
       },
-      heap {logi_dev, phys_devs.default_device()},
       swch{phys_devs.default_device(), logi_dev, surf}
 {}
 
@@ -307,8 +306,6 @@ void Vulkan::minicomp_setup()
         .format = Format::r8g8b8a8_uint,
     }});
 
-    minist.scrtch_h = heap.alloc_on_dev(minist.scratch());
-
     minist.scratch_v(new ImageView {minist.scratch()});
 
     // update scratch image descriptor set
@@ -354,7 +351,6 @@ void Vulkan::minicomp_recreate_swch()
 
     delete minist.scrtch_v;
     delete minist.scrtch;
-    heap.release(minist.scrtch_h);
 
     minist.scratch(new Image {logi_dev, {
         .extent = {
@@ -366,7 +362,6 @@ void Vulkan::minicomp_recreate_swch()
                   | flgs(ImageUsageFlag::trnsfr_src),
         .format = Format::r8g8b8a8_uint,
     }});
-    minist.scrtch_h = heap.alloc_on_dev(minist.scratch());
     minist.scratch_v(new ImageView {minist.scratch()});
 
     // update scratch image descriptor set

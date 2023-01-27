@@ -24,6 +24,7 @@
 
 #include "instance.hpp"
 #include "phys_device.hpp"
+#include "heap.hpp"
 
 #include <vulkan/vulkan.h>
 
@@ -118,6 +119,13 @@ public:
      */
     bool present(Swapchain& swch);
 
+    Heap::handle_t alloc(Image& img);
+
+    /*!
+     * \copydoc Heap::release()
+     */
+    void release(Heap::handle_t h);
+
 private:
     VkDevice dev;
 
@@ -136,6 +144,9 @@ private:
     using queue_map_t =
         std::unordered_map<QueueFlavor, std::tuple<uint32_t,VkQueue>>;
     queue_map_t queue_map;
+
+private:
+    Heap heap;
 };
 
 } // namespace cu

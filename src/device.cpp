@@ -151,11 +151,14 @@ Device::Device(PhysDevice physi_dev, Instance::ptr inst)
         log.enter(qflav_str(flavor) + " queue index", std::get<uint32_t>(t));
     }
     log.brk();
+
+    heap.construct(*this, phys_dev);
 }
 
 Device::~Device() noexcept
 {
     log.attempt("Vulkan", "destroying logical device");
+    heap.free_self(*this);
     destroy_dev(dev, NULL);
     log.finish();
     log.brk();
@@ -233,6 +236,16 @@ bool Device::present(Swapchain& swch)
     }
 
     return true;
+}
+
+Heap::handle_t Device::alloc(Image& img)
+{
+    return heap.alloc_on_dev(*this, img);
+}
+
+void Device::release(Heap::handle_t h)
+{
+    heap.release(h);
 }
 
 } // namespace cu
