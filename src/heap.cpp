@@ -25,19 +25,28 @@
 
 namespace cu {
 
-Heap::Heap(Device::ptr l_dev, PhysDevice ph_dev)
-    : dev {l_dev},
-      phys_dev {ph_dev},
-      largest_dev_heap {phys_dev.largest_dev_local_heap()},
-      main_pool {
-          largest_dev_heap.size() > 1_GiB ?
-              256_MiB : largest_dev_heap.size() / 8,
-          largest_dev_heap.optimal_type()
-      },
-      GET_VK_FN_PTR(alloc_mem, AllocateMemory),
-      GET_VK_FN_PTR(free_mem, FreeMemory),
-      GET_VK_FN_PTR(bind_img_mem, BindImageMemory)
+void Heap::construct(Device& dev, PhysDevice ph_dev)
 {
+    largest_dev_heap = ph_dev.largest_dev_local_heap();
+
+    main_pool = Pool (
+        largest_dev_heap.size() > 1_GiB ?
+            256_MiB : largest_dev_heap.size() / 8,
+        largest_dev_heap.optimal_type()
+    );
+
+    alloc_mem = reinterpret_cast<PFN_vkAllocateMemory>(
+        dev.get_proc_addr("vkAllocateMemory")
+    );
+
+    free_mem = reinterpret_cast<PFN_vkFreeMemory>(
+        dev.get_proc_addr("vkFreeMemory")
+    );
+
+    bind_img_mem = reinterpret_cast<PFN_vkBindImageMemory>(
+        dev.get_proc_addr("vkBindImageMemory")
+    );
+
     VkMemoryAllocateInfo main_pool_alloc_inf {
         .sType           = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
         .pNext           = NULL,
@@ -45,7 +54,7 @@ Heap::Heap(Device::ptr l_dev, PhysDevice ph_dev)
         .memoryTypeIndex = main_pool.type.ndx(),
     };
 
-    Vulkan::vk_try(alloc_mem(dev->inner(),
+    Vulkan::vk_try(alloc_mem(dev.inner(),
                              &main_pool_alloc_inf,
                              NULL,
                              &main_pool.nner),
@@ -57,10 +66,10 @@ Heap::Heap(Device::ptr l_dev, PhysDevice ph_dev)
     log.brk();
 }
 
-Heap::~Heap() noexcept
+void Heap::free_self(Device& dev) noexcept
 {
     log.attempt("Vulkan", "freeing main pool");
-    free_mem(dev->inner(), main_pool.nner, NULL);
+    free_mem(dev.inner(), main_pool.nner, NULL);
     log.finish();
     log.brk();
 }
@@ -74,17 +83,45 @@ Heap::Pool::Pool(VkDeviceSize size, MemoryType mem_type)
     blocks->prv = blocks->nxt;
     blocks->nxt->prv = blocks;
     blocks->nxt->nxt = blocks;
+
+    should_destroy = true;
+}
+
+Heap::Pool::Pool(Heap::Pool&& other)
+    : nner        {other.nner},
+      sz          {other.sz},
+      type        {other.type},
+      blocks      {other.blocks},
+      next_handle {other.next_handle}
+{
+    other.should_destroy = false;
+}
+
+Heap::Pool& Heap::Pool::operator=(Heap::Pool&& other)
+{
+    std::swap(nner, other.nner);
+    std::swap(sz, other.sz);
+    std::swap(type, other.type);
+    blocks = other.blocks;
+    other.blocks = nullptr;
+    std::swap(next_handle, other.next_handle);
+
+    other.should_destroy = false;
+
+    return *this;
 }
 
 Heap::Pool::~Pool() noexcept
 {
-    Block* p = blocks->nxt;
-    while (!p->front) {
-        Block* tmp = p->nxt;
+    if (should_destroy) {
+        Block* p = blocks->nxt;
+        while (!p->front) {
+            Block* tmp = p->nxt;
+            p->erase();
+            p = tmp;
+        }
         p->erase();
-        p = tmp;
     }
-    p->erase();
 }
 
 void Heap::Block::insert_before(Block* p)
@@ -176,7 +213,7 @@ Heap::Block* Heap::Pool::reserve_space(VkDeviceSize sz, VkDeviceSize alignment)
         .avail  = false,
     };
 
-    if (next_handle == 0) {
+    if (next_handle == null_handle) {
         next_handle = 1;
     }
 
@@ -233,7 +270,7 @@ Heap::Block* Heap::Pool::reserve_space(VkDeviceSize sz, VkDeviceSize alignment)
     return reserved;
 }
 
-Heap::handle_t Heap::alloc_on_dev(Image& img)
+Heap::handle_t Heap::alloc_on_dev(Device& dev, Image& img)
 {
     if (!img.mem_type_supported(main_pool.type)) {
         throw std::runtime_error("main pool memory does not support this type "
@@ -241,7 +278,7 @@ Heap::handle_t Heap::alloc_on_dev(Image& img)
     }
 
     auto block = main_pool.reserve_space(img.mem_size(), img.alignment());
-    Vulkan::vk_try(bind_img_mem(dev->inner(),
+    Vulkan::vk_try(bind_img_mem(dev.inner(),
                                 img.inner(),
                                 main_pool.nner,
                                 block->offset),
@@ -253,6 +290,10 @@ Heap::handle_t Heap::alloc_on_dev(Image& img)
 
 void Heap::Pool::release(Heap::handle_t h)
 {
+    if (h == null_handle) {
+        return;
+    }
+
     Block* p = blocks->nxt;
     for (; !p->front && p->handle != h; p = p->nxt);
 
