@@ -24,6 +24,7 @@
 
 #include "device.hpp"
 #include "vulkan_util.hpp"
+#include "heap.hpp"
 
 #include <vulkan/vulkan.h>
 
@@ -157,16 +158,19 @@ public:
     };
 
     /*!
-     * \brief (constructor) Create a new image, without any bound memory.
+     * \brief (constructor) Create a new image, with bound memory. The memory
+     * will be freed automatically when the Image goes out of scope.
      *
      * \param l_dev The logical device you want to create the image with.
+     * \param heap  The graphics memory heap to allocate from.
      * \param ps    The characteristics you want the image to have.
      */
     Image(Device::ptr l_dev, const params& ps);
 
     /*!
      * \brief (constructor) Wrap an existing VkImage, in order to
-     * handle `vkGetSwapchainImagesKHR` and the like.
+     * handle `vkGetSwapchainImagesKHR` and the like. Assumes the memory for it
+     * has been allocated elsewhere and will be freed elsewhere if necessary.
      *
      * \param existing An already-initialized VkImage.
      * \param l_dev    The logical device used to create the image.
@@ -366,6 +370,9 @@ private:
 private:
     VkMemoryRequirements mem_reqs {};
     std::bitset<32>      supported_types;
+
+private:
+    Heap::handle_t mem = Heap::null_handle;
 };
 
 } // namespace cu

@@ -34,7 +34,6 @@
 #include "device.hpp"
 #include "swapchain.hpp"
 #include "shader_module.hpp"
-#include "heap.hpp"
 #include "command_pool.hpp"
 #include "descriptor_pool.hpp"
 #include "compute_pipeline.hpp"
@@ -129,9 +128,6 @@ private:
     Device::ptr logi_dev;
 
 private:
-    Heap heap;
-
-private:
     Swapchain swch;
 
 private:
@@ -151,7 +147,6 @@ private:
         ComputePipeline* ppl;
         DescriptorPool* descpl;
         Image* scrtch;
-        Heap::handle_t scrtch_h;
         ImageView* scrtch_v;
         CommandPool::ptr cmdp;
         CommandBuffer* cmdb;

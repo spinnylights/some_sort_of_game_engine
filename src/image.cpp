@@ -85,6 +85,8 @@ Image::Image(Device::ptr l_dev, const Image::params& ps)
 
     get_mem_reqs(_dev->inner(), _img, &mem_reqs);
     supported_types = {mem_reqs.memoryTypeBits};
+
+    _dev->alloc(*this);
 }
 
 Image::Image(VkImage existing,
@@ -165,8 +167,10 @@ Image::Image(Image&& other)
       _layer_cnt        {other.layer_cnt()},
       _should_destroy   {other.will_be_destroyed()},
       mem_reqs          {other.mem_reqs},
-      supported_types   {other.supported_types}
+      supported_types   {other.supported_types},
+      mem               {other.mem}
 {
+    other.mem = Heap::null_handle;
     other.should_destroy(false);
     other._queue_fam_ndcies = {};
     other._dev = nullptr;
@@ -191,6 +195,7 @@ Image& Image::operator=(Image&& other)
     std::swap(_should_destroy, other._should_destroy);
     std::swap(mem_reqs, other.mem_reqs);
     std::swap(supported_types, other.supported_types);
+    std::swap(mem, other.mem);
 
     return *this;
 }
@@ -198,6 +203,7 @@ Image& Image::operator=(Image&& other)
 Image::~Image() noexcept
 {
     if (_should_destroy) {
+        _dev->release(mem);
         log.attempt("Vulkan", "destroying image");
         _destroy_img(_dev->inner(), _img, NULL);
         log.finish();
