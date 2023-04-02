@@ -133,7 +133,7 @@ sudo apt install vulkan-sdk
 
 4. Install GCC / G++ 12
 ```
-sudo apt gcc-12 g++-12
+sudo apt install gcc-12 g++-12
 ```
 
 5. Make GCC / G++ 12 a system-wide default
