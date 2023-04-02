@@ -22,8 +22,8 @@ on the engine. Rest assured that I am still working.
     - [MacOS](#macos)
   - [Runtime Dependencies](#runtime-dependencies)
   - [If you're working directly from the source repo](#if-youre-working-directly-from-the-source-repo)
-  - [Build steps](#build-steps)
-  - [Installation](#installation)
+  - [Build the Project](#build-the-project)
+  - [Installation the Project](#installation-the-project)
     - [Linux](#linux)
     - [Windows and macOS](#windows-and-macos)
 - [Contributing](#contributing)
@@ -131,7 +131,17 @@ sudo apt update
 sudo apt install vulkan-sdk
 ```
 
+4. Install GCC / G++ 12
+```
+sudo apt gcc-12 g++-12
+```
 
+5. Make GCC / G++ 12 a system-wide default
+```
+# This seems fragile - is there a way for the build system to detect the correct version of gcc without needing to alias like this? ~icy
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-12 100
+sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-12 100
+```
 
 
 ### Windows
@@ -176,7 +186,7 @@ Anyway, all you should need to do before proceeding is run
 without erroring out, continue to the next section. If you get an
 error, please file a bug report.
 
-## Build steps
+## Build the Project
 
 This is for doing an out-of-source build, which keeps things nice
 'n' tidy compared to not doing it that way. But you can ignore
@@ -204,7 +214,7 @@ root if you don't care about that. Anyway.
    `make`, where `#` is the number of jobs you would like to
    run simultaneously.
 
-## Installation
+## Installation the Project
 
 ### Linux
 
