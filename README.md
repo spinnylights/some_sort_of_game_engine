@@ -7,6 +7,20 @@ wondering what I'm up to, you can check my
 I'm probably studying something I need to know to make progress
 on the engine. Rest assured that I am still working.
 
+- [_Crypt Underworld_](#crypt-underworld)
+  - [Documentation](#documentation)
+  - [Building](#building)
+    - [Build dependencies](#build-dependencies)
+    - [Runtime dependencies](#runtime-dependencies)
+    - [If you're working directly from the source repo](#if-youre-working-directly-from-the-source-repo)
+    - [Build steps](#build-steps)
+    - [Installation](#installation)
+      - [Linux](#linux)
+      - [Windows and macOS](#windows-and-macos)
+  - [Contributing](#contributing)
+    - [Bug reports and feature requests](#bug-reports-and-feature-requests)
+    - [Patches](#patches)
+
 _Crypt Underworld_ is (/will be) a realtime 3D computer game
 where you wander around, piss, talk to people, eat things, etc.
 It's the sequel to Lily Zone's 2013 game [_Crypt
