@@ -7,6 +7,8 @@ wondering what I'm up to, you can check my
 I'm probably studying something I need to know to make progress
 on the engine. Rest assured that I am still working.
 
+---
+
 - [_Crypt Underworld_](#crypt-underworld)
   - [Documentation](#documentation)
   - [Building](#building)
@@ -20,6 +22,8 @@ on the engine. Rest assured that I am still working.
   - [Contributing](#contributing)
     - [Bug reports and feature requests](#bug-reports-and-feature-requests)
     - [Patches](#patches)
+
+---
 
 _Crypt Underworld_ is (/will be) a realtime 3D computer game
 where you wander around, piss, talk to people, eat things, etc.
