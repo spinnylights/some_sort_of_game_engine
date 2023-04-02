@@ -1,4 +1,8 @@
-# _Crypt Underworld_
+_Crypt Underworld_
+==================
+<p align="center">
+  <img src="doc/logo.png" alt="Crypt Underworld Logo"/>
+</p>
 
 **Note**: If you don't see much going on here and you're
 wondering what I'm up to, you can check my
@@ -22,6 +26,7 @@ on the engine. Rest assured that I am still working.
   - [Contributing](#contributing)
     - [Bug reports and feature requests](#bug-reports-and-feature-requests)
     - [Patches](#patches)
+
 
 ---
 
