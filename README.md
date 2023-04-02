@@ -103,9 +103,36 @@ Additionally, extra setup may need to be performed in order to get
 the project to compile on your operating system.
 
 ### Ubuntu 22.04
+Luckily for us, Ubuntu 22.04 (and I think most debian based systems)
+allow one to get most build dependencies via apt.
+
+1. Install general C dependencies `build-essential` and `autoconf`:
+
+
 ```
-// TODO! ~icy
+sudo apt install build-essential autoconf
 ```
+
+2. Install [SDL2's library distribution and build tools](https://wiki.libsdl.org/SDL2/Installation):
+
+
+```
+sudo apt install libsdl2-2.0-0 libsdl2-dev
+```
+
+3. Install a [distribution of the Vulkan SDK](https://packages.lunarg.com/):
+
+Note - this is just some version for Ubuntu 22.04. Check the above
+link for the proper latest version for your operating system.
+```
+wget -qO- https://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo tee /etc/apt/trusted.gpg.d/lunarg.asc
+sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-1.3.243-jammy.list https://packages.lunarg.com/vulkan/1.3.243/lunarg-vulkan-1.3.243-jammy.list
+sudo apt update
+sudo apt install vulkan-sdk
+```
+
+
+
 
 ### Windows
 ```
