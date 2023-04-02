@@ -23,7 +23,7 @@ on the engine. Rest assured that I am still working.
   - [Runtime Dependencies](#runtime-dependencies)
   - [If you're working directly from the source repo](#if-youre-working-directly-from-the-source-repo)
   - [Build the Project](#build-the-project)
-  - [Installation the Project](#installation-the-project)
+  - [Install the Project](#install-the-project)
     - [Linux](#linux)
     - [Windows and macOS](#windows-and-macos)
 - [Contributing](#contributing)
@@ -214,7 +214,7 @@ root if you don't care about that. Anyway.
    `make`, where `#` is the number of jobs you would like to
    run simultaneously.
 
-## Installation the Project
+## Install the Project
 
 ### Linux
 
