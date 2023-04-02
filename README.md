@@ -14,18 +14,18 @@ on the engine. Rest assured that I am still working.
 ---
 
 - [_Crypt Underworld_](#crypt-underworld)
-  - [Documentation](#documentation)
-  - [Building](#building)
-    - [Build dependencies](#build-dependencies)
-    - [Runtime dependencies](#runtime-dependencies)
-    - [If you're working directly from the source repo](#if-youre-working-directly-from-the-source-repo)
-    - [Build steps](#build-steps)
-    - [Installation](#installation)
-      - [Linux](#linux)
-      - [Windows and macOS](#windows-and-macos)
-  - [Contributing](#contributing)
-    - [Bug reports and feature requests](#bug-reports-and-feature-requests)
-    - [Patches](#patches)
+- [Documentation](#documentation)
+- [Building](#building)
+  - [Build dependencies](#build-dependencies)
+  - [Runtime dependencies](#runtime-dependencies)
+  - [If you're working directly from the source repo](#if-youre-working-directly-from-the-source-repo)
+  - [Build steps](#build-steps)
+  - [Installation](#installation)
+    - [Linux](#linux)
+    - [Windows and macOS](#windows-and-macos)
+- [Contributing](#contributing)
+  - [Bug reports and feature requests](#bug-reports-and-feature-requests)
+  - [Patches](#patches)
 
 
 ---
@@ -70,7 +70,7 @@ to extract scenes and then converting the resulting files to
 [glTF](https://www.khronos.org/gltf/) for use with the new
 engine.
 
-## Documentation
+# Documentation
 
 API documentation is available
 [here](https://milky.flowers/programs/crypt_underworld/doc/). If
@@ -78,7 +78,7 @@ you'd like to generate it yourself, you'll need
 [Doxygen](https://www.doxygen.nl/index.html) and
 [Graphviz](https://graphviz.org/).
 
-## Building
+# Building
 
 For binary distribution purposes, the goal is to build the Linux,
 Windows, and macOS builds all on Linux, cross-compiling as
@@ -91,19 +91,19 @@ instructions ought to work under most other \*nix environments as
 well, like the BSDs, at least I hope (feel free to file a bug
 report if not).
 
-### Build dependencies
+## Build dependencies
 
 * [SDL2 development libs + headers](https://www.libsdl.org/download-2.0.php)
 * [Vulkan headers](https://www.lunarg.com/vulkan-sdk/)
 
-### Runtime dependencies
+## Runtime dependencies
 
 * SDL2
 * Vulkan-capable graphics drivers
 * On macOS,
   [MoltenVK](https://formulae.brew.sh/formula/molten-vk)
 
-### If you're working directly from the source repo
+## If you're working directly from the source repo
 
 This applies if you've obtained a local copy of the source via
 `git clone` or the like, as opposed to working with a release
@@ -128,7 +128,7 @@ Anyway, all you should need to do before proceeding is run
 without erroring out, continue to the next section. If you get an
 error, please file a bug report.
 
-### Build steps
+## Build steps
 
 This is for doing an out-of-source build, which keeps things nice
 'n' tidy compared to not doing it that way. But you can ignore
@@ -156,9 +156,9 @@ root if you don't care about that. Anyway.
    `make`, where `#` is the number of jobs you would like to
    run simultaneously.
 
-### Installation
+## Installation
 
-#### Linux
+### Linux
 
 `make install` after running `make` will work (you will probably
 need to do this as root). By default, this will use `/usr/local`
@@ -173,14 +173,14 @@ To uninstall, you can run `make uninstall` from the same place
 you ran `make`. Again though, you're probably better off using
 your distro's package manager if possible.
 
-#### Windows and macOS
+### Windows and macOS
 
 When the game is a bit further along I'll have the build system
 generate archives/installers for these platforms that fit their
 conventions better. For the time being, you can at least try
 running the game from the build directory.
 
-## Contributing
+# Contributing
 
 The most obviously helpful thing you can do at the moment is test
 the game and file a bug report if you run into any problems.
@@ -198,7 +198,7 @@ to behave here in social terms, naturally. My goal in writing
 this is to create a more pleasant, relaxing development
 atmosphere—hopefully you will feel that way in practice.
 
-### Bug reports and feature requests
+## Bug reports and feature requests
 
 To report a bug, either create a new issue (see [GitHub's docs on
 this](https://docs.github.com/en/github/managing-your-work-on-github/creating-an-issue)
@@ -232,7 +232,7 @@ you thought was a bug is actually a missing feature, though, and
 that it may take a lot more time and effort to account for than
 you might have guessed.
 
-### Patches
+## Patches
 
 Patches to fix bugs and performance issues are also welcome. A
 [pull
