@@ -16,8 +16,11 @@ on the engine. Rest assured that I am still working.
 - [_Crypt Underworld_](#crypt-underworld)
 - [Documentation](#documentation)
 - [Building](#building)
-  - [Build dependencies](#build-dependencies)
-  - [Runtime dependencies](#runtime-dependencies)
+  - [Install Build Dependencies](#install-build-dependencies)
+    - [Ubuntu 22.04](#ubuntu-2204)
+    - [Windows](#windows)
+    - [MacOS](#macos)
+  - [Runtime Dependencies](#runtime-dependencies)
   - [If you're working directly from the source repo](#if-youre-working-directly-from-the-source-repo)
   - [Build steps](#build-steps)
   - [Installation](#installation)
@@ -91,12 +94,30 @@ instructions ought to work under most other \*nix environments as
 well, like the BSDs, at least I hope (feel free to file a bug
 report if not).
 
-## Build dependencies
-
+## Install Build Dependencies
+Crypt Underworld requires the following libraries in order to build:
 * [SDL2 development libs + headers](https://www.libsdl.org/download-2.0.php)
 * [Vulkan headers](https://www.lunarg.com/vulkan-sdk/)
 
-## Runtime dependencies
+Additionally, extra setup may need to be performed in order to get
+the project to compile on your operating system.
+
+### Ubuntu 22.04
+```
+// TODO! ~icy
+```
+
+### Windows
+```
+// TODO! ~icy
+```
+
+### MacOS
+```
+// TODO! ~icy
+```
+
+## Runtime Dependencies
 
 * SDL2
 * Vulkan-capable graphics drivers
