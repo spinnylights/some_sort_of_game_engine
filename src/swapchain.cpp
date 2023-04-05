@@ -38,7 +38,8 @@ void Swapchain::create(VkSwapchainKHR old_swch)
     const auto surface_caps = surf.capabilities(p_dev);
     extent = surface_caps.currentExtent;
     uint32_t   min_img_cnt  = 2;
-    if (surface_caps.maxImageCount < min_img_cnt) {
+    bool limited_max_imgs = surface_caps.maxImageCount != 0;
+    if (limited_max_imgs && surface_caps.maxImageCount < min_img_cnt) {
         min_img_cnt = surface_caps.maxImageCount;
     }
 
