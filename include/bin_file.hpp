@@ -59,7 +59,7 @@ public:
     /*!
      * \brief A pointer to the data as unsigned 32-bit integers.
      */
-    const std::uint32_t* u32()
+    const std::uint32_t* u32() const
     {
         return reinterpret_cast<const std::uint32_t*>(dta.data());
     }
