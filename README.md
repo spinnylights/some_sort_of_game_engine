@@ -14,18 +14,21 @@ on the engine. Rest assured that I am still working.
 ---
 
 - [_Crypt Underworld_](#crypt-underworld)
-  - [Documentation](#documentation)
-  - [Building](#building)
-    - [Build dependencies](#build-dependencies)
-    - [Runtime dependencies](#runtime-dependencies)
-    - [If you're working directly from the source repo](#if-youre-working-directly-from-the-source-repo)
-    - [Build steps](#build-steps)
-    - [Installation](#installation)
-      - [Linux](#linux)
-      - [Windows and macOS](#windows-and-macos)
-  - [Contributing](#contributing)
-    - [Bug reports and feature requests](#bug-reports-and-feature-requests)
-    - [Patches](#patches)
+- [Documentation](#documentation)
+- [Building](#building)
+  - [Install Build Dependencies](#install-build-dependencies)
+    - [Ubuntu 22.04](#ubuntu-2204)
+    - [Windows](#windows)
+    - [MacOS](#macos)
+  - [Runtime Dependencies](#runtime-dependencies)
+  - [If you're working directly from the source repo](#if-youre-working-directly-from-the-source-repo)
+  - [Build the Project](#build-the-project)
+  - [Install the Project](#install-the-project)
+    - [Linux](#linux)
+    - [Windows and macOS](#windows-and-macos)
+- [Contributing](#contributing)
+  - [Bug reports and feature requests](#bug-reports-and-feature-requests)
+  - [Patches](#patches)
 
 
 ---
@@ -70,7 +73,7 @@ to extract scenes and then converting the resulting files to
 [glTF](https://www.khronos.org/gltf/) for use with the new
 engine.
 
-## Documentation
+# Documentation
 
 API documentation is available
 [here](https://milky.flowers/programs/crypt_underworld/doc/). If
@@ -78,7 +81,7 @@ you'd like to generate it yourself, you'll need
 [Doxygen](https://www.doxygen.nl/index.html) and
 [Graphviz](https://graphviz.org/).
 
-## Building
+# Building
 
 For binary distribution purposes, the goal is to build the Linux,
 Windows, and macOS builds all on Linux, cross-compiling as
@@ -91,19 +94,74 @@ instructions ought to work under most other \*nix environments as
 well, like the BSDs, at least I hope (feel free to file a bug
 report if not).
 
-### Build dependencies
-
+## Install Build Dependencies
+Crypt Underworld requires the following libraries in order to build:
 * [SDL2 development libs + headers](https://www.libsdl.org/download-2.0.php)
 * [Vulkan headers](https://www.lunarg.com/vulkan-sdk/)
 
-### Runtime dependencies
+Additionally, extra setup may need to be performed in order to get
+the project to compile on your operating system.
+
+### Ubuntu 22.04
+Luckily for us, Ubuntu 22.04 (and I think most debian based systems)
+allow one to get most build dependencies via apt.
+
+1. Install general C dependencies `build-essential` and `autoconf`:
+
+
+```
+sudo apt install build-essential autoconf
+```
+
+2. Install [SDL2's library distribution and build tools](https://wiki.libsdl.org/SDL2/Installation):
+
+
+```
+sudo apt install libsdl2-2.0-0 libsdl2-dev
+```
+
+3. Install a [distribution of the Vulkan SDK](https://packages.lunarg.com/):
+
+Note - this is just some version for Ubuntu 22.04. Check the above
+link for the proper latest version for your operating system.
+```
+wget -qO- https://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo tee /etc/apt/trusted.gpg.d/lunarg.asc
+sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-1.3.243-jammy.list https://packages.lunarg.com/vulkan/1.3.243/lunarg-vulkan-1.3.243-jammy.list
+sudo apt update
+sudo apt install vulkan-sdk
+```
+
+4. Install GCC / G++ 12
+```
+sudo apt install gcc-12 g++-12
+```
+
+5. Make GCC / G++ 12 a system-wide default
+```
+# This seems fragile - is there a way for the build system to detect the correct version of gcc without needing to alias like this? ~icy
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-12 100
+sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-12 100
+```
+
+
+### Windows
+```
+// TODO! ~icy
+```
+
+### MacOS
+```
+// TODO! ~icy
+```
+
+## Runtime Dependencies
 
 * SDL2
 * Vulkan-capable graphics drivers
 * On macOS,
   [MoltenVK](https://formulae.brew.sh/formula/molten-vk)
 
-### If you're working directly from the source repo
+## If you're working directly from the source repo
 
 This applies if you've obtained a local copy of the source via
 `git clone` or the like, as opposed to working with a release
@@ -128,7 +186,7 @@ Anyway, all you should need to do before proceeding is run
 without erroring out, continue to the next section. If you get an
 error, please file a bug report.
 
-### Build steps
+## Build the Project
 
 This is for doing an out-of-source build, which keeps things nice
 'n' tidy compared to not doing it that way. But you can ignore
@@ -156,9 +214,9 @@ root if you don't care about that. Anyway.
    `make`, where `#` is the number of jobs you would like to
    run simultaneously.
 
-### Installation
+## Install the Project
 
-#### Linux
+### Linux
 
 `make install` after running `make` will work (you will probably
 need to do this as root). By default, this will use `/usr/local`
@@ -173,14 +231,14 @@ To uninstall, you can run `make uninstall` from the same place
 you ran `make`. Again though, you're probably better off using
 your distro's package manager if possible.
 
-#### Windows and macOS
+### Windows and macOS
 
 When the game is a bit further along I'll have the build system
 generate archives/installers for these platforms that fit their
 conventions better. For the time being, you can at least try
 running the game from the build directory.
 
-## Contributing
+# Contributing
 
 The most obviously helpful thing you can do at the moment is test
 the game and file a bug report if you run into any problems.
@@ -198,7 +256,7 @@ to behave here in social terms, naturally. My goal in writing
 this is to create a more pleasant, relaxing development
 atmosphere—hopefully you will feel that way in practice.
 
-### Bug reports and feature requests
+## Bug reports and feature requests
 
 To report a bug, either create a new issue (see [GitHub's docs on
 this](https://docs.github.com/en/github/managing-your-work-on-github/creating-an-issue)
@@ -232,7 +290,7 @@ you thought was a bug is actually a missing feature, though, and
 that it may take a lot more time and effort to account for than
 you might have guessed.
 
-### Patches
+## Patches
 
 Patches to fix bugs and performance issues are also welcome. A
 [pull
