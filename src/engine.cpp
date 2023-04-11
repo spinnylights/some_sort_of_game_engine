@@ -24,6 +24,7 @@
 #include "log.hpp"
 
 #include <chrono>
+#include <fstream>
 
 namespace cu {
 
@@ -71,7 +72,16 @@ void Engine::add_shader(std::string name, BinFile f)
 void Engine::minicomp_mode(std::filesystem::path comp_spv_path)
 {
     mode(minicomp);
-    add_shader(mode_str(), {comp_spv_path});
+    std::ifstream comp_spv_f(comp_spv_path, std::ios::binary | std::ios::ate);
+    BinFile::container_t::size_type comp_spv_sz;
+    if (comp_spv_f) {
+        comp_spv_sz = comp_spv_f.tellg();
+    } else {
+        throw std::runtime_error("unable to open compiled shader at "
+                                 + comp_spv_path.string());
+    }
+
+    add_shader(mode_str(), {comp_spv_f, comp_spv_sz});
     vulk.minicomp_setup();
 
     bool quit = false;

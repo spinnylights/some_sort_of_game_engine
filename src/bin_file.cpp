@@ -25,49 +25,42 @@
 #include <iostream>
 #include <utility>
 
-namespace fs = std::filesystem;
-
 namespace cu {
 
-BinFile::BinFile(fs::path fpath)
-    : pth {fpath}
+BinFile::BinFile(BinFile::stream_t& f, container_t::size_type size)
 {
-    if (std::ifstream is {fpath, std::ios::binary | std::ios::ate}) {
-        auto bytesize = is.tellg();
-        dta.resize(bytesize, '\0');
-        is.seekg(0);
-        is.read(reinterpret_cast<char*>(dta.data()), bytesize);
-        is.close();
+    if (f) {
+        auto posmemo = f.tellg();
+        bool non_32 = size & 3;
+        auto readsize = non_32 ? ((size >> 2) + 1) << 2 : size;
+        dta.resize(readsize, '\0');
+        f.seekg(0);
+        f.read(dta.data(), size);
+        f.seekg(posmemo);
     } else {
-        throw std::runtime_error("failed to open file at "
-                                 + fpath.string());
+        throw std::runtime_error("invalid stream");
     }
 }
 
 BinFile::BinFile(const BinFile& f)
-    : pth {f.path()},
-      dta {f.data()}
+    : dta {f.inner()}
 {}
 
 BinFile& BinFile::operator=(const BinFile& f)
 {
-    pth = f.path();
-    dta = f.data();
+    dta = f.inner();
 
     return *this;
 }
 
 BinFile::BinFile(BinFile&& f)
-    : pth {std::move(f.pth)},
-      dta {std::move(f.dta)}
+    : dta {std::move(f.dta)}
 {
-    f.pth = "";
-    f.dta = "";
+    f.dta = {};
 }
 
 BinFile& BinFile::operator=(BinFile&& f)
 {
-    std::swap(pth, f.pth);
     std::swap(dta, f.dta);
 
     return *this;

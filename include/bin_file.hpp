@@ -23,22 +23,31 @@
 #define Y3a755e5d163414fbb1bb2aa3df497d7
 
 #include <filesystem>
-#include <string>
+#include <vector>
 #include <cstdint>
 
 namespace cu {
 
 /*!
- * \brief A general-purpose representation of a binary file on disk.
+ * \brief A general-purpose representation of binary data read in from a stream,
+ * motivated by Vulkan's interface for consuming shaders.
  */
 class BinFile {
 public:
+    using data_t = char;
+    using stream_t = std::basic_istream<data_t>;
+    using container_t = std::vector<data_t>;
+
     /*!
-     * \brief (constructor) Reads in the data at fpath.
+     * \brief (constructor) Reads in data from istream and copies it into an
+     * internal buffer. If the data does not fit cleanly into 32-bit words, the
+     * internal copy is padded out with nulls for safety (this should never be
+     * the case if the data is SPIR-V).
      *
-     * \param fpath The path to the file you'd like to work with.
+     * \param istream The stream to the data you'd like to work with.
+     * \param size The amount of data to read in from the stream in bytes.
      */
-    BinFile(std::filesystem::path fpath);
+    BinFile(stream_t& istream, container_t::size_type size);
 
     BinFile(const BinFile&);
     BinFile& operator=(const BinFile&);
@@ -47,17 +56,17 @@ public:
     BinFile& operator=(BinFile&&);
 
     /*!
-     * \brief Returns the filepath.
+     * \brief The inner data.
      */
-    std::filesystem::path path() const { return pth; }
+    container_t inner() const { return dta; }
 
     /*!
-     * \brief The data contained within the file.
+     * \brief A pointer to the data.
      */
-    std::string data() const { return dta; }
+    const data_t* data() const { return dta.data(); }
 
     /*!
-     * \brief A pointer to the data as unsigned 32-bit integers.
+     * \brief A 32-bit pointer to the data. Vulkan requires this.
      */
     const std::uint32_t* u32() const
     {
@@ -67,13 +76,10 @@ public:
     /*!
      * \brief The size of the data in bytes.
      */
-    std::size_t size() const { return dta.size(); }
+    container_t::size_type size() const { return dta.size(); }
 
 public:
-    std::filesystem::path pth;
-
-public:
-    std::string dta;
+    container_t dta;
 };
 
 } // namespace cu

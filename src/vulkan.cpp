@@ -449,8 +449,6 @@ void Vulkan::minicomp_frame()
 void Vulkan::add_shader(std::string name, BinFile f)
 {
     log.enter("Vulkan",  "adding shader " + name);
-    log.indent();
-    log.enter("path", f.path().string());
     log.brk();
 
     bool ok = shdrs.insert({name, std::make_shared<ShaderModule>(logi_dev,
