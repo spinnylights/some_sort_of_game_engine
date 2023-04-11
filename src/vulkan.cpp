@@ -161,6 +161,24 @@ std::string map_vk_result(VkResult res)
         case VK_ERROR_COMPRESSION_EXHAUSTED_EXT:
             msg = "compression exhausted";
             break;
+        case VK_ERROR_IMAGE_USAGE_NOT_SUPPORTED_KHR:
+            msg = "image usage flags not supported";
+            break;
+        case VK_ERROR_VIDEO_PICTURE_LAYOUT_NOT_SUPPORTED_KHR:
+            msg = "video picture layout not supported";
+            break;
+        case VK_ERROR_VIDEO_PROFILE_OPERATION_NOT_SUPPORTED_KHR:
+            msg = "video profile operation (videoCodecOperation) not supported";
+            break;
+        case VK_ERROR_VIDEO_PROFILE_FORMAT_NOT_SUPPORTED_KHR:
+            msg = "video format parameters not supported";
+            break;
+        case VK_ERROR_VIDEO_PROFILE_CODEC_NOT_SUPPORTED_KHR:
+            msg = "codec-specific video parameters not supported";
+            break;
+        case VK_ERROR_VIDEO_STD_VERSION_NOT_SUPPORTED_KHR:
+            msg = "video Std header version not supported";
+            break;
         case VK_RESULT_MAX_ENUM:
             msg = "max result enum value (something is very wrong)";
             break;
