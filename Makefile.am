@@ -1,4 +1,4 @@
-bin_PROGRAMS = crypt_underworld
+bin_PROGRAMS = crypt_underworld cu_tests
 
 crypt_underworld_CXXFLAGS = -I$(top_srcdir)/include $(PTHREAD_CFLAGS) $(SDL_CFLAGS)
 crypt_underworld_LDADD = $(PTHREAD_LIBS) $(SDL_LIBS)
@@ -35,6 +35,13 @@ crypt_underworld_SOURCES = \
 	src/fence.cpp \
 	src/heap.cpp \
 	src/engine.cpp
+
+cu_tests_CXXFLAGS = $(crypt_underworld_CXXFLAGS) -I/usr/include/doctest/ -I/usr/local/include/doctest
+cu_tests_LDADD = $(crypt_underworld_LDADD)
+cu_tests_CXX = $(cu_tests_CXX)
+cu_tests_SOURCES = \
+	src/bin_file.cpp \
+	test/bin_file.cpp
 
 examples_dir = $(top_srcdir)/examples
 circ_dir = $(examples_dir)/circ

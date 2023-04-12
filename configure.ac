@@ -30,6 +30,16 @@ AC_CHECK_HEADERS([vulkan/vulkan.h vulkan/vulkan_core.h],
 AS_IF([test "x$pname_found_vulkan_headers" != "xyes"],
       [AC_MSG_ERROR([Unable to find the Vulkan headers])])
 
+AC_LANG_PUSH([C++])
+
+dnl Check for doctest
+AC_CHECK_HEADERS([doctest/doctest.h doctest.h],
+                [pname_found_doctest_headers=yes; break;])
+AS_IF([test "x$pname_found_doctest_headers" != "xyes"],
+      [AC_MSG_ERROR([Unable to find doctest.h])])
+
+AC_LANG_POP([C++])
+
 dnl Check for pthreads
 AX_PTHREAD
 
