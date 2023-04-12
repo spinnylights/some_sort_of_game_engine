@@ -32,7 +32,7 @@ namespace cu {
  * \brief A general-purpose representation of binary data read in from a stream,
  * motivated by Vulkan's interface for consuming shaders.
  */
-class BinFile {
+class BinData {
 public:
     using data_t = char;
     using stream_t = std::basic_istream<data_t>;
@@ -47,13 +47,13 @@ public:
      * \param istream The stream to the data you'd like to work with.
      * \param size The amount of data to read in from the stream in bytes.
      */
-    BinFile(stream_t& istream, container_t::size_type size);
+    BinData(stream_t& istream, container_t::size_type size);
 
-    BinFile(const BinFile&);
-    BinFile& operator=(const BinFile&);
+    BinData(const BinData&);
+    BinData& operator=(const BinData&);
 
-    BinFile(BinFile&&);
-    BinFile& operator=(BinFile&&);
+    BinData(BinData&&);
+    BinData& operator=(BinData&&);
 
     /*!
      * \brief The inner data.

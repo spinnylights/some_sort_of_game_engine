@@ -53,7 +53,7 @@ ShaderModule::ShaderModule(Device::ptr l_dev,
 
 ShaderModule::ShaderModule(Device::ptr l_dev,
                            std::string name,
-                           const BinFile& file)
+                           const BinData& file)
     : ShaderModule(l_dev, name, file.u32(), file.size())
 {}
 

@@ -22,12 +22,12 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include <doctest.h>
 
-#include <bin_file.hpp>
+#include <bin_data.hpp>
 
 #include <string>
 #include <sstream>
 
-void test_binfile_against_sstream(cu::BinFile bf, std::string bin_data)
+void test_binfile_against_sstream(cu::BinData bf, std::string bin_data)
 {
     SUBCASE("size matches") {
         CHECK(bf.size() == bin_data.size());
@@ -40,7 +40,7 @@ void test_binfile_against_sstream(cu::BinFile bf, std::string bin_data)
     }
 }
 
-void test_binfile_against_binfile(cu::BinFile bf, cu::BinFile other)
+void test_binfile_against_binfile(cu::BinData bf, cu::BinData other)
 {
     SUBCASE("size matches") {
         CHECK(bf.size() == other.size());
@@ -58,30 +58,30 @@ void test_binfile_against_binfile(cu::BinFile bf, cu::BinFile other)
 
     SUBCASE("data matches through u32 pointer") {
         for (std::size_t i = 0;
-             i < bf.size() / (sizeof(uint32_t) / sizeof(cu::BinFile::data_t));
+             i < bf.size() / (sizeof(uint32_t) / sizeof(cu::BinData::data_t));
              ++i) {
             CHECK(bf.u32()[i] == other.u32()[i]);
         }
     }
 }
 
-TEST_CASE("BinFile") {
+TEST_CASE("BinData") {
     std::string bin_data = { 0xd, 0xe, 0xa, 0xd, 0xb, 0xe, 0xe, 0xf };
     std::istringstream raw(bin_data);
-    cu::BinFile bf(raw, bin_data.size());
+    cu::BinData bf(raw, bin_data.size());
 
     SUBCASE("construction from an istream") {
         test_binfile_against_sstream(bf, bin_data);
     }
 
     SUBCASE("copy construction") {
-        cu::BinFile bf_cp(bf);
+        cu::BinData bf_cp(bf);
 
         test_binfile_against_binfile(bf_cp, bf);
     }
 
     SUBCASE("move construction") {
-        cu::BinFile bf_mv({raw, bin_data.size()});
+        cu::BinData bf_mv({raw, bin_data.size()});
 
         test_binfile_against_sstream(bf_mv, bin_data);
     }
@@ -89,9 +89,9 @@ TEST_CASE("BinFile") {
     SUBCASE("pads out non-32-bit-word data") {
         std::string non_32_data = { 0xf, 0xa, 0xc, 0xa, 0xd, 0xe };
         std::istringstream raw_non32(non_32_data);
-        cu::BinFile fix32_bf(raw_non32, non_32_data.size());
+        cu::BinData fix32_bf(raw_non32, non_32_data.size());
         constexpr std::size_t size_diff =
-            sizeof(uint32_t) / sizeof(cu::BinFile::data_t);
+            sizeof(uint32_t) / sizeof(cu::BinData::data_t);
         CHECK(fix32_bf.size()
               == ((non_32_data.size() / size_diff) + 1) * size_diff);
     }

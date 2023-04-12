@@ -19,7 +19,7 @@
  * Copyright (c) 2021 Zoë Sparks <zoe@milky.flowers>
  */
 
-#include "bin_file.hpp"
+#include "bin_data.hpp"
 
 #include <fstream>
 #include <iostream>
@@ -27,7 +27,7 @@
 
 namespace cu {
 
-BinFile::BinFile(BinFile::stream_t& f, container_t::size_type size)
+BinData::BinData(BinData::stream_t& f, container_t::size_type size)
 {
     if (f) {
         auto posmemo = f.tellg();
@@ -42,24 +42,24 @@ BinFile::BinFile(BinFile::stream_t& f, container_t::size_type size)
     }
 }
 
-BinFile::BinFile(const BinFile& f)
+BinData::BinData(const BinData& f)
     : dta {f.inner()}
 {}
 
-BinFile& BinFile::operator=(const BinFile& f)
+BinData& BinData::operator=(const BinData& f)
 {
     dta = f.inner();
 
     return *this;
 }
 
-BinFile::BinFile(BinFile&& f)
+BinData::BinData(BinData&& f)
     : dta {std::move(f.dta)}
 {
     f.dta = {};
 }
 
-BinFile& BinFile::operator=(BinFile&& f)
+BinData& BinData::operator=(BinData&& f)
 {
     std::swap(dta, f.dta);
 

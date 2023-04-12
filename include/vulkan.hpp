@@ -111,7 +111,7 @@ public:
     /*!
      * \brief Add a new compiled (SPIR-V) shader.
      */
-    void add_shader(std::string name, BinFile compiled_shader);
+    void add_shader(std::string name, BinData compiled_shader);
 
     // TODO: replace with something more general-purpose
     void minicomp_setup();

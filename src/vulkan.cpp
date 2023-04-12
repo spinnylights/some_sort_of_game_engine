@@ -464,7 +464,7 @@ void Vulkan::minicomp_frame()
     }
 }
 
-void Vulkan::add_shader(std::string name, BinFile f)
+void Vulkan::add_shader(std::string name, BinData f)
 {
     log.enter("Vulkan",  "adding shader " + name);
     log.brk();

@@ -24,7 +24,7 @@
 
 #include <vulkan/vulkan.hpp>
 
-#include "bin_file.hpp"
+#include "bin_data.hpp"
 #include "deviced.hpp"
 
 namespace cu {
@@ -45,7 +45,7 @@ public:
      * \param name  A name to identify the shader by.
      * \param file  The compiled (SPIR-V) shader in file form.
      */
-    ShaderModule(Device::ptr l_dev, std::string name, const BinFile& file);
+    ShaderModule(Device::ptr l_dev, std::string name, const BinData& file);
 
     /*!
      * \brief (constructor)

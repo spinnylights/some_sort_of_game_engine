@@ -20,7 +20,7 @@ crypt_underworld_SOURCES = \
 	src/image.cpp \
 	src/image_view.cpp \
 	src/image_format.cpp \
-	src/bin_file.cpp \
+	src/bin_data.cpp \
 	src/shader_module.cpp \
 	src/descriptor_set_layout_binding.cpp \
 	src/descriptor_set_layout.cpp \
@@ -40,8 +40,8 @@ cu_tests_CXXFLAGS = $(crypt_underworld_CXXFLAGS) -I/usr/include/doctest/ -I/usr/
 cu_tests_LDADD = $(crypt_underworld_LDADD)
 cu_tests_CXX = $(cu_tests_CXX)
 cu_tests_SOURCES = \
-	src/bin_file.cpp \
-	test/bin_file.cpp
+	src/bin_data.cpp \
+	test/bin_data.cpp
 
 examples_dir = $(top_srcdir)/examples
 circ_dir = $(examples_dir)/circ

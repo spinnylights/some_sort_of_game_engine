@@ -64,7 +64,7 @@ void Engine::mode(Mode new_mode)
     log.brk();
 }
 
-void Engine::add_shader(std::string name, BinFile f)
+void Engine::add_shader(std::string name, BinData f)
 {
     vulk.add_shader(name, f);
 }
@@ -73,7 +73,7 @@ void Engine::minicomp_mode(std::filesystem::path comp_spv_path)
 {
     mode(minicomp);
     std::ifstream comp_spv_f(comp_spv_path, std::ios::binary | std::ios::ate);
-    BinFile::container_t::size_type comp_spv_sz;
+    BinData::container_t::size_type comp_spv_sz;
     if (comp_spv_f) {
         comp_spv_sz = comp_spv_f.tellg();
     } else {
