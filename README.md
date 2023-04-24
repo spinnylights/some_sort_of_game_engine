@@ -86,7 +86,8 @@ you'd like to generate it yourself, you'll need
 For binary distribution purposes, the goal is to build the Linux,
 Windows, and macOS builds all on Linux, cross-compiling as
 needed. With that in mind, these instructions have been tested in
-a Linux environment only for the time being. They _should_ work
+a Linux environment only for the time being. They work under Windows
+using WSL2, and also _should_ work
 under Windows using e.g. [MSYS2](https://www.msys2.org/) and
 MinGW-w64 (MSVC support is not guaranteed), and under macOS
 provided that you have a C++ compiler installed. The Linux
