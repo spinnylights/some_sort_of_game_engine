@@ -17,7 +17,7 @@ on the engine. Rest assured that I am still working.
 - [Documentation](#documentation)
 - [Building](#building)
   - [Install Build Dependencies](#install-build-dependencies)
-    - [Ubuntu 22.04](#ubuntu-2204)
+    - [Debian-based Linux Distros](#debian-based-linux-distros)
     - [Windows](#windows)
     - [MacOS](#macos)
   - [Runtime Dependencies](#runtime-dependencies)
@@ -102,47 +102,13 @@ Crypt Underworld requires the following libraries in order to build:
 Additionally, extra setup may need to be performed in order to get
 the project to compile on your operating system.
 
-### Ubuntu 22.04
-Luckily for us, Ubuntu 22.04 (and I think most debian based systems)
-allow one to get most build dependencies via apt.
-
-1. Install general C dependencies `build-essential` and `autoconf`:
-
-
+### Debian-based Linux Distros
+Most dependencies can be installed via apt on debian-based distros:
 ```
-sudo apt install build-essential autoconf
+sudo apt install build-essential autoconf libsdl2-2.0-0 libsdl2-dev
 ```
-
-2. Install [SDL2's library distribution and build tools](https://wiki.libsdl.org/SDL2/Installation):
-
-
-```
-sudo apt install libsdl2-2.0-0 libsdl2-dev
-```
-
-3. Install a [distribution of the Vulkan SDK](https://packages.lunarg.com/):
-
-Note - this is just some version for Ubuntu 22.04. Check the above
-link for the proper latest version for your operating system.
-```
-wget -qO- https://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo tee /etc/apt/trusted.gpg.d/lunarg.asc
-sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-1.3.243-jammy.list https://packages.lunarg.com/vulkan/1.3.243/lunarg-vulkan-1.3.243-jammy.list
-sudo apt update
-sudo apt install vulkan-sdk
-```
-
-4. Install GCC / G++ 12
-```
-sudo apt install gcc-12 g++-12
-```
-
-5. Make GCC / G++ 12 a system-wide default
-```
-# This seems fragile - is there a way for the build system to detect the correct version of gcc without needing to alias like this? ~icy
-sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-12 100
-sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-12 100
-```
-
+In addition to the above, you will also need [the Vulkan SDK which
+you can obtain here](https://vulkan.lunarg.com/sdk/home#linux).
 
 ### Windows
 ```
