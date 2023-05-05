@@ -1,79 +1,23 @@
-_Crypt Underworld_
-==================
-<p align="center">
-  <img src="doc/logo.png" alt="Crypt Underworld Logo"/>
-</p>
-
-**Note**: If you don't see much going on here and you're
-wondering what I'm up to, you can check my
-[vulkan-notes](https://github.com/spinnylights/vulkan-notes) and
-[math-work](https://github.com/spinnylights/math-work) repos, as
-I'm probably studying something I need to know to make progress
-on the engine. Rest assured that I am still working.
-
----
-
-- [_Crypt Underworld_](#crypt-underworld)
-  - [Documentation](#documentation)
-  - [Building](#building)
-    - [Build dependencies](#build-dependencies)
-    - [Runtime dependencies](#runtime-dependencies)
-    - [If you're working directly from the source repo](#if-youre-working-directly-from-the-source-repo)
-    - [Build steps](#build-steps)
-    - [Installation](#installation)
-      - [Linux](#linux)
-      - [Windows and macOS](#windows-and-macos)
-  - [Contributing](#contributing)
-    - [Bug reports and feature requests](#bug-reports-and-feature-requests)
-    - [Patches](#patches)
+- [Documentation](#documentation)
+- [Building](#building)
+  - [Build dependencies](#build-dependencies)
+  - [Runtime dependencies](#runtime-dependencies)
+  - [If you're working directly from the source repo](#if-youre-working-directly-from-the-source-repo)
+  - [Build steps](#build-steps)
+  - [Installation](#installation)
+    - [Linux](#linux)
+    - [Windows and macOS](#windows-and-macos)
+- [Contributing](#contributing)
+  - [Bug reports and feature requests](#bug-reports-and-feature-requests)
+  - [Patches](#patches)
 
 
 ---
-
-_Crypt Underworld_ is (/will be) a realtime 3D computer game
-where you wander around, piss, talk to people, eat things, etc.
-It's the sequel to Lily Zone's 2013 game [_Crypt
-Worlds_](https://cicadamarionette.com/Games/CryptWorlds/Main.html),
-and is being made by [her](https://www.cicadamarionette.com/) and
-[me](https://milky.flowers/), with some music by
-[ESPer99](https://esper99.bandcamp.com/).
-
-Right now it is still in a relatively early phase of development
-despite having been worked on for the better part of a decade, to
-my great sheepishness. We had an amazing successful
-[Kickstarter](https://www.kickstarter.com/projects/357609386/crypt-underworld-a-sequel-to-crypt-worlds)
-years ago that (among other things) saved me right as I was about
-to lose my housing, something for which I will always be
-grateful. Lily and I have decided to pivot to this game as our
-top priority as it seems like our work-in-progress game with the
-greatest demand, and I'm currently working on it full-time M-F
-(and sometimes over the weekend too, depending).
-
-There is a build available
-[here](https://lilithzone.itch.io/fundraisins). However, that
-build is made with Unity 2018 and thus is not built from this
-repository. Here, for runtime performance, quality of life (I'm
-tired of dealing with Unity on Linux), and
-[ethical](https://www.fsf.org/about/what-is-free-software)
-reasons, I am writing the engine much more from the ground up
-using [SDL](https://www.libsdl.org/) and
-[Vulkan](https://www.khronos.org/vulkan/), which should allow
-support for the three platforms we've been targeting (Linux,
-Windows, macOS) and maybe some others like FreeBSD and such.
-
-Note that we are _not_ starting the game over from scratch, so if
-you like the current build, don't worry. We're keeping the
-existing models, scenes, etc.—this is a port, not a reboot. To
-be specific, we're using Unity's [FBX
-exporter](https://docs.unity3d.com/Packages/com.unity.formats.fbx@2.0/manual/exporting.html)
-to extract scenes and then converting the resulting files to
-[glTF](https://www.khronos.org/gltf/) for use with the new
-engine.
 
 ## Documentation
 
 API documentation is available
-[here](https://milky.flowers/programs/crypt_underworld/doc/). If
+[here](https://milky.flowers/programs/some_sort_of_game_engine/doc/). If
 you'd like to generate it yourself, you'll need
 [Doxygen](https://www.doxygen.nl/index.html) and
 [Graphviz](https://graphviz.org/).
@@ -250,11 +194,3 @@ demonstrate how much of a difference your patch makes and under
 what circumstances. I can take these measurements myself, but of
 course my environment is not the same as yours, so I may not see
 the same things.
-
-Since this is an art project, Lily and I are probably more likely
-to turn down patches that add features or otherwise change the
-game's behavior than we would if this was a utilitarian library
-or something. We do plan to support mods, so you should have a
-way to add things onto the base game that way. However, if
-there's something you really feel that every player would want,
-feel free to create an issue for it and we can discuss.
