@@ -31,8 +31,7 @@
 
 namespace cu {
 
-
-uint32_t PhysDevices::get_dev_cnt(Instance::ptr inst)
+std::vector<VkPhysicalDevice> PhysDevices::enumerate_devs(Instance::ptr inst)
 {
     uint32_t dev_cnt;
     Vulkan::vk_try(enum_phys_devs(inst->inner(), &dev_cnt, NULL),
@@ -41,12 +40,6 @@ uint32_t PhysDevices::get_dev_cnt(Instance::ptr inst)
     log.enter("physical device count", dev_cnt);
     log.brk();
 
-    return dev_cnt;
-}
-
-std::vector<VkPhysicalDevice> PhysDevices::enumerate_devs(Instance::ptr inst,
-                                                          uint32_t dev_cnt)
-{
     std::vector<VkPhysicalDevice> potential_devs (dev_cnt);
     Vulkan::vk_try(enum_phys_devs(inst->inner(),
                                   &dev_cnt,
@@ -141,18 +134,13 @@ std::vector<std::string> PhysDevices::get_dev_exts(VkPhysicalDevice dev)
         return ext_names;
 }
 
-void PhysDevices::populate_devs(Instance::ptr inst, Surface& surf)
+void PhysDevices::fill_devs(std::vector<PhysDevice>& devs, bool compute_only)
 {
-    auto dev_cnt        = get_dev_cnt(inst);
-    auto potential_devs = enumerate_devs(inst, dev_cnt);
-
     for (auto potential_dev : potential_devs) {
-
         auto q_family_props = get_queue_fam_props(potential_dev);
 
         PhysDevice phys_dev {
             potential_dev,
-            surf,
             inst,
             get_dev_props(potential_dev),
             get_mem_props(potential_dev),
@@ -162,31 +150,52 @@ void PhysDevices::populate_devs(Instance::ptr inst, Surface& surf)
 
         phys_dev.log();
 
-        bool supports_graphics = false;
-        bool supports_present = false;
-
         for (const auto& fam : phys_dev.queue_families) {
-            if (fam.graphics()) {
-                supports_graphics = true;
+            if ((compute_only && fam.compute()) || fam.graphics()) {
+                devs.push_back(phys_dev);
+                break;
             }
-
-            if (fam.present()) {
-                supports_present = true;
-            }
-        }
-
-        if (supports_graphics && supports_present) {
-            devs.push_back(phys_dev);
         }
     }
 
     log.brk();
 }
 
-void PhysDevices::populate_default()
+void PhysDevices::fill_devs(std::vector<PhysDevice>& devs, Surface& surf)
 {
+    for (auto potential_dev : potential_devs) {
+        auto q_family_props = get_queue_fam_props(potential_dev);
+
+        PhysDevice phys_dev {
+            potential_dev,
+            inst,
+            get_dev_props(potential_dev),
+            get_mem_props(potential_dev),
+            q_family_props,
+            get_dev_exts(potential_dev),
+            surf,
+        };
+
+        phys_dev.log();
+
+        for (const auto& fam : phys_dev.queue_families) {
+            if (fam.graphics() && fam.present()) {
+                devs.push_back(phys_dev);
+                break;
+            }
+        }
+    }
+
+    log.brk();
+}
+
+std::vector<PhysDevice>::size_type
+PhysDevices::get_default_dev_ndx(const std::vector<PhysDevice>& devs)
+{
+    std::vector<PhysDevice>::size_type default_dev = 0;
+
     if (devs.size() == 0) {
-        throw std::runtime_error("no Vulkan-capable devices found!");
+        throw std::runtime_error("no valid devices found!");
     } else if (devs.size() == 1) {
         default_dev = 0;
     } else {
@@ -214,37 +223,56 @@ void PhysDevices::populate_default()
 
     log.enter("default phys. device", default_dev);
     log.brk();
+
+    return default_dev;
 }
 
-PhysDevices::PhysDevices(Instance::ptr inst, Surface& surf)
+PhysDevice PhysDevices::default_device(bool compute_only)
+{
+    std::vector<PhysDevice> devs {};
+
+    fill_devs(devs, compute_only);
+
+    return devs.at(get_default_dev_ndx(devs));
+}
+
+PhysDevice PhysDevices::default_device(Surface& surf)
+{
+    std::vector<PhysDevice> devs {};
+
+    fill_devs(devs, surf);
+
+    return devs.at(get_default_dev_ndx(devs));
+}
+
+PhysDevices::PhysDevices(Instance::ptr instn)
     :enum_phys_devs{
          reinterpret_cast<PFN_vkEnumeratePhysicalDevices>(
-             inst->get_proc_addr("vkEnumeratePhysicalDevices")
+             instn->get_proc_addr("vkEnumeratePhysicalDevices")
          )
      },
      get_phys_dev_props{
          reinterpret_cast<PFN_vkGetPhysicalDeviceProperties2>(
-             inst->get_proc_addr("vkGetPhysicalDeviceProperties2")
+             instn->get_proc_addr("vkGetPhysicalDeviceProperties2")
          )
      },
      get_phys_dev_mem_props{
          reinterpret_cast<PFN_vkGetPhysicalDeviceMemoryProperties>(
-             inst->get_proc_addr("vkGetPhysicalDeviceMemoryProperties")
+             instn->get_proc_addr("vkGetPhysicalDeviceMemoryProperties")
          )
      },
      get_phys_dev_queue_fam_props{
          reinterpret_cast<PFN_vkGetPhysicalDeviceQueueFamilyProperties>(
-             inst->get_proc_addr("vkGetPhysicalDeviceQueueFamilyProperties")
+             instn->get_proc_addr("vkGetPhysicalDeviceQueueFamilyProperties")
          )
      },
      enum_dev_ext_props{
          reinterpret_cast<PFN_vkEnumerateDeviceExtensionProperties>(
-             inst->get_proc_addr("vkEnumerateDeviceExtensionProperties")
+             instn->get_proc_addr("vkEnumerateDeviceExtensionProperties")
          )
-     }
-{
-    populate_devs(inst, surf);
-    populate_default();
-}
+     },
+     potential_devs(enumerate_devs(instn)),
+     inst {instn}
+{}
 
 } // namespace cu

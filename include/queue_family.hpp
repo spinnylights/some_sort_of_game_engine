@@ -42,6 +42,11 @@ public:
     /*!
      * \brief (constructor)
      *
+     * Note that this does not query whether the QueueFamily supports
+     * presentation to a Surface; present() will return false when this
+     * constructor finishes. To update the QueueFamily's present support
+     * information, use query_present() post-initialization.
+     *
      * \param handle The queue family properties handle populated
      * by Vulkan (see
      * [vkGetPhysicalDeviceQueueFamilyProperties()](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/vkGetPhysicalDeviceQueueFamilyProperties.html)
@@ -53,15 +58,22 @@ public:
      * device which has this queue family (needed because this
      * class is involved in PhysDevice instantiation).
      *
-     * \param surf The Surface in use.
-     *
      * \param inst The Instance in use.
      */
     QueueFamily(VkQueueFamilyProperties& handle,
                 uint32_t ndex,
                 VkPhysicalDevice dev,
-                Surface& surf,
                 Instance::ptr inst);
+
+    /*!
+     * Use this to update whether the QueueFamily supports presentation to the
+     * given Surface. You can then query this using present().
+     *
+     * \param dev The physical device the QueueFamily resides on.
+     *
+     * \param surf The Surface to query present support for.
+     */
+    void query_present(VkPhysicalDevice dev, Surface& surf);
 
     /*!
      * \brief Whether the queue family supports graphics
@@ -124,7 +136,7 @@ private:
     VkQueueFlags flags;
     uint32_t     queue_cnt;
     uint32_t     ndx;
-    bool         pres_support;
+    bool         pres_support = false;
 
     PFN_vkGetPhysicalDeviceSurfaceSupportKHR get_surf_support;
 };

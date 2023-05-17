@@ -253,9 +253,9 @@ Vulkan::Vulkan(std::vector<const char*> exts,
     : inst{std::make_shared<Instance>(exts, layers)},
       dbg_msgr{inst, debug},
       surf{sdl, inst},
-      phys_devs{inst, surf},
+      phys_devs{inst},
       logi_dev {
-          std::make_shared<Device>(phys_devs.default_device(), inst)
+          std::make_shared<Device>(phys_devs.default_device(surf), inst)
       },
       swch{phys_devs.default_device(), logi_dev, surf}
 {}

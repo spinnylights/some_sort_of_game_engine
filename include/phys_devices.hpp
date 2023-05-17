@@ -44,36 +44,60 @@ public:
      * \brief (constructor)
      *
      * \param inst The Instance in use.
-     * \param surf The Surface in use.
      */
-    PhysDevices(Instance::ptr inst, Surface& surf);
+    PhysDevices(Instance::ptr instn);
 
     /*!
-     * \brief Returns the default physical device, chosen
-     * according to a set of heuristics.
+     * \brief Returns the default physical device, chosen according to a set of
+     * heuristics.
+     *
+     * This function assumes that you won't be using the PhysDevice to present
+     * to a Surface. Use the default_device(Surface&) form if you do plan to
+     * present to surface.
+     *
+     * \param compute_only If you enable this, this function will only check
+     * each PhysDevice for compute support, ignoring whether or not it supports
+     * graphics operations (which it would otherwise check for). The PhysDevice
+     * you get back may support graphics operations anyway. (Note that if a
+     * physical device does support graphics operations, the Vulkan standard
+     * requires it to support compute operations as well).
      */
-    PhysDevice default_device() { return devs.at(default_dev); }
+    PhysDevice default_device(bool compute_only = false);
+
+    /*!
+     * \copybrief PhysDevice::PhysDevice(bool)
+     *
+     * This function will query each PhysDevice for present support to the given
+     * Surface, as well as support for graphics and compute operations. If no
+     * such devices are found, it will throw an excpetion.
+     *
+     * \param surf The Surface you plan to present to with the PhysDevice.
+     */
+    PhysDevice default_device(Surface& surf);
 
 private:
-    std::vector<PhysDevice> devs;
-    std::vector<PhysDevice>::size_type default_dev;
+    PhysDevices();
 
-    void populate_devs(Instance::ptr, Surface&);
-    void populate_default();
-    uint32_t get_dev_cnt(Instance::ptr inst);
     std::vector<std::string> get_dev_exts(VkPhysicalDevice dev);
-    std::vector<VkPhysicalDevice> enumerate_devs(Instance::ptr inst,
-                                                 uint32_t dev_cnt);
+    std::vector<VkPhysicalDevice> enumerate_devs(Instance::ptr inst);
     std::vector<VkQueueFamilyProperties>
-    get_queue_fam_props(VkPhysicalDevice& dev);
+        get_queue_fam_props(VkPhysicalDevice& dev);
     PhysDevice::PhysDeviceProps get_dev_props(VkPhysicalDevice& dev);
     VkPhysicalDeviceMemoryProperties get_mem_props(VkPhysicalDevice& dev);
+    void fill_devs(std::vector<PhysDevice>& devs, bool compute_only);
+    void fill_devs(std::vector<PhysDevice>& devs, Surface& surf);
+    std::vector<PhysDevice>::size_type
+        get_default_dev_ndx(const std::vector<PhysDevice>& devs);
 
     PFN_vkEnumeratePhysicalDevices enum_phys_devs;
     PFN_vkGetPhysicalDeviceProperties2 get_phys_dev_props;
     PFN_vkGetPhysicalDeviceMemoryProperties get_phys_dev_mem_props;
     PFN_vkGetPhysicalDeviceQueueFamilyProperties get_phys_dev_queue_fam_props;
     PFN_vkEnumerateDeviceExtensionProperties enum_dev_ext_props;
+
+    std::vector<VkPhysicalDevice> potential_devs;
+    Instance::ptr inst;
+
 };
 
 } // namespace cu

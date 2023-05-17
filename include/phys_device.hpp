@@ -58,15 +58,33 @@ struct PhysDevice {
     /*!
      * \brief (constructor) PhysicalDevices is a factory for this
      * class; you may find it more convenient to use.
+     *
+     * Use this constructor if you don't plan to present to a Surface with this
+     * PhysDevice. All of its queue families will report that they lack present
+     * support regardless of the capabilities of the underlying hardware.
      */
     PhysDevice(VkPhysicalDevice                     device,
-               Surface&                             surf,
                Instance::ptr                        inst,
                PhysDeviceProps                      device_props,
                VkPhysicalDeviceMemoryProperties     vk_memory_props,
                std::vector<VkQueueFamilyProperties> vk_queue_props,
                std::vector<std::string>
                    extensions_supported);
+
+    /*!
+     * \copybrief PhysDevice::PhysDevice(VkPhysicalDevice,Instance::ptr,PhysDeviceProps,VkPhysicalDeviceMemoryProperties,std::vector<VkQueueFamilyProperties>,std::vector<std::string>)
+     *
+     * Use this constructor if you plan to present to surf with this PhysDevice.
+     * The library will check each of the PhysDevice's queue families for
+     * present support to it.
+     */
+    PhysDevice(VkPhysicalDevice                     device,
+               Instance::ptr                        inst,
+               PhysDeviceProps                      device_props,
+               VkPhysicalDeviceMemoryProperties     vk_memory_props,
+               std::vector<VkQueueFamilyProperties> vk_queue_props,
+               std::vector<std::string>             extensions_supported,
+               Surface&                             surf);
 
     PhysDevice(const PhysDevice&);
     PhysDevice& operator=(const PhysDevice&);
@@ -77,7 +95,7 @@ struct PhysDevice {
     /*
      * \brief The handle wrapped by the class.
      */
-    VkPhysicalDevice dev;
+    VkPhysicalDevice dev = VK_NULL_HANDLE;
 
     /*!
      * \brief The name reported by the device.
@@ -186,11 +204,16 @@ struct PhysDevice {
      */
     PhysicalHeap largest_dev_local_heap() const;
 
-private:
+    /*!
+     * \brief Whether this physical device supports graphics operations. (Note
+     * that this also implies support for compute operations per the Vulkan
+     * standard.)
+     */
+    bool graphics();
 
+private:
     void get_queue_fams(std::vector<VkQueueFamilyProperties>&
                            queue_fam_props,
-                       Surface& surf,
                        Instance::ptr inst);
 
     void populate_mem_props(const VkPhysicalDeviceMemoryProperties&

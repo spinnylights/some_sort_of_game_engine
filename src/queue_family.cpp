@@ -31,7 +31,6 @@ namespace cu {
 QueueFamily::QueueFamily(VkQueueFamilyProperties& q_family_props,
                          uint32_t ndex,
                          VkPhysicalDevice dev,
-                         Surface& surf,
                          Instance::ptr inst)
     :get_surf_support{
         reinterpret_cast<PFN_vkGetPhysicalDeviceSurfaceSupportKHR>(
@@ -43,11 +42,14 @@ QueueFamily::QueueFamily(VkQueueFamilyProperties& q_family_props,
 
     queue_cnt = q_family_props.queueCount;
 
+    flags = q_family_props.queueFlags;
+}
+
+void QueueFamily::query_present(VkPhysicalDevice dev, Surface& surf)
+{
     VkBool32 pres_supported;
     get_surf_support(dev, ndx, surf.inner(), &pres_supported);
     pres_support = Vulkan::vkbool_to_bool(pres_supported);
-
-    flags = q_family_props.queueFlags;
 }
 
 bool QueueFamily::graphics() const

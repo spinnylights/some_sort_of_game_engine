@@ -72,7 +72,7 @@ public:
     PFN_vkVoidFunction get_proc_addr(const char* name);
 
 private:
-    VkInstance inst;
+    VkInstance inst = VK_NULL_HANDLE;
 
     PFN_vkGetInstanceProcAddr get_inst_proc_addr;
     PFN_vkEnumerateInstanceLayerProperties enum_inst_layer_props;

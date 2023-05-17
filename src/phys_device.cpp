@@ -44,7 +44,6 @@ VkDeviceSize calc_total_mem(const VkPhysicalDeviceMemoryProperties& mem_props)
 
 void PhysDevice::get_queue_fams(std::vector<VkQueueFamilyProperties>&
                                    queue_fam_props,
-                               Surface& surf,
                                Instance::ptr inst)
 {
         for (uint32_t i = 0; i < queue_fam_props.size(); ++i) {
@@ -52,13 +51,11 @@ void PhysDevice::get_queue_fams(std::vector<VkQueueFamilyProperties>&
                 queue_fam_props.at(i),
                 i,
                 inner(),
-                surf,
-                inst
+                inst,
             };
 
             queue_families.push_back(fam);
         }
-
 }
 
 void PhysDevice::populate_mem_props(const VkPhysicalDeviceMemoryProperties&
@@ -86,7 +83,6 @@ void PhysDevice::populate_mem_props(const VkPhysicalDeviceMemoryProperties&
 }
 
 PhysDevice::PhysDevice(VkPhysicalDevice                     device,
-                       Surface&                             surf,
                        Instance::ptr                        inst,
                        PhysDeviceProps                      device_props,
                        VkPhysicalDeviceMemoryProperties     vk_memory_props,
@@ -111,7 +107,7 @@ PhysDevice::PhysDevice(VkPhysicalDevice                     device,
           )
       }
 {
-    get_queue_fams(vk_queue_props, surf, inst);
+    get_queue_fams(vk_queue_props, inst);
     populate_mem_props(vk_memory_props);
     maintenance4.pNext = &timel_sem;
     features.pNext = &maintenance4;
@@ -123,6 +119,25 @@ PhysDevice::PhysDevice(VkPhysicalDevice                     device,
 
     if (!maintenance4.maintenance4) {
         throw std::runtime_error("gpu does not support maintenance4");
+    }
+}
+
+PhysDevice::PhysDevice(VkPhysicalDevice                     device,
+                       Instance::ptr                        inst,
+                       PhysDeviceProps                      device_props,
+                       VkPhysicalDeviceMemoryProperties     vk_memory_props,
+                       std::vector<VkQueueFamilyProperties> vk_queue_props,
+                       std::vector<std::string>            extensions_supported,
+                       Surface&                             surf)
+    : PhysDevice::PhysDevice(device,
+                             inst,
+                             device_props,
+                             vk_memory_props,
+                             vk_queue_props,
+                             extensions_supported)
+{
+    for (auto& fam : queue_families) {
+        fam.query_present(device, surf);
     }
 }
 
@@ -301,6 +316,20 @@ PhysicalHeap PhysDevice::largest_dev_local_heap() const
     }
 
     return mem_heaps.at(out_ndx);
+}
+
+bool PhysDevice::graphics()
+{
+    bool out = false;
+
+    for (const auto& fam : queue_families) {
+        if (fam.graphics()) {
+            out = true;
+            break;
+        }
+    }
+
+    return out;
 }
 
 } // namespace cu

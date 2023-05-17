@@ -127,7 +127,7 @@ public:
     void release(Heap::handle_t h);
 
 private:
-    VkDevice dev;
+    VkDevice dev = VK_NULL_HANDLE;
 
 private:
     PhysDevice phys_dev;
